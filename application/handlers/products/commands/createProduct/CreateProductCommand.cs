@@ -35,7 +35,6 @@ namespace MyApi.application.handlers.products.commands.createProduct
 
             public async Task<ResponseModel<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
             {
-
                 var productRequest = request.Request;
 
                 var newProduct = new Product

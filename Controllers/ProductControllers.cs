@@ -12,7 +12,7 @@ namespace MyApi.Controllers
 {
     [ApiController]
     [Route("api/pim")]
-    public class Product : BaseApiController
+    public class ProductController : BaseApiController
     {
         [HttpGet("get-product-extraction-info")]
         // [Permissions(AppPermissions.VIEW_PRODUCTS, AppPermissions.EDIT_PRODUCT)]
