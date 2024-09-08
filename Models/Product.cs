@@ -12,8 +12,8 @@ namespace MyApi.Models
         public string? Upc12 { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string? ValidationResult { get; set; }
-        public List<ProductImage>? ProductImages { get; set; } // Navigation property for the join table
-                                                               // public List<ExtractSession> ExtractSessions { get; set; }
+        public ICollection<ProductImage>? ProductImages { get; set; } // Navigation property for the join table
+                                                                      // public List<ExtractSession> ExtractSessions { get; set; }
         public string? CompareResult { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using MyApi.application.common.configs;
 using MyApi.application.common.interfaces;
 using MyApi.application.infrastructure.services;
 using MyApi.data;
@@ -13,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 //* add services to scope
 builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<IImageServices, ImageServices>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,7 +26,21 @@ builder.Services.AddControllers(); // Add this line to register controllers
 // Register MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);
 
+//* bind config
+builder.Services.Configure<StorageConfig>(builder.Configuration.GetSection("StorageConfig"));
+
+//* static config
+var assetPath = builder.Configuration["StorageConfig:AssetPath"];
+var assetPathRequest = builder.Configuration["StorageConfig:AssetPathRequest"];
+
 var app = builder.Build();
+
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), assetPath)),
+    RequestPath = assetPathRequest,
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,6 +48,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
 
 app.UseHttpsRedirection();
 

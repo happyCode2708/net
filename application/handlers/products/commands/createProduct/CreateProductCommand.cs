@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Options;
 using MyApi.application.common.interfaces;
 using MyApi.core.controllers;
 using MyApi.data;
@@ -48,11 +49,13 @@ namespace MyApi.application.handlers.products.commands.createProduct
 
                 var productResponse = new CreateProductResponse
                 {
-                    ProductId = newProduct.Id
+                    ProductId = newProduct.Id,
+                    IxoneID = newProduct.IxoneID,
+                    Upc12 = newProduct.Upc12,
                 };
 
 
-                return ResponseModel<CreateProductResponse>.Success(productResponse);
+                return ResponseModel<CreateProductResponse>.Success(productResponse, "create product successfully");
 
                 // throw new NotImplementedException();
             }

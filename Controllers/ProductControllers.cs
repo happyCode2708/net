@@ -7,6 +7,7 @@ using MediatR;
 using MyApi.application.handlers.products.queries.extractProductInfo;
 using MyApi.core.controllers;
 using MyApi.application.handlers.products.commands.createProduct;
+using MyApi.application.handlers.products.commands.createProductWithImages;
 
 namespace MyApi.Controllers
 {
@@ -40,6 +41,21 @@ namespace MyApi.Controllers
             // }
 
             var result = await CommandAsync(new CreateProductCommand(request));
+
+            return Ok(result);
+
+        }
+        // api api/pim/create-product
+        [HttpPost("create-product-with-images")]
+        public async Task<IActionResult> CreateProductWithImages([FromForm] CreateProductWithImagesRequest request)
+        {
+
+            // if (!ModelState.IsValid)
+            // {
+            //     return BadRequest(ModelState);
+            // }
+
+            var result = await CommandAsync(new CreateProductWithImageCommand(request));
 
             return Ok(result);
 
