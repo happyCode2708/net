@@ -28,6 +28,7 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 
 //* bind config
 builder.Services.Configure<StorageConfig>(builder.Configuration.GetSection("StorageConfig"));
+builder.Services.Configure<CredentialConfig>(builder.Configuration.GetSection("Credentials"));
 
 //* static config
 var assetPath = builder.Configuration["StorageConfig:AssetPath"];

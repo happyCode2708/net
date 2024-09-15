@@ -58,9 +58,12 @@ namespace MyApi.Controllers
             var result = await CommandAsync(new CreateProductWithImageCommand(request));
 
             return Ok(result);
+        }
+        public async Task<IActionResult> ExtractProductInfoFromImages(ExtractProductInfoFromImagesRequest request)
+        {
+            var result = await CommandAsync();
 
+            return Ok("test");
         }
     }
-
-
 }
