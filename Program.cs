@@ -9,6 +9,9 @@ using MyApi.data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//* Register IHttpClientFactory
+builder.Services.AddHttpClient(); // This registers the IHttpClientFactory service
+
 //* add db connection
 builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -16,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 //* add services to scope
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IImageServices, ImageServices>();
+builder.Services.AddSingleton<IGenerativeServices, GenerativeServices>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

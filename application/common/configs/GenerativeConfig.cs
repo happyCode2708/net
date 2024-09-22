@@ -10,19 +10,34 @@ namespace MyApi.application.common.configs
     {
 
         public List<object> SafetySettings { get; set; }
-        public object Config { get; set; }
-        public string _locationId = "asia-east3";
+        public object GenerationConfig { get; set; }
+        private string _locationId = "us-central1";
         public string LocationId
         {
             get => _locationId;
             set => _locationId = value;
         }
 
-        public string EndPoint => $"https://{LocationId}-aiplatform.googleapis.com";
+        private string _projectId = "splendid-sonar-429704-g9";
+
+        public string ProjectId
+        {
+            get => _projectId;
+            set => _projectId = value;
+        }
+
+        private string _modelId = "gemini-1.5-flash-001";
+
+        public string ModelId
+        {
+            get => _modelId;
+            set => _modelId = value;
+        }
 
         public string Token { get; set; }
-
         private readonly CredentialConfig _credentialConfig;
+        public string EndPoint => $"{LocationId}-aiplatform.googleapis.com";
+        public string Url => $"https://{EndPoint}/v1/projects/{ProjectId}/locations/{LocationId}/publishers/google/models/{ModelId}:streamGenerateContent";
 
         public GenerativeConfig(IOptions<CredentialConfig> credentialConfig)
         {
@@ -37,17 +52,22 @@ namespace MyApi.application.common.configs
                     new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_MEDIUM_AND_ABOVE" }
                 };
 
+
             Token = credential;
 
-            Config = new
+            //* generationConfig
+            GenerationConfig = new
             {
-                projectId = "splendid-sonar-429704-g9",
-                modelId = "gemini-1.5-flash-001",
                 maxOutputTokens = 8192,
                 temperature = 0.2,
                 topP = 0.95
             };
 
+        }
+
+        public void SetModelId(string modelId)
+        {
+            _modelId = modelId;
         }
     }
 }

@@ -8,6 +8,7 @@ using MyApi.application.handlers.products.queries.extractProductInfo;
 using MyApi.core.controllers;
 using MyApi.application.handlers.products.commands.createProduct;
 using MyApi.application.handlers.products.commands.createProductWithImages;
+using MyApi.application.handlers.products.commands.ExtractProductInfoFromImages;
 
 namespace MyApi.Controllers
 {
@@ -59,11 +60,13 @@ namespace MyApi.Controllers
 
             return Ok(result);
         }
+        // api api/pim/extract-product-with-images
+        [HttpPost("extract-product-with-images")]
         public async Task<IActionResult> ExtractProductInfoFromImages(ExtractProductInfoFromImagesRequest request)
         {
-            var result = await CommandAsync();
+            var result = await CommandAsync(new ExtractProductInfoFromImagesCommand(request));
 
-            return Ok("test");
+            return Ok(result);
         }
     }
 }
