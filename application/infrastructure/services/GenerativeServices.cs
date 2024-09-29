@@ -11,6 +11,7 @@ using MyApi.application.common.interfaces;
 using MyApi.Models;
 using Google.Apis.Auth.OAuth2;
 using System.Text;
+using MyApi.application.common.dict;
 
 namespace MyApi.application.infrastructure.services
 {
@@ -58,12 +59,18 @@ namespace MyApi.application.infrastructure.services
             }
         }
 
-        public async Task<string> GenerateContentAsync(GenerativeContentOptions g)
+        public async Task<string> GenerateContentAsync(GenerativeContentOptions generativeOptions)
         {
 
             await _setupGoogleTokenTask;
 
             var defaultGenerativeConfig = new GenerativeConfig(_credentialConfig);
+
+            if (generativeOptions.ModelId.HasValue)
+            {
+                var changeModelConfig = GenerativeModelDict.Map[generativeOptions.ModelId.Value];
+                defaultGenerativeConfig.SetModelId(changeModelConfig);
+            }
 
             var requestBody = new
             {
@@ -72,7 +79,7 @@ namespace MyApi.application.infrastructure.services
                         role = "user",
                         parts = new []{
                             new {
-                                text= "what is vietnam capital?",
+                                text= generativeOptions.Prompt,
                             }
                         },
                     },
@@ -80,6 +87,8 @@ namespace MyApi.application.infrastructure.services
                 generationConfig = defaultGenerativeConfig.GenerationConfig,
                 safetySettings = defaultGenerativeConfig.SafetySettings,
             };
+
+            Console.WriteLine($"url: {defaultGenerativeConfig.Url}");
 
             var httpClient = _httpClientFactory.CreateClient();
 

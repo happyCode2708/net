@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyApi.application.common.enums;
 using MyApi.Models;
 
 namespace MyApi.application.common.interfaces
@@ -19,7 +20,7 @@ namespace MyApi.application.common.interfaces
 
         public string? Prompt { get; set; }
 
-        public string? ModelId { get; set; }
+        public GenerativeModelEnum? ModelId { get; set; }
 
     }
 }

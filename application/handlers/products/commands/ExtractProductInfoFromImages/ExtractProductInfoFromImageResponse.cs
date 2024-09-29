@@ -7,6 +7,8 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
 {
     public class ExtractProductInfoFromImageResponse
     {
-        public string result { get; set; }
+        public string FullResult { get; set; }
+
+        public string ConcatText { get; set; }
     }
 }
