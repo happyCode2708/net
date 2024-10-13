@@ -7,7 +7,9 @@ namespace MyApi.Models
 {
     public class Product
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        public int Id { get; set; }
+        public string UniqueId { get; set; } = Guid.NewGuid().ToString();
         public string? IxoneID { get; set; }
         public string? Upc12 { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -24,8 +24,13 @@ namespace MyApi.data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
+            modelBuilder.Entity<Product>().Property(p => p.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Product>().HasIndex(p => p.UniqueId).IsUnique();
+
 
             modelBuilder.Entity<Image>().HasKey(i => i.Id);
+            modelBuilder.Entity<Image>().Property(i => i.Id).ValueGeneratedOnAdd(); ;
+            modelBuilder.Entity<Image>().HasIndex(i => i.UniqueId).IsUnique();
 
             modelBuilder.Entity<ProductImage>().HasKey(pi => new { pi.ProductId, pi.ImageId });
 

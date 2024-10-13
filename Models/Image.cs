@@ -7,7 +7,8 @@ namespace MyApi.Models
 {
         public class Image
         {
-                public string Id { get; set; } = Guid.NewGuid().ToString();
+                public int Id { get; set; }
+                public string UniqueId { get; set; } = Guid.NewGuid().ToString();
                 public string OriginFileName { get; set; }
                 public string StoredFileName { get; set; }
                 public string Url { get; set; }

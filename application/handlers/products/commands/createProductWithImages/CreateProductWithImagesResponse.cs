@@ -9,7 +9,7 @@ namespace MyApi.application.handlers.products.commands.createProductWithImages
 {
     public class CreateProductWithImagesResponse
     {
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
         public string? IxoneID { get; set; }
         public string? Upc12 { get; set; }
         public ICollection<CreateProductWithImagesResponseProductImageDto> ProductImages { get; set; }
