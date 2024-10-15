@@ -7,6 +7,6 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
 {
     public class ExtractProductInfoFromImagesRequest
     {
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
     }
 }

@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IImageServices, ImageServices>();
 builder.Services.AddSingleton<IGenerativeServices, GenerativeServices>();
+builder.Services.AddSingleton<IPromptBuilderService, PromptBuilderService>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

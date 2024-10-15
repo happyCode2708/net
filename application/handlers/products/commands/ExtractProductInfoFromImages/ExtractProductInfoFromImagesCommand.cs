@@ -1,13 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Azure.Core;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.ObjectPool;
 using MyApi.application.common.enums;
 using MyApi.application.common.interfaces;
 using MyApi.core.controllers;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+
 
 namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromImages
 {
@@ -24,17 +31,69 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
         {
             private IGenerativeServices _generativeServices;
 
-            public Handler(IGenerativeServices generativeService)
-            {
+            private IApplicationDbContext _context;
 
+            private IPromptBuilderService _promptBuilderService;
+
+            public Handler(IGenerativeServices generativeService, IPromptBuilderService PromptBuilderService, IApplicationDbContext Context)
+            {
                 _generativeServices = generativeService;
+                _promptBuilderService = PromptBuilderService;
+                _context = Context;
             }
 
             public async Task<ResponseModel<ExtractProductInfoFromImageResponse>> Handle(ExtractProductInfoFromImagesCommand request, CancellationToken cancellationToken)
             {
+                var requestObject = request.Request;
+
+                var productId = requestObject.ProductId;
+
+
+                // var product = await _context.Products.Include(p => p.ProductImages!).ThenInclude(pi => pi.Image!).FirstOrDefaultAsync(p => p.Id == productId);
+
+                var product = await _context.Products
+                    .Include(p => p.ProductImages!)
+                    .ThenInclude(pi => pi.Image!)
+                    .FirstOrDefaultAsync(p => p.Id == productId);
+
+                if (product == null || product.ProductImages == null)
+                {
+                    return ResponseModel<ExtractProductInfoFromImageResponse>.Fail("Failed");
+                }
+
+                // Safely extract paths from non-null images
+                var imagePathList = product.ProductImages
+                    .Where(pi => pi.Image != null)
+                    .Select(pi => pi.Image!.Path)
+                    .ToList();
+
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true, // For pretty JSON output
+                                          // ReferenceHandler = ReferenceHandler.Preserve // Handle circular references
+                };
+
+                string json = JsonSerializer.Serialize(imagePathList, options);
+                Console.WriteLine(json); // Log to console or wherever you need
+
+
+
+                // // Serialize the images list to JSON
+                // var json = JsonSerializer.Serialize(imageList, new JsonSerializerOptions
+                // {
+                //     WriteIndented = true, // Pretty-print the JSON
+                //     ReferenceHandler = ReferenceHandler.Preserve
+                // });
+
+                // Console.WriteLine(json); // Log it to the console
+
+
+                // Console.WriteLine($"test : {imageList}");
+
                 var generativeOptions = new GenerativeContentOptions
                 {
-                    Prompt = "What is capital of USA?",
+                    ImagePathList = imagePathList,
+                    Prompt = _promptBuilderService.MakeMarkdownNutritionPrompt("", 4),
                     ModelId = GenerativeModelEnum.Gemini_1_5_Flash_001,
                 };
 

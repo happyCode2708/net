@@ -11,16 +11,17 @@ namespace MyApi.application.common.interfaces
     {
         Task<string> GenerateContentAsync(GenerativeContentOptions GenerateOptions);
         Task<string> RetrieveImagesInfo(List<Image> images);
-
+        public string EncodeImageToBase64(string imagePath);
     }
 
     public class GenerativeContentOptions
     {
-        public List<string>? Base64Images { get; set; }
+        public List<string>? ImagePathList { get; set; }
 
         public string? Prompt { get; set; }
 
         public GenerativeModelEnum? ModelId { get; set; }
+
 
     }
 }

@@ -12,6 +12,9 @@ using MyApi.Models;
 using Google.Apis.Auth.OAuth2;
 using System.Text;
 using MyApi.application.common.dict;
+using Microsoft.OpenApi.Any;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MyApi.application.infrastructure.services
 {
@@ -72,18 +75,42 @@ namespace MyApi.application.infrastructure.services
                 defaultGenerativeConfig.SetModelId(changeModelConfig);
             }
 
+            var imageListInRequest = new List<ImageObject>();
+
+            if (generativeOptions.ImagePathList != null)
+            {
+                imageListInRequest = generativeOptions.ImagePathList.Select(imagePath => new ImageObject
+                {
+                    inlineData = new InlineData
+                    {
+                        mimeType = "image/png",
+                        data = EncodeImageToBase64(imagePath)
+                    }
+                }).ToList();
+            }
+
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true, // For pretty JSON output
+                                      // ReferenceHandler = ReferenceHandler.Preserve // Handle circular references
+            };
+
+            string json = JsonSerializer.Serialize(imageListInRequest, options);
+            Console.WriteLine(json); // Lo
+
+            var geminiText = new { text = generativeOptions.Prompt, };
+
             var requestBody = new
             {
                 contents = new[] {
                     new {
                         role = "user",
-                        parts = new []{
-                            new {
-                                text= generativeOptions.Prompt,
-                            }
-                        },
-                    },
-                },
+                        parts =  new List<object>(imageListInRequest) {
+                          geminiText
+                        }
+                    }
+
+            },
                 generationConfig = defaultGenerativeConfig.GenerationConfig,
                 safetySettings = defaultGenerativeConfig.SafetySettings,
             };
@@ -113,6 +140,24 @@ namespace MyApi.application.infrastructure.services
         {
             throw new NotImplementedException();
         }
+
+        public string EncodeImageToBase64(string imagePath)
+        {
+            byte[] imageBytes = File.ReadAllBytes(imagePath);
+            return Convert.ToBase64String(imageBytes);
+        }
+
+    }
+
+    public class InlineData
+    {
+        public string mimeType { get; set; }
+        public string data { get; set; }
+    }
+
+    public class ImageObject
+    {
+        public InlineData inlineData { get; set; }
     }
 }
 
