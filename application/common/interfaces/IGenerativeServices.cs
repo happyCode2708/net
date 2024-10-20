@@ -9,7 +9,7 @@ namespace MyApi.application.common.interfaces
 {
     public interface IGenerativeServices
     {
-        Task<string> GenerateContentAsync(GenerativeContentOptions GenerateOptions);
+        Task<GenerateContentResult> GenerateContentAsync(GenerativeContentOptions GenerateOptions);
         Task<string> RetrieveImagesInfo(List<Image> images);
         public string EncodeImageToBase64(string imagePath);
     }
@@ -21,8 +21,12 @@ namespace MyApi.application.common.interfaces
         public string? Prompt { get; set; }
 
         public GenerativeModelEnum? ModelId { get; set; }
+    }
 
-
+    public class GenerateContentResult
+    {
+        public string? ConcatResult { get; set; }
+        public string? RawResult { get; set; }
     }
 }
 

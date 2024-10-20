@@ -101,16 +101,10 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
                 // {
                 var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
-                //* get concat text results
-
-                JArray resultArray = JArray.Parse(result);
-
-                var ConcatResult = String.Join(" ", resultArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
-
                 var res = new ExtractProductInfoFromImageResponse
                 {
-                    FullResult = result,
-                    ConcatText = ConcatResult,
+                    FullResult = result.RawResult,
+                    ConcatText = result.ConcatResult,
                 };
 
                 return ResponseModel<ExtractProductInfoFromImageResponse>.Success(res, "success");

@@ -15,6 +15,7 @@ using MyApi.application.common.dict;
 using Microsoft.OpenApi.Any;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace MyApi.application.infrastructure.services
 {
@@ -62,9 +63,8 @@ namespace MyApi.application.infrastructure.services
             }
         }
 
-        public async Task<string> GenerateContentAsync(GenerativeContentOptions generativeOptions)
+        public async Task<GenerateContentResult> GenerateContentAsync(GenerativeContentOptions generativeOptions)
         {
-
             await _setupGoogleTokenTask;
 
             var defaultGenerativeConfig = new GenerativeConfig(_credentialConfig);
@@ -76,6 +76,7 @@ namespace MyApi.application.infrastructure.services
             }
 
             var imageListInRequest = new List<ImageObject>();
+            var partRequest = new List<object>();
 
             if (generativeOptions.ImagePathList != null)
             {
@@ -89,6 +90,7 @@ namespace MyApi.application.infrastructure.services
                 }).ToList();
             }
 
+            //* this code is for writeline only -- down
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true, // For pretty JSON output
@@ -97,19 +99,27 @@ namespace MyApi.application.infrastructure.services
 
             string json = JsonSerializer.Serialize(imageListInRequest, options);
             Console.WriteLine(json); // Lo
+            //* this code is for writeline only -- up
 
-            var geminiText = new { text = generativeOptions.Prompt, };
+            if (!String.IsNullOrWhiteSpace(generativeOptions.Prompt))
+            {
+                var geminiText = new { text = generativeOptions.Prompt, };
+                partRequest.Add(geminiText);
+
+            }
+
+            if (imageListInRequest.Count > 0)
+            {
+                partRequest.AddRange(imageListInRequest);
+            }
 
             var requestBody = new
             {
                 contents = new[] {
                     new {
                         role = "user",
-                        parts =  new List<object>(imageListInRequest) {
-                          geminiText
-                        }
+                        parts =  partRequest
                     }
-
             },
                 generationConfig = defaultGenerativeConfig.GenerationConfig,
                 safetySettings = defaultGenerativeConfig.SafetySettings,
@@ -126,11 +136,33 @@ namespace MyApi.application.infrastructure.services
 
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsStringAsync();
+                var result = await response.Content.ReadAsStringAsync();
+                if (!String.IsNullOrEmpty(result))
+                {
+                    JArray resultInArray = JArray.Parse(result);
+
+                    var concatResult = String.Join(" ", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
+
+                    var generateResult = new GenerateContentResult
+                    {
+                        RawResult = result,
+                        ConcatResult = concatResult,
+                    };
+
+                    return generateResult;
+                }
+                else
+                {
+
+                    return new GenerateContentResult
+                    {
+                        RawResult = null,
+                        ConcatResult = null,
+                    };
+                }
             }
             else
             {
-
                 var errorContent = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException($"Error occurred while calling Google AI API: {response.StatusCode}, Content: {errorContent}");
             }
@@ -146,7 +178,6 @@ namespace MyApi.application.infrastructure.services
             byte[] imageBytes = File.ReadAllBytes(imagePath);
             return Convert.ToBase64String(imageBytes);
         }
-
     }
 
     public class InlineData
