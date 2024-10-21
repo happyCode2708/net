@@ -141,7 +141,7 @@ namespace MyApi.application.infrastructure.services
                 {
                     JArray resultInArray = JArray.Parse(result);
 
-                    var concatResult = String.Join(" ", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
+                    var concatResult = String.Join("", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
 
                     var generateResult = new GenerateContentResult
                     {
