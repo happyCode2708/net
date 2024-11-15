@@ -11,6 +11,8 @@ using MyApi.Application.Handlers.Products.Commands.CreateProductWithImages;
 using MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromImages;
 using MyApi.Application.Handlers.Products.Queries.QueryProductList;
 using MyApi.Application.Handlers.Products.Commands.ExtractFactPanel;
+using MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute;
+using MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo;
 
 namespace MyApi.Controllers
 {
@@ -68,11 +70,6 @@ namespace MyApi.Controllers
         public async Task<IActionResult> CreateProductWithImages([FromForm] CreateProductWithImagesRequest request)
         {
 
-            // if (!ModelState.IsValid)
-            // {
-            //     return BadRequest(ModelState);
-            // }
-
             var result = await CommandAsync(new CreateProductWithImageCommand(request));
 
             return Ok(result);
@@ -93,5 +90,30 @@ namespace MyApi.Controllers
 
             return Ok(result);
         }
+        // api api/pim/extract-product-first-attribute
+        [HttpPost("extract-product-first-attribute")]
+        public async Task<IActionResult> ExtractProductFirstAttribute(ExtractProductFirstAttributeRequest request)
+        {
+            var result = await CommandAsync(new ExtractProductFirstAttributeCommand(request));
+
+            return Ok(result);
+        }
+        // api api/pim/extract-product-second-attribute
+        [HttpPost("extract-product-second-attribute")]
+        public async Task<IActionResult> ExtractProductSecondAttribute(ExtractProductSecondAttributeRequest request)
+        {
+            var result = await CommandAsync(new ExtractProductSecondAttributeCommand(request));
+
+            return Ok(result);
+        }   
+
+              // api api/pim/extract-product-second-attribute
+        [HttpPost("validate-and-parse-raw-extracted-info")]
+        public async Task<IActionResult> ValidateAndParsedRawExtractedInfo(ValidateAndParseRawExtractedInfoRequest request)
+        { 
+            var result = await CommandAsync(new ValidateAndParseRawExtractedInfoCommand(request));
+
+            return Ok(result);
+        }  
     }
 }

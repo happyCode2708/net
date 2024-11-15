@@ -36,6 +36,7 @@ namespace MyApi.Application.Common.Utils
     {
         public static NutritionFactData ParseMarkdownResponse(string markdownResponse)
         {
+
             var result = new NutritionFactData
             {
                 Header = new HeaderInfo(),

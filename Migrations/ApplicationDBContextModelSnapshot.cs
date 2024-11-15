@@ -98,7 +98,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Product", b =>

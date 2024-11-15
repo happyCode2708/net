@@ -11,17 +11,17 @@ using MyApi.Application.Common.Utils;
 using MyApi.Domain.Models;
 
 
-namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
+namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {
-    public class ExtractFactPanelCommand : IRequest<ResponseModel<ExtractFactPanelResponse>>
+    public class ExtractProductSecondAttributeCommand : IRequest<ResponseModel<ExtractProductSecondAttributeResponse>>
     {
-        public ExtractFactPanelRequest Request;
-        public ExtractFactPanelCommand(ExtractFactPanelRequest request)
+        public ExtractProductSecondAttributeRequest Request;
+        public ExtractProductSecondAttributeCommand(ExtractProductSecondAttributeRequest request)
         {
             Request = request;
         }
 
-        public class Handler : IRequestHandler<ExtractFactPanelCommand, ResponseModel<ExtractFactPanelResponse>>
+        public class Handler : IRequestHandler<ExtractProductFirstAttributeCommand, ResponseModel<ExtractProductFirstAttributeResponse>>
         {
             private IGenerativeServices _generativeServices;
             private IApplicationDbContext _context;
@@ -35,7 +35,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                 _promptBuilderServices = promptBuilderServices;
             }
 
-            public async Task<ResponseModel<ExtractFactPanelResponse>> Handle(ExtractFactPanelCommand request, CancellationToken cancellationToken)
+            public async Task<ResponseModel<ExtractProductFirstAttributeResponse>> Handle(ExtractProductFirstAttributeCommand request, CancellationToken cancellationToken)
             {
                 var requestObject = request.Request;
                 var productId = requestObject.ProductId;
@@ -48,7 +48,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                 if (product == null || product.ProductImages == null)
                 {
-                    return ResponseModel<ExtractFactPanelResponse>.Fail("Failed to find product or product images");
+                    return ResponseModel<ExtractProductFirstAttributeResponse>.Fail("Failed to find product or product images");
                 }
 
                 // Extract image paths
@@ -59,7 +59,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                 if (!imagePathList.Any())
                 {
-                    return ResponseModel<ExtractFactPanelResponse>.Fail("No images found for analysis");
+                    return ResponseModel<ExtractProductFirstAttributeResponse>.Fail("No images found for analysis");
                 }
 
                 // Create extract session
@@ -68,7 +68,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     ProductId = productId,
                     CreatedAt = DateTime.UtcNow,
                     Status = ExtractStatus.Processing,
-                    SourceType = ExtractSourceType.NutritionFact,
+                    SourceType = ExtractSourceType.ProductSecondAttribute,
                     ExtractorVersion = "1.0",
                     ProductItem = product
                 };
@@ -83,7 +83,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     {
                         ImagePathList = imagePathList,
                         Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
-                        ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
+                        ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                     };
 
                     // Get AI analysis results
@@ -93,21 +93,21 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParser.ParseMarkdownResponse(result.ConcatResult) : null;
 
                     // Update extract session with results
-                    extractSession.RawExtractData = result.ConcatResult;
+                    extractSession.RawExtractData = result.RawResult;
                     extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
 
                     await _context.SaveChangesAsync(cancellationToken);
 
-                    var response = new ExtractFactPanelResponse
+                    var response = new ExtractProductFirstAttributeResponse
                     {
                         FullResult = result.RawResult,
                         ConcatText = result.ConcatResult,
-                        ParsedResult = parsedNutritionData
+                        ParsedResult = null
                     };
 
-                    return ResponseModel<ExtractFactPanelResponse>.Success(response);
+                    return ResponseModel<ExtractProductFirstAttributeResponse>.Success(response);
                 }
                 catch (Exception ex)
                 {

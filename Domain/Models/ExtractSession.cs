@@ -7,17 +7,17 @@ namespace MyApi.Domain.Models
 {
     public enum ExtractSourceType
     {
-        NutritionFact,
-        Attribute1, 
-        Attribute2
+        NutritionFact = 0,
+        ProductFirstAttribute = 1, 
+        ProductSecondAttribute = 2
     }
 
     public enum ExtractStatus
     {
-        Pending,
-        Processing, 
-        Completed,
-        Failed
+        Pending = 0,
+        Processing = 1, 
+        Completed = 2,
+        Failed = 3
     }
 
     public class ExtractSession
@@ -26,15 +26,12 @@ namespace MyApi.Domain.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public ExtractStatus Status { get; set; }
-        public string ErrorMessage { get; set; }
-
+        public string? ErrorMessage { get; set; }
         public int ProductId { get; set; }
         public Product ProductItem { get; set; }
-
-        public string ExtractedData { get; set; }
-        public string RawExtractData {get;set;}
+        public string? ExtractedData { get; set; }
+        public string? RawExtractData {get;set;}
         public ExtractSourceType SourceType { get; set; }
-
         public string ExtractorVersion { get; set; } // extractor version
     }
 }

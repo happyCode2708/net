@@ -25,9 +25,11 @@ namespace MyApi.Application.Common.Interfaces
 
     public class GetProductListReturn
     {
-        [JsonIgnore]
-        public List<ProductWithImage> ProductList;
-        public int Count;
+        // [JsonIgnore]
+        // public List<ProductWithImage> ProductList;
+        public List<ProductWithImageAndExtraction> ProductList;
+
+        public int TotalCount;
 
     }
 

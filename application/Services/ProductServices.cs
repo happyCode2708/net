@@ -49,8 +49,8 @@ namespace MyApi.Application.Services
                 query = query.Where(p => p.IxoneID.Contains(searchText) || p.Upc12.Contains(searchText) || p.Id.ToString().Contains(searchText));
             }
 
-            //* get count;
-            var count = query.Count();
+            //* get totalCount;
+            var totalCount = query.Count();
 
             if (pageNumber.HasValue && pageSize.HasValue)
             {
@@ -58,7 +58,7 @@ namespace MyApi.Application.Services
             }
 
 
-            var productList = await query.Select(p => new ProductWithImage
+            var productList = await query.Select(p => new ProductWithImageAndExtraction
             {
                 Id = p.Id,
                 UniqueId = p.UniqueId,
@@ -76,7 +76,7 @@ namespace MyApi.Application.Services
             var result = new GetProductListReturn
             {
                 ProductList = productList,
-                Count = count,
+                TotalCount = totalCount,
             };
 
             return result;

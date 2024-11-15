@@ -82,11 +82,9 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
                     }).ToList(),
                 };
 
-                // await _imageServices.SaveStaticFile(productRequest.File);
 
                 return ResponseModel<CreateProductWithImagesResponse>.Success(newProductWithImagesResponse);
 
-                // throw new NotImplementedException();
             }
         }
 
