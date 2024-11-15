@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client.Extensions.Msal;
-using MyApi.application.common.configs;
-using MyApi.application.common.interfaces;
-using MyApi.Models;
+using MyApi.Application.Common.Configs;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Domain.Models;
 
-namespace MyApi.application.infrastructure.services
+namespace MyApi.Application.Services
 {
     public class ImageServices : IImageServices
     {

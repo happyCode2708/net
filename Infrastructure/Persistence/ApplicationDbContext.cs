@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyApi.application.common.interfaces;
-using MyApi.Models;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Domain.Models;
 
-namespace MyApi.data
+namespace MyApi.Infrastructure.Persistence
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
@@ -18,11 +18,15 @@ namespace MyApi.data
         // Define your DbSets (tables) here
         // public DbSet<YourEntity> YourEntities { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ExtractSession> ExtractSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+            // Product 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
             modelBuilder.Entity<Product>().Property(p => p.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Product>().HasIndex(p => p.UniqueId).IsUnique();

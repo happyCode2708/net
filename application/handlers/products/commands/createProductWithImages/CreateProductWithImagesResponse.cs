@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MyApi.Models;
+using MyApi.Domain.Models;
 
-namespace MyApi.application.handlers.products.commands.createProductWithImages
+namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
 {
     public class CreateProductWithImagesResponse
     {

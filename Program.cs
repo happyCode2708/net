@@ -2,15 +2,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
-using MyApi.application.common.configs;
-using MyApi.application.common.interfaces;
-using MyApi.application.infrastructure.services;
-using MyApi.data;
+using MyApi.Application.Common.Configs;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Application.Services;
+using MyApi.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //* Register IHttpClientFactory
-builder.Services.AddHttpClient(); // This registers the IHttpClientFactory service
+builder.Services.AddHttpClient(); // This registers the IHttpCdlientFactory service
 
 //* add db connection
 builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
@@ -22,11 +22,25 @@ builder.Services.AddScoped<IImageServices, ImageServices>();
 builder.Services.AddSingleton<IGenerativeServices, GenerativeServices>();
 builder.Services.AddSingleton<IPromptBuilderService, PromptBuilderService>();
 
+//* add cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNextJsApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Replace with your Next.js app URL
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials(); // if you need to send cookies or auth headers
+    });
+});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers(); // Add this line to register controllers
+builder.Services.AddControllers().AddNewtonsoftJson();
+// Add this line to register controllers
+
 
 // Register MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);
@@ -41,6 +55,9 @@ var assetPathRequest = builder.Configuration["StorageConfig:AssetPathRequest"];
 
 var app = builder.Build();
 
+
+//* use cors policy
+app.UseCors("AllowNextJsApp");
 
 app.UseStaticFiles(new StaticFileOptions
 {

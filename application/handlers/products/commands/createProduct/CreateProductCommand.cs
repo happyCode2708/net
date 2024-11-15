@@ -5,14 +5,13 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Options;
-using MyApi.application.common.interfaces;
-using MyApi.core.controllers;
-using MyApi.data;
-using MyApi.Models;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Domain.Models;
+using MyApi.Core.Controllers;
 
-namespace MyApi.application.handlers.products.commands.createProduct
+
+namespace MyApi.Application.Handlers.Products.Commands.CreateProduct
 {
-
 
     public class CreateProductCommand : IRequest<ResponseModel<CreateProductResponse>>
     {

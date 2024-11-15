@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyApi.application.common.enums;
-using MyApi.Models;
+using MyApi.Application.Common.Enums;
+using MyApi.Domain.Models;
 
-namespace MyApi.application.common.interfaces
+namespace MyApi.Application.Common.Interfaces
 {
     public interface IGenerativeServices
     {

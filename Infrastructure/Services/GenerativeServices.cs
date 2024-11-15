@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.Win32.SafeHandles;
-using MyApi.application.common.configs;
-using MyApi.application.common.interfaces;
-using MyApi.Models;
+using MyApi.Application.Common.Configs;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Domain.Models;
 using Google.Apis.Auth.OAuth2;
 using System.Text;
-using MyApi.application.common.dict;
+using MyApi.Application.Common.Dict;
 using Microsoft.OpenApi.Any;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
 
-namespace MyApi.application.infrastructure.services
+namespace MyApi.Application.Services
 {
     public class GenerativeServices : IGenerativeServices
     {

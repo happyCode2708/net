@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Models;
+using MyApi.Domain.Models;
 
-namespace MyApi.application.common.interfaces
+namespace MyApi.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<ExtractSession> ExtractSessions { get; set; }
+
 
         /// <summary>
         /// Overwrite the SaveChanges

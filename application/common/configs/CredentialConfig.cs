@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyApi.application.common.configs
+namespace MyApi.Application.Common.Configs
 {
     public class CredentialConfig
     {

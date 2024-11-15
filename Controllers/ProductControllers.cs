@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using MyApi.application.handlers.products.queries.extractProductInfo;
-using MyApi.core.controllers;
-using MyApi.application.handlers.products.commands.createProduct;
-using MyApi.application.handlers.products.commands.createProductWithImages;
-using MyApi.application.handlers.products.commands.ExtractProductInfoFromImages;
+using MyApi.Application.Handlers.Products.Queries.ExtractProductInfo;
+using MyApi.Core.Controllers;
+using MyApi.Application.Handlers.Products.Commands.CreateProduct;
+using MyApi.Application.Handlers.Products.Commands.CreateProductWithImages;
+using MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromImages;
+using MyApi.Application.Handlers.Products.Queries.QueryProductList;
+using MyApi.Application.Handlers.Products.Commands.ExtractFactPanel;
 
 namespace MyApi.Controllers
 {
@@ -28,6 +30,21 @@ namespace MyApi.Controllers
             }
 
             var result = await QueryAsync(new GetExtractProductInfoQuery(productId));
+
+            return Ok(result);
+        }
+        [HttpGet("get-product-list")]
+        public async Task<IActionResult> GetProductList([FromQuery] string? searchText, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+
+            var query = new QueryProductListRequest
+            {
+                SearchText = searchText,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+
+            var result = await QueryAsync(new QueryProductList(query));
 
             return Ok(result);
         }
@@ -65,6 +82,14 @@ namespace MyApi.Controllers
         public async Task<IActionResult> ExtractProductInfoFromImages(ExtractProductInfoFromImagesRequest request)
         {
             var result = await CommandAsync(new ExtractProductInfoFromImagesCommand(request));
+
+            return Ok(result);
+        }
+        // api api/pim/extract-fact-panel
+        [HttpPost("extract-fact-panel")]
+        public async Task<IActionResult> ExtractFactPanel(ExtractFactPanelRequest request)
+        {
+            var result = await CommandAsync(new ExtractFactPanelCommand(request));
 
             return Ok(result);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyApi.application.common.interfaces
+namespace MyApi.Application.Common.Interfaces
 {
     public interface IPromptBuilderService
     {
