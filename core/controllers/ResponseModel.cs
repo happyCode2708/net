@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace MyApi.core.controllers
+namespace MyApi.Core.Controllers
 {
     public class ResponseModel
     {
@@ -40,12 +41,14 @@ namespace MyApi.core.controllers
 
         public static ResponseModel<T> Fail(string message = null, string exception = null, T data = default)
         {
-            return new ResponseModel<T>() {IsSuccess = false, Exception = exception, Message = message ?? exception, Data = data};
+            return new ResponseModel<T>() { IsSuccess = false, Exception = exception, Message = message ?? exception, Data = data };
         }
-        
+
         public static ResponseModel<T> Success(T data, string message = null)
         {
-            return new ResponseModel<T>(data) {IsSuccess = true, Message = message};
+            var result = new ResponseModel<T>(data) { IsSuccess = true, Message = message };
+
+            return result;
         }
     }
 }

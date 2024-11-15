@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyApi.data;
+using MyApi.Infrastructure.Persistence;
 
 #nullable disable
 
@@ -22,7 +22,50 @@ namespace MyApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MyApi.Models.Image", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtractedData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtractorVersion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RawExtractData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SourceType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId", "SourceType", "CreatedAt");
+
+                    b.ToTable("ExtractSessions");
+                });
+
+            modelBuilder.Entity("MyApi.Domain.Models.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,16 +101,13 @@ namespace MyApi.Migrations
                     b.ToTable("Image");
                 });
 
-            modelBuilder.Entity("MyApi.Models.Product", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompareResult")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -82,9 +122,6 @@ namespace MyApi.Migrations
                     b.Property<string>("Upc12")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ValidationResult")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UniqueId")
@@ -93,7 +130,7 @@ namespace MyApi.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("MyApi.Models.ProductImage", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.ProductImage", b =>
                 {
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -108,15 +145,26 @@ namespace MyApi.Migrations
                     b.ToTable("ProductImage");
                 });
 
-            modelBuilder.Entity("MyApi.Models.ProductImage", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>
                 {
-                    b.HasOne("MyApi.Models.Image", "Image")
+                    b.HasOne("MyApi.Domain.Models.Product", "ProductItem")
+                        .WithMany("ExtractSessions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductItem");
+                });
+
+            modelBuilder.Entity("MyApi.Domain.Models.ProductImage", b =>
+                {
+                    b.HasOne("MyApi.Domain.Models.Image", "Image")
                         .WithMany("ProductImages")
                         .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyApi.Models.Product", "Product")
+                    b.HasOne("MyApi.Domain.Models.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -127,13 +175,15 @@ namespace MyApi.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("MyApi.Models.Image", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.Image", b =>
                 {
                     b.Navigation("ProductImages");
                 });
 
-            modelBuilder.Entity("MyApi.Models.Product", b =>
+            modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
                 {
+                    b.Navigation("ExtractSessions");
+
                     b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618

@@ -7,16 +7,16 @@ using Azure.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.ObjectPool;
-using MyApi.application.common.enums;
-using MyApi.application.common.interfaces;
-using MyApi.core.controllers;
+using MyApi.Application.Common.Enums;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Core.Controllers;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 
 
-namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromImages
+namespace MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromImages
 {
     public class ExtractProductInfoFromImagesCommand : IRequest<ResponseModel<ExtractProductInfoFromImageResponse>>
     {
@@ -48,9 +48,6 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
 
                 var productId = requestObject.ProductId;
 
-
-                // var product = await _context.Products.Include(p => p.ProductImages!).ThenInclude(pi => pi.Image!).FirstOrDefaultAsync(p => p.Id == productId);
-
                 var product = await _context.Products
                     .Include(p => p.ProductImages!)
                     .ThenInclude(pi => pi.Image!)
@@ -67,38 +64,14 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
                     .Select(pi => pi.Image!.Path)
                     .ToList();
 
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true, // For pretty JSON output
-                                          // ReferenceHandler = ReferenceHandler.Preserve // Handle circular references
-                };
-
-                string json = JsonSerializer.Serialize(imagePathList, options);
-                Console.WriteLine(json); // Log to console or wherever you need
-
-
-
-                // // Serialize the images list to JSON
-                // var json = JsonSerializer.Serialize(imageList, new JsonSerializerOptions
-                // {
-                //     WriteIndented = true, // Pretty-print the JSON
-                //     ReferenceHandler = ReferenceHandler.Preserve
-                // });
-
-                // Console.WriteLine(json); // Log it to the console
-
-
-                // Console.WriteLine($"test : {imageList}");
-
                 var generativeOptions = new GenerativeContentOptions
                 {
                     ImagePathList = imagePathList,
                     Prompt = _promptBuilderService.MakeMarkdownNutritionPrompt("", 4),
-                    ModelId = GenerativeModelEnum.Gemini_1_5_Flash_001,
+                    ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
                 };
 
-                // try
-                // {
+
                 var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
                 var res = new ExtractProductInfoFromImageResponse
@@ -108,12 +81,7 @@ namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromIma
                 };
 
                 return ResponseModel<ExtractProductInfoFromImageResponse>.Success(res, "success");
-                // }
-                // catch (HttpRequestException ex)
-                // {
-                //     Conwole.log
-                //     throw new NotImplementedException();
-                // }
+
             }
         }
     }

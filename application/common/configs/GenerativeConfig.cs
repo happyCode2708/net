@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using MyApi.Application.Common.Dict;
+using MyApi.Application.Common.Enums;
 
-namespace MyApi.application.common.configs
+namespace MyApi.Application.Common.Configs
 {
     public class GenerativeConfig
     {
@@ -26,7 +28,7 @@ namespace MyApi.application.common.configs
             set => _projectId = value;
         }
 
-        private string _modelId = "gemini-1.5-flash-001";
+        private string _modelId = GenerativeModelDict.Map[GenerativeModelEnum.Gemini_1_5_Flash_002];
 
         public string ModelId
         {

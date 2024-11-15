@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using MyApi.core.controllers;
+using MyApi.Core.Controllers;
 
-namespace MyApi.application.handlers.products.queries.extractProductInfo
+namespace MyApi.Application.Handlers.Products.Queries.ExtractProductInfo
 {
 
     public class GetExtractProductInfoQuery : IRequest<ResponseModel<GetExtractProductInfoResponse>>

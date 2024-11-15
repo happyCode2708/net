@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyApi.core.controllers
+namespace MyApi.Core.Controllers
 {
     /// <summary>
     /// the base class for all APIs, apply mediator pattern
@@ -41,10 +41,10 @@ namespace MyApi.core.controllers
         /// <returns></returns>
         protected async Task<TResult> QueryAsync<TResult>(IRequest<TResult> query)
         {
-            if (_mediator == null)
-            {
-                throw new InvalidOperationException("Mediator is not initialized.");
-            }
+            // if (_mediator == null)
+            // {
+            //     throw new InvalidOperationException("Mediator is not initialized.");
+            // }
 
             return await Mediator.Send(query);
         }

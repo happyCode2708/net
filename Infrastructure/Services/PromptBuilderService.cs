@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyApi.application.common.interfaces;
+using MyApi.Application.Common.Interfaces;
 
-namespace MyApi.application.common.interfaces
+namespace MyApi.Application.Services
 {
     public class PromptBuilderService : IPromptBuilderService
     {

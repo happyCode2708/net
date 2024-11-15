@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using MyApi.application.common.interfaces;
-using MyApi.application.handlers.products.commands.createProduct;
-using MyApi.Controllers;
-using MyApi.core.controllers;
-using MyApi.Models;
+using MyApi.Application.Common.Interfaces;
+using MyApi.Application.Handlers.Products.Commands.CreateProduct;
+using MyApi.Core.Controllers;
+using MyApi.Domain.Models;
 
-namespace MyApi.application.handlers.products.commands.createProductWithImages
+namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
 {
     public class CreateProductWithImageCommand : IRequest<ResponseModel<CreateProductWithImagesResponse>>
     {

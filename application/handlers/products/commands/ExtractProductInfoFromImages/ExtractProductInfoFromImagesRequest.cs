@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyApi.application.handlers.products.commands.ExtractProductInfoFromImages
+namespace MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromImages
 {
     public class ExtractProductInfoFromImagesRequest
     {
