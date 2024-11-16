@@ -46,6 +46,8 @@ namespace MyApi.Controllers
                 PageSize = pageSize,
             };
 
+            Console.WriteLine(pageSize);
+
             var result = await QueryAsync(new QueryProductList(query));
 
             return Ok(result);
@@ -105,15 +107,15 @@ namespace MyApi.Controllers
             var result = await CommandAsync(new ExtractProductSecondAttributeCommand(request));
 
             return Ok(result);
-        }   
+        }
 
-              // api api/pim/extract-product-second-attribute
+        // api api/pim/extract-product-second-attribute
         [HttpPost("validate-and-parse-raw-extracted-info")]
         public async Task<IActionResult> ValidateAndParsedRawExtractedInfo(ValidateAndParseRawExtractedInfoRequest request)
-        { 
+        {
             var result = await CommandAsync(new ValidateAndParseRawExtractedInfoCommand(request));
 
             return Ok(result);
-        }  
+        }
     }
 }

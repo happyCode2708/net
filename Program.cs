@@ -6,6 +6,7 @@ using MyApi.Application.Common.Configs;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Services;
 using MyApi.Infrastructure.Persistence;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,9 +50,15 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.Configure<StorageConfig>(builder.Configuration.GetSection("StorageConfig"));
 builder.Services.Configure<CredentialConfig>(builder.Configuration.GetSection("Credentials"));
 
+//* add auto mapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
 //* static config
 var assetPath = builder.Configuration["StorageConfig:AssetPath"];
 var assetPathRequest = builder.Configuration["StorageConfig:AssetPathRequest"];
+
+//* Register AutoMapper
 
 var app = builder.Build();
 

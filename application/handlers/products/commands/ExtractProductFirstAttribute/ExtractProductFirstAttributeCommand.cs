@@ -93,7 +93,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                     var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParser.ParseMarkdownResponse(result.ConcatResult) : null;
 
                     // Update extract session with results
-                    extractSession.RawExtractData = result.RawResult;
+                    extractSession.RawExtractData = result.ConcatResult;
                     extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;

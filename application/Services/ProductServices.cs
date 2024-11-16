@@ -6,16 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Dto;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Domain.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace MyApi.Application.Services
 {
     public class ProductServices : IProductServices
     {
         private readonly IApplicationDbContext _context;
-
-        public ProductServices(IApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public ProductServices(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public Task AddImageToProduct(int productId, List<string> imageIds, CancellationToken cancellationToken = default)
@@ -23,13 +26,13 @@ namespace MyApi.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<GetProductListReturn> GetProductList(GetProductListProps getProductListProps)
+        public async Task<GetProductGridItemReturn> GetProductGrid(GetProductGridProps getProductGridProps)
         {
 
             var query = _context.Products.AsQueryable();
 
-            var productFilter = getProductListProps.Filter;
-            var productOptions = getProductListProps.Options;
+            var productFilter = getProductGridProps.Filter;
+            var productOptions = getProductGridProps.Options;
 
             var searchText = productFilter.SearchText;
             var pageSize = productFilter.PageSize;
@@ -58,24 +61,30 @@ namespace MyApi.Application.Services
             }
 
 
-            var productList = await query.Select(p => new ProductWithImageAndExtraction
-            {
-                Id = p.Id,
-                UniqueId = p.UniqueId,
-                IxoneID = p.IxoneID,
-                Upc12 = p.Upc12,
-                CreatedAt = p.CreatedAt,
-                ProductImages = includeImages ? p.ProductImages.Select(pi => new ProductImageDto
-                {
-                    ImageId = pi.Image.Id,
-                    Url = pi.Image.Url,
-                }).ToList() : new List<ProductImageDto>(),
+            // var productGridList = await query.Select(p => new ProductGridItem
+            // {
+            //     Id = p.Id,
+            //     UniqueId = p.UniqueId,
+            //     IxoneID = p.IxoneID,
+            //     Upc12 = p.Upc12,
+            //     CreatedAt = p.CreatedAt,
+            //     ProductImages = includeImages ? p.ProductImages.Select(pi => new ProductImageDto
+            //     {
+            //         ImageId = pi.Image.Id,
+            //         Url = pi.Image.Url,
+            //     }).ToList() : new List<ProductImageDto>(),
 
-            }).ToListAsync();
+            // }).ToListAsync();
 
-            var result = new GetProductListReturn
+            // var productGridList = await query.ProjectTo<ProductGridItem>(_mapper.ConfigurationProvider).ToListAsync();
+
+            var productGridList = await query.Select(p => _mapper.Map<ProductGridItem>(p)).ToListAsync();
+
+            // var product = _mapper.Map<Product>(request.Dto);
+
+            var result = new GetProductGridItemReturn
             {
-                ProductList = productList,
+                ProductGridData = productGridList,
                 TotalCount = totalCount,
             };
 

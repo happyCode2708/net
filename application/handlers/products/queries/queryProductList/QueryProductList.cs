@@ -10,6 +10,9 @@ using MyApi.Core.Controllers;
 using static MyApi.Application.Common.Dto.GridDto;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Dto;
+using MyApi.Application.Common.Utils;
+using AutoMapper;
+using MyApi.Domain.Models;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
@@ -25,80 +28,87 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
         {
             private readonly IProductServices _productServices;
             private readonly IApplicationDbContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(IProductServices productServices, IApplicationDbContext context)
+            public Handler(IProductServices productServices, IApplicationDbContext context, IMapper mapper)
             {
                 _productServices = productServices;
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<ResponseModel<QueryProductListResponse>> Handle(QueryProductList queryProductList, CancellationToken cancellationToken)
             {
                 var request = queryProductList.Request;
 
-                var getProductListProps = new GetProductListProps
+                var getProductGridProps = new GetProductGridProps
                 {
-                    Filter = new GetProductListFiler
+                    Filter = new GetProductGridFiler
                     {
                         SearchText = request.SearchText,
                         PageNumber = request.PageNumber,
                         PageSize = request.PageSize
                     },
-                    Options = new GetProductListOptions
+                    Options = new GetProductGridOptions
                     {
                         IncludeImages = true
                     },
                 };
 
-                var searchProductListResult = await _productServices.GetProductList(getProductListProps);
+                var searchProductGridResult = await _productServices.GetProductGrid(getProductGridProps);
 
                 // Get latest extraction results for products grouped by sourceType
-                var productIds = searchProductListResult.ProductList.Select(p => p.Id).ToList();
-                var latestExtractionsOfAllProducts= await _context.ExtractSessions
+                var productIds = searchProductGridResult.ProductGridData.Select(p => p.Id).ToList();
+
+                var latestExtractionsOfProductList = await _context.ExtractSessions
                     .Where(e => productIds.Contains(e.ProductId))
                     .GroupBy(g => new { g.ProductId, g.SourceType })
-                    .Select(g => g.OrderByDescending(e => e.CreatedAt).First())
+                    .Select(g => g.OrderByDescending(e => e.CompletedAt).First())
                     .ToListAsync(cancellationToken);
 
-                // Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(latestExtractionsOfAllProducts));
-                
+                AppConsole.WriteLineObject("Lastes Extractions Debug:", latestExtractionsOfProductList);
 
-                // Combine product and extraction data
-                var productsWithExtractions = searchProductListResult.ProductList.Select(product => {
-                    // var extractions = latestExtractionsOfAllProducts.Where(e => e.ProductId == product.Id);
-                    
-                    var productExtractionData = new ProductExtractionData();
-                    
-                    // foreach(var extraction in latestExtractionsOfAllProducts) {
-                    //     if(extraction.ProductId == product.Id) {
-                    //     }
-                    // }
+                var productsWithExtractions = _mapper.Map<List<ProductGridItemWithExtractionResult>>(searchProductGridResult.ProductGridData);
 
-                    // var mainExtraction = productExtractionData.FirstOrDefault(); // Get first extraction for main status
-                    // if (mainExtraction != null)
-                    // {
-                    //     product.ExtractionData = mainExtraction.ExtractedData;
-                    //     product.ExtractionStatus = mainExtraction.Status;
-                    // }
-                    return product;
-                }).ToList();
+                productsWithExtractions.ForEach(p =>
+                {
+                    var latestExtractionsOfProductItems = latestExtractionsOfProductList.Where(e => e.ProductId == p.Id).ToList();
+
+                    var nutritionInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.NutritionFact).FirstOrDefault();
+                    var firstAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductFirstAttribute).FirstOrDefault();
+
+
+                    p.ExtractionData = new ProductExtractionData
+                    {
+                        NutritionInfoData = new NutritionInfo
+                        {
+                            Data = !String.IsNullOrEmpty(nutritionInfo?.ExtractedData) ? Json.Deserialize<NutritionFactData>(nutritionInfo.ExtractedData) : null,
+                            ExtractionStatus = nutritionInfo?.Status,
+                        },
+                        FirstAttributeInfoData = new FirstAttributeInfo
+                        {
+                            Data = !String.IsNullOrEmpty(firstAttributeInfo?.ExtractedData) ? Json.Deserialize<NutritionFactData>(firstAttributeInfo.ExtractedData) : null,
+                            ExtractionStatus = firstAttributeInfo?.Status,
+                        }
+                    };
+                });
+
 
                 var response = new QueryProductListResponse
                 {
-                    ProductList = productsWithExtractions,
+                    ProductList = productsWithExtractions
                 };
 
                 if (request.PageNumber.HasValue && request.PageSize.HasValue)
                 {
                     response.Pagination = new PaginationInfo
                     {
-                        Count = searchProductListResult.TotalCount,
+                        Count = searchProductGridResult.TotalCount,
                         PageNumber = request.PageNumber.Value,
                         PageSize = request.PageSize.Value
                     };
                 };
 
-                // Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(productsWithExtractions));
 
                 return ResponseModel<QueryProductListResponse>.Success(response, "Successfully queried product list with extraction data");
             }

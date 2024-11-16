@@ -6,34 +6,22 @@ using System.Threading.Tasks;
 using MyApi.Application.Common.Dto;
 using MyApi.Domain.Models;
 using static MyApi.Application.Common.Dto.GridDto;
-using MyApi.Application.Common.Dto;
 using MyApi.Application.Common.Utils;
-
+using MyApi.Application.Common.Interfaces;
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
     public class QueryProductListResponse
     {
         [JsonIgnore]
-        public List<ProductWithImageAndExtraction> ProductList;
+        public List<ProductGridItemWithExtractionResult> ProductList;
 
         public PaginationInfo Pagination;
     }
 
-    public class ProductWithImage
+    public class ProductGridItemWithExtractionResult : ProductGridItem
     {
-        public int Id { get; set; }
-        public string UniqueId { get; set; } = Guid.NewGuid().ToString();
-        public string? IxoneID { get; set; }
-        public string? Upc12 { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public string? ValidationResult { get; set; }
-        public ICollection<ProductImageDto>? ProductImages { get; set; } // Navigation property for the join table                                  // public List<ExtractSession> ExtractSessions { get; set; }
-        public string? CompareResult { get; set; }
+        public ProductExtractionData? ExtractionData { get; set; }
     }
-
-
-    public class ProductWithImageAndExtraction : ProductExtractionData;
-
 
     public class BaseExtractSession
     {
@@ -42,12 +30,12 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 
     public class NutritionInfo : BaseExtractSession
     {
-        public NutritionFactData? data { get; set; }
+        public NutritionFactData? Data { get; set; }
     }
 
     public class FirstAttributeInfo : BaseExtractSession
     {
-        public NutritionFactData? data { get; set; }
+        public NutritionFactData? Data { get; set; }
     }
     public class ProductExtractionData
     {
