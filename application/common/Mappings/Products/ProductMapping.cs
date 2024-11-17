@@ -15,18 +15,19 @@ namespace MyApi.Application.Common.Mappings.Products
         public ProductGridItemMappingImage()
         {
 
-            //* Map ProductImage -> ProductImageDto [1]
+            //* [1] Map ProductImage -> ProductImageDto
             CreateMap<ProductImage, ProductImageDto>()
                 .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.Image.Id))
                 .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Image.Url));
 
-            //* Map Product -> ProductGridItem [2] (include [1])
+            //* [2] (SubMap [1]) Map Product -> ProductGridItem 
             CreateMap<Product, ProductGridItem>();
 
-            //* Map ProductGridItem -> ProductGridItemWithExtractionResult [3]
+            //* [3] Map ProductGridItem -> ProductGridItemWithExtractionResult
             CreateMap<ProductGridItem, ProductGridItemWithExtractionResult>();
 
             //? product => productGridItem => productGridItemWithExtractionResult
+
         }
     }
 }
