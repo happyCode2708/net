@@ -9,6 +9,7 @@ using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
 using MyApi.Application.Common.Utils;
 using MyApi.Domain.Models;
+using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
@@ -79,10 +80,12 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                 try
                 {
                     // Setup AI analysis options
+                    var prompt = _promptBuilderServices.MakeFirstAttributePrompt(null);
+
                     var generativeOptions = new GenerativeContentOptions
                     {
                         ImagePathList = imagePathList,
-                        Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
+                        Prompt = prompt,
                         ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                     };
 
@@ -90,11 +93,11 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                     var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
                     // Parse nutrition facts from markdown response
-                    var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParser.ParseMarkdownResponse(result.ConcatResult) : null;
+                    var parsedFirstAttribute = !String.IsNullOrEmpty(result.ConcatResult) ? FirstAttributeParserUtilsParser.ParseResult(result.ConcatResult) : null;
 
                     // Update extract session with results
                     extractSession.RawExtractData = result.ConcatResult;
-                    extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
+                    extractSession.ExtractedData = AppJson.Serialize(parsedFirstAttribute);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
 
@@ -104,7 +107,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                     {
                         FullResult = result.RawResult,
                         ConcatText = result.ConcatResult,
-                        ParsedResult = null
+                        ParsedResult = parsedFirstAttribute,
                     };
 
                     return ResponseModel<ExtractProductFirstAttributeResponse>.Success(response);

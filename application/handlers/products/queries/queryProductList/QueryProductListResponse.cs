@@ -8,6 +8,7 @@ using MyApi.Domain.Models;
 using static MyApi.Application.Common.Dto.GridDto;
 using MyApi.Application.Common.Utils;
 using MyApi.Application.Common.Interfaces;
+using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
     public class QueryProductListResponse
@@ -23,23 +24,23 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
         public ProductExtractionData? ExtractionData { get; set; }
     }
 
-    public class BaseExtractSession
+    public class ExtendExtractSession
     {
         public ExtractStatus? ExtractionStatus { get; set; }
     }
 
-    public class NutritionInfo : BaseExtractSession
+    public class NutritionExtractResult : ExtendExtractSession
     {
         public NutritionFactData? Data { get; set; }
     }
 
-    public class FirstAttributeInfo : BaseExtractSession
+    public class FirstAttributeExtractResult : ExtendExtractSession
     {
-        public NutritionFactData? Data { get; set; }
+        public FirstProductAttributeInfo? Data { get; set; }
     }
     public class ProductExtractionData
     {
-        public NutritionInfo? NutritionInfoData { get; set; }
-        public FirstAttributeInfo? FirstAttributeInfoData { get; set; }
+        public NutritionExtractResult? NutritionInfo { get; set; }
+        public FirstAttributeExtractResult? FirstAttributeInfo { get; set; }
     }
 }

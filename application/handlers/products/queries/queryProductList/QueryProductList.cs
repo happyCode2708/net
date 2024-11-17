@@ -13,6 +13,7 @@ using MyApi.Application.Common.Dto;
 using MyApi.Application.Common.Utils;
 using AutoMapper;
 using MyApi.Domain.Models;
+using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
@@ -66,8 +67,6 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                     .Select(g => g.OrderByDescending(e => e.CompletedAt).First())
                     .ToListAsync(cancellationToken);
 
-                AppConsole.WriteLineObject("Lastes Extractions Debug:", latestExtractionsOfProductList);
-
                 var productsWithExtractions = _mapper.Map<List<ProductGridItemWithExtractionResult>>(searchProductGridResult.ProductGridData);
 
                 productsWithExtractions.ForEach(p =>
@@ -80,14 +79,14 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 
                     p.ExtractionData = new ProductExtractionData
                     {
-                        NutritionInfoData = new NutritionInfo
+                        NutritionInfo = new NutritionExtractResult
                         {
-                            Data = !String.IsNullOrEmpty(nutritionInfo?.ExtractedData) ? Json.Deserialize<NutritionFactData>(nutritionInfo.ExtractedData) : null,
+                            Data = !String.IsNullOrEmpty(nutritionInfo?.ExtractedData) ? AppJson.Deserialize<NutritionFactData>(nutritionInfo.ExtractedData) : null,
                             ExtractionStatus = nutritionInfo?.Status,
                         },
-                        FirstAttributeInfoData = new FirstAttributeInfo
+                        FirstAttributeInfo = new FirstAttributeExtractResult
                         {
-                            Data = !String.IsNullOrEmpty(firstAttributeInfo?.ExtractedData) ? Json.Deserialize<NutritionFactData>(firstAttributeInfo.ExtractedData) : null,
+                            Data = !String.IsNullOrEmpty(firstAttributeInfo?.ExtractedData) ? AppJson.Deserialize<FirstProductAttributeInfo>(firstAttributeInfo.ExtractedData) : null,
                             ExtractionStatus = firstAttributeInfo?.Status,
                         }
                     };

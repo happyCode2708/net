@@ -90,7 +90,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
                     // Parse nutrition facts from markdown response
-                    var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParser.ParseMarkdownResponse(result.ConcatResult) : null;
+                    var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
 
                     // Update extract session with results
                     extractSession.RawExtractData = result.ConcatResult;

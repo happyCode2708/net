@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Any;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
+using MyApi.Application.Common.Utils;
 
 namespace MyApi.Application.Services
 {
@@ -146,6 +147,7 @@ namespace MyApi.Application.Services
                     var generateResult = new GenerateContentResult
                     {
                         RawResult = result,
+                        JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
                         ConcatResult = concatResult,
                     };
 

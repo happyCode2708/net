@@ -32,7 +32,7 @@ namespace MyApi.Application.Common.Utils
         public List<string> Footnotes { get; set; }
     }
 
-    public class NutritionFactParser
+    public class NutritionFactParserUtils
     {
         public static NutritionFactData ParseMarkdownResponse(string markdownResponse)
         {
@@ -62,9 +62,9 @@ namespace MyApi.Application.Common.Utils
                     foreach (var line in lines)
                     {
                         if (string.IsNullOrWhiteSpace(line) || !line.Contains("|")) continue;
-                        
+
                         if (line.Contains("Nutrient Name") || line.Contains("nutrient name descriptor")) continue;
-                        
+
                         var parts = line.Split('|')
                             .Select(p => p.Trim())
                             .ToArray();
@@ -88,7 +88,7 @@ namespace MyApi.Application.Common.Utils
                 {
                     var headerLine = section.Split('\n')
                         .FirstOrDefault(l => l.Contains("About"));
-                    
+
                     if (headerLine != null)
                     {
                         var parts = headerLine.Split('|')
@@ -114,7 +114,7 @@ namespace MyApi.Application.Common.Utils
                     var lines = section.Split('\n');
                     foreach (var line in lines)
                     {
-                        if (!line.Contains("|") || line.Contains("---") || 
+                        if (!line.Contains("|") || line.Contains("---") ||
                             line.Contains("footnote content")) continue;
 
                         var footnote = line.Split('|')[1].Trim();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Application.Common.Enums;
 using MyApi.Domain.Models;
+using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Common.Interfaces
 {
@@ -26,6 +27,7 @@ namespace MyApi.Application.Common.Interfaces
     public class GenerateContentResult
     {
         public string? ConcatResult { get; set; }
+        public JArray? JsonParsedRawResult { get; set; }
         public string? RawResult { get; set; }
     }
 }
