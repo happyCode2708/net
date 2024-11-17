@@ -12,8 +12,8 @@ using MyApi.Infrastructure.Persistence;
 namespace MyApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117144811_addValidatedExtractResult")]
-    partial class addValidatedExtractResult
+    [Migration("20241117193838_AddValidatedExtractResult")]
+    partial class AddValidatedExtractResult
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
