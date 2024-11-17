@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace MyApi.Application.Common.Utils.FirstAttributeParserUtils
+namespace MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils
 {
 
     public class FirstProductAttributeInfo

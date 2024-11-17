@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Application.Common.Utils;
 using Newtonsoft.Json.Linq;
-using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {

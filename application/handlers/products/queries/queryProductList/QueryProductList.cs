@@ -10,10 +10,11 @@ using MyApi.Core.Controllers;
 using static MyApi.Application.Common.Dto.GridDto;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Dto;
-using MyApi.Application.Common.Utils;
 using AutoMapper;
 using MyApi.Domain.Models;
-using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {

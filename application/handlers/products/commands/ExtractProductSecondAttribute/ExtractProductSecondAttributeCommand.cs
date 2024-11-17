@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
-using MyApi.Application.Common.Utils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 using MyApi.Domain.Models;
 
 

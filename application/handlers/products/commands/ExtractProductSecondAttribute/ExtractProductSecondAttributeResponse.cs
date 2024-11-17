@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyApi.Application.Common.Utils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {

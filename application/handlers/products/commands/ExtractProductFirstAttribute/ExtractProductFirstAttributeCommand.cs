@@ -9,7 +9,7 @@ using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
 using MyApi.Application.Common.Utils;
 using MyApi.Domain.Models;
-using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute

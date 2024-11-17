@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
-using MyApi.Application.Common.Utils;
 using MyApi.Domain.Models;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel

@@ -1,9 +1,8 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MyApi.Application.Common.Utils.FirstAttributeParserUtils;
 
-namespace MyApi.Application.Common.Utils.FirstAttributeParserUtils
+namespace MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils
 {
     public class FirstAttributeParserUtilsParser
     {
