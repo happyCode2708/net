@@ -25,6 +25,8 @@ namespace MyApi.Application.Common.Mappings.Products
 
             //* Map ProductGridItem -> ProductGridItemWithExtractionResult [3]
             CreateMap<ProductGridItem, ProductGridItemWithExtractionResult>();
+
+            //? product => productGridItem => productGridItemWithExtractionResult
         }
     }
 }
