@@ -8,5 +8,6 @@ namespace MyApi.Application.Common.Configs
     public class CredentialConfig
     {
         public string google { get; set; }
+        public string googleApiKey { get; set; }
     }
 }

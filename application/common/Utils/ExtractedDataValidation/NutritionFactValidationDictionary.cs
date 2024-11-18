@@ -1,8 +1,8 @@
 namespace MyApi.Application.Common.Utils.ExtractedDataValidation
 {
-    public class NutritionFactValidationDictionary
+    public static class NutritionFactValidationDictionary
     {
-        public Dictionary<string, string> NutrientNameDictionary = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> NutrientNameDictionary = new()
         {
             {"vit. a", "VITAMIN A"},
             { "vit a", "VITAMIN A"},
@@ -78,7 +78,7 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
             { "sugars", "TOTAL SUGARS"},
         };
 
-        public Dictionary<string, string> NutrientAmountDictionary = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> NutrientUomDictionary = new()
         {
             { "g", "GRAM" },
             { "mg", "MILLIGRAM" },

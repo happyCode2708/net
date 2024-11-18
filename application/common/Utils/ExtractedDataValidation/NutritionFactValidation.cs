@@ -1,5 +1,6 @@
 using AutoMapper;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using System.Text.RegularExpressions;
 
 namespace MyApi.Application.Common.Utils.ExtractedDataValidation
 {
@@ -18,7 +19,6 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
             
             var validatedNutritionFactData = _mapper.Map<ValidateNutritionFactData>(nutritionFactData);
             
-
             validatedNutritionFactData.ValidatedNutrients = validateNutrientDescriptor(validatedNutritionFactData.ValidatedNutrients);
             validatedNutritionFactData.ValidatedNutrients = validateNutrientName(validatedNutritionFactData.ValidatedNutrients);
             validatedNutritionFactData.ValidatedNutrients = validateAmount(validatedNutritionFactData.ValidatedNutrients);
@@ -34,7 +34,7 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
         }
 
         private static List<ValidatedNutrient> validateNutrientName(List<ValidatedNutrient> validatedNutrients) {
-            var nutrientNameDictionary = new NutritionFactValidationDictionary().NutrientNameDictionary;
+            var nutrientNameDictionary = NutritionFactValidationDictionary.NutrientNameDictionary;
             
             foreach (var nutrient in validatedNutrients) {
                 var nutrientName = nutrient.NutrientName;
@@ -50,18 +50,38 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
 
         
         private static List<ValidatedNutrient> validateAmount(List<ValidatedNutrient> validatedNutrients) {
+ 
+            var uomMap = NutritionFactValidationDictionary.NutrientUomDictionary;
 
-            var nutrientAmountDictionary = new NutritionFactValidationDictionary().NutrientAmountDictionary;
-            
             foreach (var nutrient in validatedNutrients) {
-                var nutrientName = nutrient.NutrientName;
-               
+                var amountPerServing = nutrient.AmountPerServing?.Amount?.Trim();
+
+                if (string.IsNullOrEmpty(amountPerServing)) continue;
+
+                if (amountPerServing.Contains("%")) {
+                    nutrient.DailyValue = amountPerServing;
+
+                    if(nutrient.AmountPerServing?.Amount != null) {
+                        nutrient.AmountPerServing.Amount = null;
+                    }
+                    continue;
+                }
+
+                var specialCaseMatch = Regex.Match(amountPerServing, @"(less than|<)?\s*(\d+(\.\d+)?)([a-zA-Z]+)", RegexOptions.IgnoreCase);
+                if (specialCaseMatch.Success) {
+                    var prefix = !string.IsNullOrEmpty(specialCaseMatch.Groups[1].Value) 
+                        ? specialCaseMatch.Groups[1].Value.Trim() + " " 
+                        : "";
+                    var numericPart = specialCaseMatch.Groups[2].Value;
+                    var uom = specialCaseMatch.Groups[4].Value.ToLower();
+
+                    if (uomMap.ContainsKey(uom) && nutrient.AmountPerServing != null) {
+                        nutrient.AmountPerServing.Amount = prefix + numericPart;
+                        nutrient.AmountPerServing.AnalyticalValue = float.Parse(numericPart).ToString();
+                        nutrient.AmountPerServing.Uom = uomMap[uom];
+                    }
+                }
             }
-
-
-            // var pattern = $"{startMarker}\\n(.*?)\\n{endMarker}";
-            // var match = Regex.Match(input, pattern, RegexOptions.Singleline);
-            // return match.Success ? match.Groups[1].Value.Trim() : string.Empty;
 
             return validatedNutrients;
         }

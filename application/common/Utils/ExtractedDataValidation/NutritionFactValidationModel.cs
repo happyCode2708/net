@@ -7,7 +7,7 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
     {
         public string NutrientName { get; set; }
         public string Descriptor { get; set; }
-        public AmountPerServingDto AmountPerServing { get; set; }
+        public AmountPerServingDto? AmountPerServing { get; set; }
         public string ParentheticalStatement { get; set; }
         public string DailyValue { get; set; }
         public string BlendIngredients { get; set; }

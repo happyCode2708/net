@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MyApi.Application.Common.Dict;
 using MyApi.Application.Common.Enums;
+using System.Text.Json.Serialization;
 
 namespace MyApi.Application.Common.Configs
 {
@@ -12,7 +13,7 @@ namespace MyApi.Application.Common.Configs
     {
 
         public List<object> SafetySettings { get; set; }
-        public object GenerationConfig { get; set; }
+        public GenerationConfigModel GenerationConfig { get; set; }
         private string _locationId = "us-central1";
         public string LocationId
         {
@@ -58,11 +59,12 @@ namespace MyApi.Application.Common.Configs
             Token = credential;
 
             //* generationConfig
-            GenerationConfig = new
+            GenerationConfig = new GenerationConfigModel
             {
                 maxOutputTokens = 8192,
-                temperature = 0.2,
-                topP = 0.95
+                temperature = 1,
+                topP = 0.95,
+                topK = 40,
             };
 
         }
@@ -71,5 +73,22 @@ namespace MyApi.Application.Common.Configs
         {
             _modelId = modelId;
         }
+
+        public static class ResponseMimeType
+        {
+            public const string TextPlain = "text/plain";
+        }
+
+        public class GenerationConfigModel
+        {
+            public double temperature { get; set; }
+            public int maxOutputTokens { get; set; }
+            public double topP { get; set; }
+            public int topK { get; set; }
+
+            [JsonConverter(typeof(JsonStringEnumConverter))]
+            public string? responseMimeType { get; set; }
+        }
     }
 }
+
