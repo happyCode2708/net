@@ -13,7 +13,7 @@ namespace MyApi.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<ExtractSession> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).ValueGeneratedOnAdd();
+            builder.Property(e => e.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1);
             builder.Property(e => e.CreatedAt).IsRequired();
             builder.Property(e => e.Status).IsRequired();
             builder.Property(e => e.SourceType).IsRequired();
