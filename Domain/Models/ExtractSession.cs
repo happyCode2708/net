@@ -24,17 +24,11 @@ namespace MyApi.Domain.Models
     {
         public int Id { get; set; }
         public ExtractSourceType SourceType { get; set; }
-
         public DateTime CreatedAt { get; set; }
-
         public DateTime? CompletedAt { get; set; }
-
         public ExtractStatus Status { get; set; }
-
         public string? ErrorMessage { get; set; }
-
         public int ProductId { get; set; }
-
         public Product ProductItem { get; set; }
         public string? RawExtractData { get; set; }
         public string? ExtractedData { get; set; }

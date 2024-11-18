@@ -5,33 +5,6 @@ using System.Threading.Tasks;
 
 namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils
 {
-    public class NutritionFact
-    {
-        public string NutrientName { get; set; }
-        public string Descriptor { get; set; }
-        public string AmountPerServing { get; set; }
-        public string ParentheticalStatement { get; set; }
-        public string DailyValue { get; set; }
-        public string BlendIngredients { get; set; }
-    }
-
-    public class HeaderInfo
-    {
-        public string ServingPerContainer { get; set; }
-        public string ServingSize { get; set; }
-        public string EquivalentServingSize { get; set; }
-        public string AmountPerServingName { get; set; }
-        public string Calories { get; set; }
-    }
-
-    public class NutritionFactData
-    {
-        public bool HasNutritionPanel { get; set; }
-        public HeaderInfo Header { get; set; }
-        public List<NutritionFact> Nutrients { get; set; }
-        public List<string> Footnotes { get; set; }
-    }
-
     public class NutritionFactParserUtils
     {
         public static NutritionFactData ParseMarkdownResponse(string markdownResponse)
@@ -40,7 +13,7 @@ namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParse
             var result = new NutritionFactData
             {
                 Header = new HeaderInfo(),
-                Nutrients = new List<NutritionFact>(),
+                Nutrients = new List<Nutrient>(),
                 Footnotes = new List<string>()
             };
 
@@ -71,7 +44,7 @@ namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParse
 
                         if (parts.Length >= 6 && !string.IsNullOrWhiteSpace(parts[1]))
                         {
-                            result.Nutrients.Add(new NutritionFact
+                            result.Nutrients.Add(new Nutrient
                             {
                                 NutrientName = parts[1],
                                 Descriptor = string.IsNullOrWhiteSpace(parts[2]) ? null : parts[2],

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
+using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {
@@ -12,6 +14,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
         public string? ConcatText { get; set; }
 
-        public NutritionFactData? ParsedResult { get; set; }
+        public SecondAttributeProductInfo? ParsedResult { get; set; }
+        //! DEV
+        public JArray? ParsedFullResult { get; set; }
     }
 }

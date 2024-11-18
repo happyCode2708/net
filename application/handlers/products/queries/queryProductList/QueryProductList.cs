@@ -14,6 +14,7 @@ using AutoMapper;
 using MyApi.Domain.Models;
 using MyApi.Application.Common.Utils;
 using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
@@ -74,9 +75,9 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                 {
                     var latestExtractionsOfProductItems = latestExtractionsOfProductList.Where(e => e.ProductId == p.Id).ToList();
 
-                    var nutritionInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.NutritionFact).FirstOrDefault();
-                    var firstAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductFirstAttribute).FirstOrDefault();
-
+                    var nutritionInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.NutritionFact && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
+                    var firstAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductFirstAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
+                    var SecondAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductSecondAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
 
                     p.ExtractionData = new ProductExtractionData
                     {
@@ -89,7 +90,12 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                         {
                             Data = !String.IsNullOrEmpty(firstAttributeInfo?.ExtractedData) ? AppJson.Deserialize<FirstProductAttributeInfo>(firstAttributeInfo.ExtractedData) : null,
                             ExtractionStatus = firstAttributeInfo?.Status,
-                        }
+                        },
+                        SecondAttributeInfo = new SecondAttributeExtractResult
+                        {
+                            Data = !String.IsNullOrEmpty(SecondAttributeInfo?.ExtractedData) ? AppJson.Deserialize<SecondAttributeProductInfo>(SecondAttributeInfo.ExtractedData) : null,
+                            ExtractionStatus = firstAttributeInfo?.Status,
+                        },                    
                     };
                 });
 

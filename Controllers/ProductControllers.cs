@@ -101,13 +101,13 @@ namespace MyApi.Controllers
             return Ok(result);
         }
         // api api/pim/extract-product-second-attribute
-        // [HttpPost("extract-product-second-attribute")]
-        // public async Task<IActionResult> ExtractProductSecondAttribute(ExtractProductSecondAttributeRequest request)
-        // {
-        //     var result = await CommandAsync(new ExtractProductSecondAttributeCommand(request));
+        [HttpPost("extract-product-second-attribute")]
+        public async Task<IActionResult> ExtractProductSecondAttribute(ExtractProductSecondAttributeRequest request)
+        {
+            var result = await CommandAsync(new ExtractProductSecondAttributeCommand(request));
 
-        //     return Ok(result);
-        // }
+            return Ok(result);
+        }
 
         // api api/pim/extract-product-second-attribute
         [HttpPost("validate-and-parse-raw-extracted-info")]

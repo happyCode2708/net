@@ -8,6 +8,7 @@ using MyApi.Domain.Models;
 using static MyApi.Application.Common.Dto.GridDto;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
+using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
@@ -39,9 +40,17 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
     {
         public FirstProductAttributeInfo? Data { get; set; }
     }
+
+
+    public class SecondAttributeExtractResult : ExtendExtractSession
+    {
+        public SecondAttributeProductInfo? Data { get; set; }
+    }
+
     public class ProductExtractionData
     {
         public NutritionExtractResult? NutritionInfo { get; set; }
         public FirstAttributeExtractResult? FirstAttributeInfo { get; set; }
+        public SecondAttributeExtractResult? SecondAttributeInfo { get; set; }
     }
 }

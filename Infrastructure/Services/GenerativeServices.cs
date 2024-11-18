@@ -133,41 +133,53 @@ namespace MyApi.Application.Services
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var response = await httpClient.PostAsJsonAsync(defaultGenerativeConfig.Url, requestBody);
+            // var response = await httpClient.PostAsJsonAsync(defaultGenerativeConfig.Url, requestBody);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                if (!String.IsNullOrEmpty(result))
-                {
-                    JArray resultInArray = JArray.Parse(result);
+            //! MOCK
+            // var response = new{
+            //     IsSuccessStatusCode = true,
+            //     Content = new StringContent(""),
+            // };
+            return new GenerateContentResult() {
+                RawResult = "mock",
+                // JsonParsedRawResult =  new List<object>{new { test = true }},
+                ConcatResult = "mock",
+            };
 
-                    var concatResult = String.Join("", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
 
-                    var generateResult = new GenerateContentResult
-                    {
-                        RawResult = result,
-                        JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
-                        ConcatResult = concatResult,
-                    };
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     var result = await response.Content.ReadAsStringAsync();
+            //     if (!String.IsNullOrEmpty(result))
+            //     {
+            //         JArray resultInArray = JArray.Parse(result);
 
-                    return generateResult;
-                }
-                else
-                {
+            //         var concatResult = String.Join("", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
 
-                    return new GenerateContentResult
-                    {
-                        RawResult = null,
-                        ConcatResult = null,
-                    };
-                }
-            }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException($"Error occurred while calling Google AI API: {response.StatusCode}, Content: {errorContent}");
-            }
+            //         var generateResult = new GenerateContentResult
+            //         {
+            //             RawResult = result,
+            //             JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
+            //             ConcatResult = concatResult,
+            //         };
+
+            //         return generateResult;
+            //     }
+            //     else
+            //     {
+
+            //         return new GenerateContentResult
+            //         {
+            //             RawResult = null,
+            //             ConcatResult = null,
+            //         };
+            //     }
+            // }
+            // else
+            // {
+            //     var errorContent = await response.Content.ReadAsStringAsync();
+            //     throw new HttpRequestException($"Error occurred while calling Google AI API: {response.StatusCode}, Content: {errorContent}");
+            // }
         }
 
         public Task<string> RetrieveImagesInfo(List<Image> images)
