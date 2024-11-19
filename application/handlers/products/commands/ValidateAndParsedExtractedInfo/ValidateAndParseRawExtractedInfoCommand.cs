@@ -4,6 +4,9 @@ using MyApi.Core.Controllers;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Utils;
 using MyApi.Domain.Models;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using AutoMapper;
+using MyApi.Application.Common.Utils.ExtractedDataValidation;
 
 namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo
 {
@@ -21,50 +24,63 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
 
             private IApplicationDbContext _context;
 
-            public Handler(IApplicationDbContext context)
+            private readonly IMapper _mapper;
+
+            public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<ResponseModel<ValidateAndParseRawExtractedInfoResponse>> Handle(ValidateAndParseRawExtractedInfoCommand request, CancellationToken cancellationToken)
             {
                 var requestObject = request.Request;
 
-
-                var latestExtractionOfProduct = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == requestObject.SourceType).OrderByDescending(e => e.CompletedAt).FirstAsync();
-
-                var newParsedResult = new NewParsedResult();
-
-                // newParsedResult.NutritionFact = requestObject.SourceType == ExtractSourceType.NutritionFact ? latestExtractionOfProduct.ExtractedData;
-
-
-                // if(!string.IsNullOrEmpty(latestExtractionOfProduct.RawExtractData) ) {
-                //     return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Could not find raw extracted data");
-                // }
-
-                
-
-                // // var newParsedResult = !string.IsNullOrEmpty(latestExtractionOfProduct.RawExtractData) ? NutritionFactParser.ParseMarkdownResponse(latestExtractionOfProduct.RawExtractData) : null;
-                
-                // if (requestObject.SourceType == ExtractSourceType.NutritionFact) {
-                //     newParsedResult.NutritionFact = NutritionFactParser.ParseMarkdownResponse(latestExtractionOfProduct.RawExtractData);
-                // };
-
-                // latestExtractionOfProduct.ExtractedData = System.Text.Json.JsonSerializer.Serialize(newParsedResult);
-
-                // await _context.SaveChangesAsync(cancellationToken);
-
-
-
-
-                var response = new ValidateAndParseRawExtractedInfoResponse
+                if (requestObject.SourceType == null)
                 {
-                    NewParsedData = null,
-                    CreatedAt = latestExtractionOfProduct.CreatedAt,
-                    SourceType = requestObject.SourceType
-                };
+                    return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Source type is required");
+                }
 
-                return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Success(response);
+
+                var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == requestObject.SourceType).OrderByDescending(e => e.CompletedAt).FirstAsync();
+
+
+                var rawExtractData = lastExtractSession.RawExtractData;
+
+                if (String.IsNullOrEmpty(rawExtractData))
+                {
+                    return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Could not find raw extracted data");
+                }
+
+
+                if (requestObject.SourceType == ExtractSourceType.NutritionFact)
+                {
+
+                    var newParsedNutritionData = NutritionFactParserUtils.ParseMarkdownResponse(rawExtractData);
+
+                    var nutritionValidator = new NutritionFactValidation(_mapper);
+
+                    var validatedNutritionData = nutritionValidator.Validate(newParsedNutritionData);
+
+                    lastExtractSession.ExtractedData = AppJson.Serialize(newParsedNutritionData);
+                    lastExtractSession.ValidatedExtractedData = AppJson.Serialize(validatedNutritionData);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    var response = new ValidateAndParseRawExtractedInfoResponse
+                    {
+                        ParsedAndValidatedResult = new ParsedAndValidatedResult
+                        {
+                            NutritionFactData = newParsedNutritionData,
+                            ValidatedNutritionFactData = validatedNutritionData
+                        },
+                        SourceType = requestObject.SourceType
+                    };
+
+                    return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Success(response);
+                }
+
+                return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Something went wrong");
             }
         }
 

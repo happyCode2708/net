@@ -94,23 +94,6 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
             return validatedNutrients;
         }
 
-
-        private static ValidatedNutrient retriveAmountPerServing(ValidatedNutrient validatedNutrient) {
-
-            var originalAmountPerServing = validatedNutrient.AmountPerServing.Amount;
-
-            if(originalAmountPerServing == null) {
-                return validatedNutrient;
-            }
-
-
-            if(originalAmountPerServing.Contains("%")) {
-                validatedNutrient.DailyValue = originalAmountPerServing;
-                validatedNutrient.AmountPerServing.Amount = null;
-            }
-
-            return validatedNutrient;
-        }
     }
 }   
 

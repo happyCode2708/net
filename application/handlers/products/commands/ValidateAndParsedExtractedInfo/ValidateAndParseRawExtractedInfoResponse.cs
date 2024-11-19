@@ -1,20 +1,18 @@
 
+using Microsoft.Identity.Client;
 using MyApi.Application.Common.Utils;
+using MyApi.Application.Common.Utils.ExtractedDataValidation;
+using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 using MyApi.Domain.Models;
 
 namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo {
     public class ValidateAndParseRawExtractedInfoResponse {
-        // public DtoExtractResult? NewParsedResult { get; set; }
-
-        public NewParsedResult? NewParsedData { get; set; }
-    
-        public DateTime? CreatedAt { get; set; }
-        public ExtractSourceType? SourceType { get; set; }
-        
+        public ParsedAndValidatedResult ParsedAndValidatedResult { get; set; }
+        public ExtractSourceType? SourceType { get; set; }        
     }
 
-    public class NewParsedResult {
-        // public FirstAttributeData? FirstAttribute { get; set;}
+    public class ParsedAndValidatedResult {
+        public NutritionFactData? NutritionFactData { get; set; }
+        public ValidateNutritionFactData? ValidatedNutritionFactData { get; set; }
     }
-
 }

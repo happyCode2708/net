@@ -10,7 +10,7 @@ using Application.Common.Interfaces;
 
 namespace MyApi.Application.Common.Configs
 {
-    public class GenerativeConfig: IGenerativeConfig
+    public class GeminiConfig: IGeminiConfig
     {
 
         public List<object> SafetySettings { get; set; }
@@ -37,16 +37,24 @@ namespace MyApi.Application.Common.Configs
             get => _modelId;
             set => _modelId = value;
         }
-
-        public string Token { get; set; }
         private readonly CredentialConfig _credentialConfig;
+
+        private string? _googleApiKey;
+
+        public string? GoogleApiKey
+        {
+            get => _googleApiKey;
+            set => _googleApiKey = value;
+        }
+
         public string EndPoint => $"{LocationId}-aiplatform.googleapis.com";
         public string Url => $"https://{EndPoint}/v1/projects/{ProjectId}/locations/{LocationId}/publishers/google/models/{ModelId}:streamGenerateContent";
+        public string UploadImageUrl => $"https://vision.googleapis.com/v1/images:annotate?key={GoogleApiKey}";
 
-        public GenerativeConfig(IOptions<CredentialConfig> credentialConfig)
+        public GeminiConfig(IOptions<CredentialConfig> credentialConfig)
         {
             _credentialConfig = credentialConfig.Value;
-            var credential = _credentialConfig.Google;
+            SetGoogleApiKey(_credentialConfig.GoogleApiKey);
 
             SafetySettings = new List<object>
                    {
@@ -55,9 +63,6 @@ namespace MyApi.Application.Common.Configs
                     new { category = "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold = "BLOCK_MEDIUM_AND_ABOVE" },
                     new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_MEDIUM_AND_ABOVE" }
                 };
-
-            Token = credential;
-
             //* generationConfig
             GenerationConfig = new GenerationConfigModel
             {
@@ -65,22 +70,20 @@ namespace MyApi.Application.Common.Configs
                 temperature = 1,
                 topP = 0.95,
                 topK = 40,
+                responseMimeType = ResponseMimeType.TextPlain
             };
 
+        }
+
+        public void SetGoogleApiKey(string googleApiKey)
+        {
+            _googleApiKey = googleApiKey;
         }
 
         public void SetModelId(string modelId)
         {
             _modelId = modelId;
-        }
-
-        public class GenerationConfigModel
-        {
-            public double temperature { get; set; }
-            public int maxOutputTokens { get; set; }
-            public double topP { get; set; }
-            public int topK { get; set; }
-        }
+        } 
     }
 }
 

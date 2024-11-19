@@ -9,6 +9,8 @@ using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
 using MyApi.Domain.Models;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Interfaces;
+using AutoMapper.Configuration.Annotations;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
@@ -24,13 +26,15 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
         public class Handler : IRequestHandler<ExtractFactPanelCommand, ResponseModel<ExtractFactPanelResponse>>
         {
             private IGenerativeServices _generativeServices;
+            private IGeminiServices _geminiServices;
             private IApplicationDbContext _context;
             private IPromptBuilderService _promptBuilderServices;
 
 
-            public Handler(IGenerativeServices generativeServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices)
+            public Handler(IGenerativeServices generativeServices, IGeminiServices geminiServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices)
             {
                 _generativeServices = generativeServices;
+                _geminiServices = geminiServices;
                 _context = context;
                 _promptBuilderServices = promptBuilderServices;
             }
@@ -39,6 +43,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
             {
                 var requestObject = request.Request;
                 var productId = requestObject.ProductId;
+                var serviceType = requestObject.ServiceType;
 
                 // Get product with images from database
                 var product = await _context.Products
@@ -78,23 +83,38 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                 try
                 {
-                    // Setup AI analysis options
-                    var generativeOptions = new GenerativeContentOptions
-                    {
-                        ImagePathList = imagePathList,
-                        Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
-                        ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
-                    };
+                    IGenerateContentResult result;
+                    
+                    if(serviceType == ServiceType.Gemini) {
+                        var generativeOptions = new GeminiGenerativeContentOptions
+                        {
+                            ImagePathList = imagePathList,
+                            Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
+                            ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
+                        };
+                        var generateResult = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
+                        result = generateResult;
+
+                    } else {
+                        var generativeOptions = new GenerativeContentOptions
+                        {
+                            ImagePathList = imagePathList,
+                            Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
+                            ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
+                        };
+                        var generateResult = await _generativeServices.GenerateContentAsync(generativeOptions);
+                        result = generateResult;
+                    }
+
 
                     // Get AI analysis results
-                    var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
                     // Parse nutrition facts from markdown response
-                    var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
+                    // var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
 
                     // Update extract session with results
                     extractSession.RawExtractData = result.ConcatResult;
-                    extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
+                    // extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
 
@@ -104,7 +124,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     {
                         FullResult = result.RawResult,
                         ConcatText = result.ConcatResult,
-                        ParsedResult = parsedNutritionData
+                        // ParsedResult = parsedNutritionData
                     };
 
                     return ResponseModel<ExtractFactPanelResponse>.Success(response);

@@ -11,11 +11,19 @@ namespace MyApi.Application.Common.Interfaces
     public interface IGenerativeServices
     {
         Task<GenerateContentResult> GenerateContentAsync(GenerativeContentOptions GenerateOptions);
-        Task<string> RetrieveImagesInfo(List<Image> images);
-        public string EncodeImageToBase64(string imagePath);
     }
 
-    public class GenerativeContentOptions
+
+    public interface IGenerativeContentOptions
+    {
+        List<string>? ImagePathList { get; set; }
+
+        string? Prompt { get; set; }
+
+        GenerativeModelEnum? ModelId { get; set; }
+    }
+
+    public class GenerativeContentOptions: IGenerativeContentOptions
     {
         public List<string>? ImagePathList { get; set; }
 
@@ -24,7 +32,14 @@ namespace MyApi.Application.Common.Interfaces
         public GenerativeModelEnum? ModelId { get; set; }
     }
 
-    public class GenerateContentResult
+    public interface IGenerateContentResult
+    {
+        string? ConcatResult { get; set; }
+        JArray? JsonParsedRawResult { get; set; }
+        string? RawResult { get; set; }
+    }
+
+    public class GenerateContentResult: IGenerateContentResult
     {
         public string? ConcatResult { get; set; }
         public JArray? JsonParsedRawResult { get; set; }

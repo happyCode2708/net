@@ -45,7 +45,7 @@ namespace MyApi.Application.Services
             {
                 GoogleCredential credential;
 
-                byte[] decodedBytes = System.Convert.FromBase64String(_credentialConfig.Value.google);
+                byte[] decodedBytes = System.Convert.FromBase64String(_credentialConfig.Value.Google);
                 string jsonContent = System.Text.Encoding.UTF8.GetString(decodedBytes);
                 using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonContent)))
                 {
@@ -86,7 +86,7 @@ namespace MyApi.Application.Services
                     inlineData = new InlineData
                     {
                         mimeType = "image/png",
-                        data = EncodeImageToBase64(imagePath)
+                        data = FileUtils.EncodeImageToBase64(imagePath)
                     }
                 }).ToList();
             }
@@ -180,135 +180,6 @@ namespace MyApi.Application.Services
             //     var errorContent = await response.Content.ReadAsStringAsync();
             //     throw new HttpRequestException($"Error occurred while calling Google AI API: {response.StatusCode}, Content: {errorContent}");
             // }
-        }
-
-        public Task<string> RetrieveImagesInfo(List<Image> images)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string EncodeImageToBase64(string imagePath)
-        {
-            byte[] imageBytes = File.ReadAllBytes(imagePath);
-            return Convert.ToBase64String(imageBytes);
-        }
-
-        public async Task<GenerateContentResult> GenerateContentWithApiKeyAsync(GenerativeContentOptions generativeOptions)
-        {
-            var defaultGenerativeConfig = new GenerativeConfig(_credentialConfig);
-            
-            if (generativeOptions.ModelId.HasValue)
-            {
-                var changeModelConfig = GenerativeModelDict.Map[generativeOptions.ModelId.Value];
-                defaultGenerativeConfig.SetModelId(changeModelConfig);
-            }
-
-            var contents = new List<object>();
-            
-            // Add image parts if present
-            if (generativeOptions.ImagePathList?.Any() == true)
-            {
-                foreach (var imagePath in generativeOptions.ImagePathList)
-                {
-                    contents.Add(new
-                    {
-                        role = "user",
-                        parts = new[]
-                        {
-                            new
-                            {
-                                fileData = new
-                                {
-                                    fileUri = await UploadImageAsync(imagePath),
-                                    mimeType = "image/jpeg" // Adjust mime type based on your needs
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Add text prompt if present
-            if (!string.IsNullOrWhiteSpace(generativeOptions.Prompt))
-            {
-                contents.Add(new
-                {
-                    role = "user",
-                    parts = new[]
-                    {
-                        new { text = generativeOptions.Prompt }
-                    }
-                });
-            }
-
-            var generationConfig = defaultGenerativeConfig.GenerationConfig;
-            generationConfig.responseMimeType = GenerativeConfig.ResponseMimeType.TextPlain;
-
-            var requestBody = new
-            {
-                contents,
-                generationConfig,
-            };
-              
-            var httpClient = _httpClientFactory.CreateClient();
-            var apiUrl = $"{defaultGenerativeConfig.Url}?key={_credentialConfig.Value.googleApiKey}";
-            
-            var response = await httpClient.PostAsJsonAsync(apiUrl, requestBody);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                if (!String.IsNullOrEmpty(result))
-                {
-                    return new GenerateContentResult
-                    {
-                        RawResult = result,
-                        JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
-                        ConcatResult = ExtractTextFromResponse(result)
-                    };
-                }
-            }
-
-            throw new HttpRequestException($"Error calling Gemini API: {response.StatusCode}");
-        }
-
-        private async Task<string> UploadImageAsync(string imagePath)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            var fileBytes = await File.ReadAllBytesAsync(imagePath);
-            var fileContent = new ByteArrayContent(fileBytes);
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg"); // Adjust based on file type
-
-            var uploadUrl = $"https://generativelanguage.googleapis.com/upload/v1beta/files?key={_credentialConfig.Value.googleApiKey}";
-            
-            using var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
-            request.Headers.Add("X-Goog-Upload-Command", "start, upload, finalize");
-            request.Headers.Add("X-Goog-Upload-Header-Content-Length", fileBytes.Length.ToString());
-            request.Headers.Add("X-Goog-Upload-Header-Content-Type", "image/jpeg");
-            
-            var metadata = new { file = new { display_name = Path.GetFileName(imagePath) } };
-            request.Content = new StringContent(JsonSerializer.Serialize(metadata), Encoding.UTF8, "application/json");
-            
-            var response = await httpClient.SendAsync(request);
-            if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Failed to upload image: {response.StatusCode}");
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            // Parse the response to get the file URI
-            var responseJson = JsonSerializer.Deserialize<JsonElement>(responseContent);
-            return responseJson.GetProperty("file").GetProperty("uri").GetString();
-        }
-
-        private string ExtractTextFromResponse(string response)
-        {
-            // Implement response parsing based on the actual response format
-            // This is a placeholder - adjust according to actual response structure
-            var responseObj = JsonSerializer.Deserialize<JsonElement>(response);
-            return responseObj.GetProperty("candidates")[0]
-                .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
-                .GetString();
         }
     }
 

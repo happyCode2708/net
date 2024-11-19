@@ -20,9 +20,22 @@ namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParse
         public string Calories { get; set; }
     }
 
+    // public class NutritionFactData
+    // {
+    //     public bool HasNutritionPanel { get; set; }
+    //     public HeaderInfo Header { get; set; }
+    //     public List<Nutrient> Nutrients { get; set; }
+    //     public List<string> Footnotes { get; set; }
+    // }
+
     public class NutritionFactData
     {
         public bool HasNutritionPanel { get; set; }
+        public List<FactPanels> FactPanelsData { get; set; }
+    }
+
+    public class FactPanels
+    {
         public HeaderInfo Header { get; set; }
         public List<Nutrient> Nutrients { get; set; }
         public List<string> Footnotes { get; set; }

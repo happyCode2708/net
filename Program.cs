@@ -21,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IImageServices, ImageServices>();
 builder.Services.AddSingleton<IGenerativeServices, GenerativeServices>();
+builder.Services.AddSingleton<IGeminiServices, GeminiServices>();
 builder.Services.AddSingleton<IPromptBuilderService, PromptBuilderService>();
 
 //* add cors
