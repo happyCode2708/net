@@ -23,7 +23,7 @@ namespace MyApi.Application.Common.Interfaces
         GenerativeModelEnum? ModelId { get; set; }
     }
 
-    public class GenerativeContentOptions: IGenerativeContentOptions
+    public class GenerativeContentOptions : IGenerativeContentOptions
     {
         public List<string>? ImagePathList { get; set; }
 
@@ -35,15 +35,14 @@ namespace MyApi.Application.Common.Interfaces
     public interface IGenerateContentResult
     {
         string? ConcatResult { get; set; }
-        JArray? JsonParsedRawResult { get; set; }
         string? RawResult { get; set; }
     }
 
-    public class GenerateContentResult: IGenerateContentResult
+    public class GenerateContentResult : IGenerateContentResult
     {
         public string? ConcatResult { get; set; }
-        public JArray? JsonParsedRawResult { get; set; }
         public string? RawResult { get; set; }
+        public JArray? JsonParsedRawResult { get; set; }
     }
 }
 

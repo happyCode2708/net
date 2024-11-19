@@ -10,7 +10,7 @@ using Application.Common.Interfaces;
 
 namespace MyApi.Application.Common.Configs
 {
-    public class GeminiConfig: IGeminiConfig
+    public class GeminiConfig : IGeminiConfig
     {
 
         public List<object> SafetySettings { get; set; }
@@ -22,13 +22,6 @@ namespace MyApi.Application.Common.Configs
             set => _locationId = value;
         }
 
-        private string _projectId = "splendid-sonar-429704-g9";
-
-        public string ProjectId
-        {
-            get => _projectId;
-            set => _projectId = value;
-        }
 
         private string _modelId = GenerativeModelDict.Map[GenerativeModelEnum.Gemini_1_5_Flash_002];
 
@@ -47,8 +40,8 @@ namespace MyApi.Application.Common.Configs
             set => _googleApiKey = value;
         }
 
-        public string EndPoint => $"{LocationId}-aiplatform.googleapis.com";
-        public string Url => $"https://{EndPoint}/v1/projects/{ProjectId}/locations/{LocationId}/publishers/google/models/{ModelId}:streamGenerateContent";
+        public string EndPoint => $"generativelanguage.googleapis.com";
+        public string Url => $"https://{EndPoint}/v1beta/models/{ModelId}:generateContent?key={GoogleApiKey}";
         public string UploadImageUrl => $"https://vision.googleapis.com/v1/images:annotate?key={GoogleApiKey}";
 
         public GeminiConfig(IOptions<CredentialConfig> credentialConfig)
@@ -70,7 +63,7 @@ namespace MyApi.Application.Common.Configs
                 temperature = 1,
                 topP = 0.95,
                 topK = 40,
-                responseMimeType = ResponseMimeType.TextPlain
+                responseMimeType = "text/plain"
             };
 
         }
@@ -83,7 +76,7 @@ namespace MyApi.Application.Common.Configs
         public void SetModelId(string modelId)
         {
             _modelId = modelId;
-        } 
+        }
     }
 }
 

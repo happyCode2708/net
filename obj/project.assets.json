@@ -5084,26 +5084,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\nnqduy\\.nuget\\packages\\": {}
+    "/Users/duynguyen/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\source\\ocr_net\\net\\MyApi.csproj",
+      "projectUniqueName": "/Users/duynguyen/Desktop/net_cor/MyApi/MyApi.csproj",
       "projectName": "MyApi",
-      "projectPath": "D:\\source\\ocr_net\\net\\MyApi.csproj",
-      "packagesPath": "C:\\Users\\nnqduy\\.nuget\\packages\\",
-      "outputPath": "D:\\source\\ocr_net\\net\\obj\\",
+      "projectPath": "/Users/duynguyen/Desktop/net_cor/MyApi/MyApi.csproj",
+      "packagesPath": "/Users/duynguyen/.nuget/packages/",
+      "outputPath": "/Users/duynguyen/Desktop/net_cor/MyApi/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\nnqduy\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/duynguyen/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5185,7 +5183,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

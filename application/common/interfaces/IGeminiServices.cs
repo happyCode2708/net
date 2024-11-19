@@ -14,17 +14,17 @@ namespace MyApi.Application.Common.Interfaces
         Task<GeminiGenerateContentResult> GenerateContentWithApiKeyAsync(GeminiGenerativeContentOptions GenerateOptions);
     }
 
-    public class GeminiGenerativeContentOptions: IGenerativeContentOptions
+    public class GeminiGenerativeContentOptions : IGenerativeContentOptions
     {
         public List<string>? ImagePathList { get; set; }
         public string? Prompt { get; set; }
         public GenerativeModelEnum? ModelId { get; set; }
     }
-    public class GeminiGenerateContentResult: IGenerateContentResult
+    public class GeminiGenerateContentResult : IGenerateContentResult
     {
         public string? ConcatResult { get; set; }
-        public JArray? JsonParsedRawResult { get; set; }
         public string? RawResult { get; set; }
+        public JObject? JsonParsedRawResult { get; set; }
     }
 }
 

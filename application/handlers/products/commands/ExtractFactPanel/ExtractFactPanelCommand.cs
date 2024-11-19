@@ -84,18 +84,20 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                 try
                 {
                     IGenerateContentResult result;
-                    
-                    if(serviceType == ServiceType.Gemini) {
+
+                    if (serviceType == ServiceType.Gemini)
+                    {
                         var generativeOptions = new GeminiGenerativeContentOptions
                         {
                             ImagePathList = imagePathList,
                             Prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count),
-                            ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
+                            ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                         };
                         var generateResult = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
                         result = generateResult;
-
-                    } else {
+                    }
+                    else
+                    {
                         var generativeOptions = new GenerativeContentOptions
                         {
                             ImagePathList = imagePathList,
@@ -110,11 +112,11 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     // Get AI analysis results
 
                     // Parse nutrition facts from markdown response
-                    // var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
+                    var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
 
                     // Update extract session with results
                     extractSession.RawExtractData = result.ConcatResult;
-                    // extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
+                    extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
 
@@ -124,7 +126,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     {
                         FullResult = result.RawResult,
                         ConcatText = result.ConcatResult,
-                        // ParsedResult = parsedNutritionData
+                        ParsedResult = parsedNutritionData
                     };
 
                     return ResponseModel<ExtractFactPanelResponse>.Success(response);

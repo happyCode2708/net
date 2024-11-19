@@ -8,7 +8,7 @@ namespace Application.Common.Interfaces
         void SetModelId(string modelId);
     }
 
-    public interface IGeminiConfig: IGenerativeConfig
+    public interface IGeminiConfig : IGenerativeConfig
     {
         string? GoogleApiKey { get; set; }
         string? UploadImageUrl { get; }
@@ -27,7 +27,8 @@ namespace Application.Common.Interfaces
         public double topP { get; set; }
         public int topK { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
+        // [JsonConverter(typeof(JsonStringEnumConverter))]
         public string? responseMimeType { get; set; }
     }
+
 }

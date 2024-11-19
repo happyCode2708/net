@@ -13,7 +13,7 @@ namespace MyApi.Application.Common.Utils
         }
         public static void WriteLineObject<T>(string name, T value)
         {
-            Console.WriteLine("Latest Extractions Debug:");
+            Console.WriteLine(name);
             Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(value, new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
         }
     }

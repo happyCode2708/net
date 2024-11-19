@@ -34,7 +34,7 @@ namespace MyApi.Application.Services
         public async Task<GeminiGenerateContentResult> GenerateContentWithApiKeyAsync(GeminiGenerativeContentOptions generativeOptions)
         {
             var defaultGenerativeConfig = new GeminiConfig(_credentialConfig);
-            
+
             if (generativeOptions.ModelId.HasValue)
             {
                 var changeModelConfig = GenerativeModelDict.Map[generativeOptions.ModelId.Value];
@@ -42,7 +42,7 @@ namespace MyApi.Application.Services
             }
 
             var contents = new List<object>();
-            
+
             // Add image parts if present
             if (generativeOptions.ImagePathList?.Any() == true)
             {
@@ -60,7 +60,7 @@ namespace MyApi.Application.Services
                                     fileUri = await UploadImageAsync(imagePath),
                                     mimeType = "image/jpeg" // Adjust mime type based on your needs
                                 }
-                            }   
+                            }
                         }
                     });
                 }
@@ -86,83 +86,117 @@ namespace MyApi.Application.Services
                 contents,
                 generationConfig,
             };
-              
+
+
             var httpClient = _httpClientFactory.CreateClient();
-            var apiUrl = $"{defaultGenerativeConfig.Url}?key={_credentialConfig.Value.GoogleApiKey}";
-            
+            var apiUrl = defaultGenerativeConfig.Url;
+
             var response = await httpClient.PostAsJsonAsync(apiUrl, requestBody);
+
 
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
+
                 if (!String.IsNullOrEmpty(result))
                 {
+                    JObject resultObject = JObject.Parse(result);
+                    var candidates = resultObject?["candidates"];
+                    AppConsole.WriteLine("candidates", candidates);
+
+                    var concatResult = String.Join("", candidates.Select(r => r["content"]?["parts"]?.First?["text"]));
+
                     return new GeminiGenerateContentResult
                     {
                         RawResult = result,
-                        JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
-                        // ConcatResult = ExtractTextFromResponse(result)
+                        JsonParsedRawResult = resultObject,
+                        ConcatResult = concatResult
                     };
                 }
+
+                return new GeminiGenerateContentResult();
+            }
+            else
+            {
+                throw new HttpRequestException($"Error calling Gemini API: {response.StatusCode}");
             }
 
-            throw new HttpRequestException($"Error calling Gemini API: {response.StatusCode}");
         }
 
         private async Task<string> UploadImageAsync(string imagePath)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var fileBytes = await File.ReadAllBytesAsync(imagePath);
-            var fileContent = new ByteArrayContent(fileBytes);
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg"); // Adjust based on file type
+            {
+                var httpClient = _httpClientFactory.CreateClient();
 
-            var uploadUrl = $"https://generativelanguage.googleapis.com/upload/v1beta/files?key={_credentialConfig.Value.GoogleApiKey}";
-            
-            using var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
-            request.Headers.Add("X-Goog-Upload-Command", "start, upload, finalize");
-            request.Headers.Add("X-Goog-Upload-Header-Content-Length", fileBytes.Length.ToString());
-            request.Headers.Add("X-Goog-Upload-Header-Content-Type", "image/jpeg");
-            
-            var metadata = new { file = new { display_name = Path.GetFileName(imagePath) } };
-            request.Content = new StringContent(JsonSerializer.Serialize(metadata), Encoding.UTF8, "application/json");
-            
-            var response = await httpClient.SendAsync(request);
-            if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Failed to upload image: {response.StatusCode}");
+                var uploadUrl = $"https://generativelanguage.googleapis.com/upload/v1beta/files?key={_credentialConfig.Value.GoogleApiKey}";
 
-            var responseContent = await response.Content.ReadAsStringAsync();
-            // Parse the response to get the file URI
-            // var responseJson = JsonSerializer.Deserialize<JsonElement>(responseContent);
-            var responseJson = AppJson.Deserialize<JArray>(responseContent);
+                var fileName = Path.GetFileName(imagePath);
+                var metadata = new { file = new { display_name = fileName } };
+                var metadataJson = JsonSerializer.Serialize(metadata);
 
-            var imgUri = responseJson?[0]?["file"]?["uri"]?.ToString();
+                using var multipartContent = new MultipartFormDataContent();
 
-            return imgUri ?? "";
-            // return responseJson.GetProperty("file").GetProperty("uri").GetString();
+                // Add metadata part
+                var metadataContent = new StringContent(metadataJson, Encoding.UTF8, "application/json");
+                metadataContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "\"metadata\""
+                };
+                multipartContent.Add(metadataContent);
+
+                // Add file part
+                var fileBytes = await File.ReadAllBytesAsync(imagePath);
+                var fileContent = new ByteArrayContent(fileBytes);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+                fileContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "\"file\"",
+                    FileName = $"\"{fileName}\""
+                };
+                multipartContent.Add(fileContent);
+
+                using var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl) { Content = multipartContent };
+
+                // Send request
+                var response = await httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to upload image: {errorContent}");
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseJson = JsonSerializer.Deserialize<JsonElement>(responseContent);
+
+                return responseJson.GetProperty("file").GetProperty("uri").GetString();
+            }
+
+
+
+
+            // private string ExtractTextFromResponse(string response)
+            // {
+            //     // Implement response parsing based on the actual response format
+            //     // This is a placeholder - adjust according to actual response structure
+            //     var responseObj = JsonSerializer.Deserialize<JsonElement>(response);
+            //     return responseObj.GetProperty("candidates")[0]
+            //         .GetProperty("content")
+            //         .GetProperty("parts")[0]
+            //         .GetProperty("text")
+            //         .GetString();
+            // }
         }
 
-        // private string ExtractTextFromResponse(string response)
+        // public class InlineData
         // {
-        //     // Implement response parsing based on the actual response format
-        //     // This is a placeholder - adjust according to actual response structure
-        //     var responseObj = JsonSerializer.Deserialize<JsonElement>(response);
-        //     return responseObj.GetProperty("candidates")[0]
-        //         .GetProperty("content")
-        //         .GetProperty("parts")[0]
-        //         .GetProperty("text")
-        //         .GetString();
+        //     public string mimeType { get; set; }
+        //     public string data { get; set; }
+        // }
+
+        // public class ImageObject
+        // {
+        //     public InlineData inlineData { get; set; }
         // }
     }
-
-    // public class InlineData
-    // {
-    //     public string mimeType { get; set; }
-    //     public string data { get; set; }
-    // }
-
-    // public class ImageObject
-    // {
-    //     public InlineData inlineData { get; set; }
-    // }
 }
 
