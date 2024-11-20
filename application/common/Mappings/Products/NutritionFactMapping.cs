@@ -8,7 +8,6 @@ namespace MyApi.Application.Common.Mappings.Products
     {
         public NutritionFactMapping()
         {
-
             CreateMap<Nutrient, ValidatedNutrient>()
                 .ForMember(
                     dest => dest.AmountPerServing,
@@ -20,8 +19,13 @@ namespace MyApi.Application.Common.Mappings.Products
                     })
                 );
 
+            CreateMap<FactPanel, ValidatedFactPanel>()
+               .ForMember(
+                    dest => dest.ValidatedNutrients,
+                    opt => opt.MapFrom(src => src.Nutrients)
+                );;
+
             CreateMap<NutritionFactData, ValidateNutritionFactData>();
-            //     .ForMember(dest => dest.Uom, opt => opt.MapFrom(src => src.AmountPerServing));
         }
     }
 }

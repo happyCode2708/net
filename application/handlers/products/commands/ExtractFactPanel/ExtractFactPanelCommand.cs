@@ -11,6 +11,9 @@ using MyApi.Domain.Models;
 using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 using Application.Common.Interfaces;
 using AutoMapper.Configuration.Annotations;
+using MyApi.Application.Common.Utils.ExtractedDataValidation;
+using AutoMapper;
+using MyApi.Application.Common.Utils;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
@@ -29,14 +32,15 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
             private IGeminiServices _geminiServices;
             private IApplicationDbContext _context;
             private IPromptBuilderService _promptBuilderServices;
+            private IMapper _mapper;
 
-
-            public Handler(IGenerativeServices generativeServices, IGeminiServices geminiServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices)
+            public Handler(IGenerativeServices generativeServices, IGeminiServices geminiServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IMapper mapper)
             {
                 _generativeServices = generativeServices;
                 _geminiServices = geminiServices;
                 _context = context;
                 _promptBuilderServices = promptBuilderServices;
+                _mapper = mapper;
             }
 
             public async Task<ResponseModel<ExtractFactPanelResponse>> Handle(ExtractFactPanelCommand request, CancellationToken cancellationToken)
@@ -114,11 +118,15 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     // Parse nutrition facts from markdown response
                     var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionFactParserUtils.ParseMarkdownResponse(result.ConcatResult) : null;
 
+                    var validatedNutritionFactData =  new NutritionFactValidation(_mapper).handleValidateNutritionFact(parsedNutritionData);
+
                     // Update extract session with results
                     extractSession.RawExtractData = result.ConcatResult;
                     extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
+                    extractSession.ValidatedExtractedData = AppJson.Serialize(validatedNutritionFactData);
+
 
                     await _context.SaveChangesAsync(cancellationToken);
 

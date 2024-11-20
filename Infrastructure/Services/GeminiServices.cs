@@ -102,7 +102,6 @@ namespace MyApi.Application.Services
                 {
                     JObject resultObject = JObject.Parse(result);
                     var candidates = resultObject?["candidates"];
-                    AppConsole.WriteLine("candidates", candidates);
 
                     var concatResult = String.Join("", candidates.Select(r => r["content"]?["parts"]?.First?["text"]));
 

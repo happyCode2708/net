@@ -1,6 +1,6 @@
 namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils
 {
-    public class Nutrient
+    public class BaseNutrient
     {
         public string NutrientName { get; set; }
         public string Descriptor { get; set; }
@@ -8,6 +8,11 @@ namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParse
         public string ParentheticalStatement { get; set; }
         public string DailyValue { get; set; }
         public string BlendIngredients { get; set; }
+    }
+
+    public class Nutrient: BaseNutrient
+    {
+        public string AmountPerServing { get; set; }
     }
 
 
@@ -28,16 +33,23 @@ namespace MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParse
     //     public List<string> Footnotes { get; set; }
     // }
 
-    public class NutritionFactData
+    public class BaseNutritionFactData 
     {
         public bool HasNutritionPanel { get; set; }
-        public List<FactPanels> FactPanelsData { get; set; }
     }
 
-    public class FactPanels
+    public class NutritionFactData : BaseNutritionFactData
     {
+        public List<FactPanel> FactPanelsData { get; set; }
+    }
+
+    public class BaseFactPanel  {
         public HeaderInfo Header { get; set; }
-        public List<Nutrient> Nutrients { get; set; }
         public List<string> Footnotes { get; set; }
+    }
+
+    public class FactPanel : BaseFactPanel
+    {
+        public List<Nutrient> Nutrients { get; set; }
     }
 }

@@ -135,18 +135,6 @@ namespace MyApi.Application.Services
 
             var response = await httpClient.PostAsJsonAsync(defaultGenerativeConfig.Url, requestBody);
 
-            //! MOCK
-            // var response = new{
-            //     IsSuccessStatusCode = true,
-            //     Content = new StringContent(""),
-            // };
-            // return new GenerateContentResult()
-            // {
-            //     RawResult = "mock",
-            //     // JsonParsedRawResult =  new List<object>{new { test = true }},
-            //     ConcatResult = "mock",
-            // };
-
 
             if (response.IsSuccessStatusCode)
             {

@@ -60,7 +60,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
 
                     var nutritionValidator = new NutritionFactValidation(_mapper);
 
-                    var validatedNutritionData = nutritionValidator.Validate(newParsedNutritionData);
+                    var validatedNutritionData = nutritionValidator.handleValidateNutritionFact(newParsedNutritionData);
 
                     lastExtractSession.ExtractedData = AppJson.Serialize(newParsedNutritionData);
                     lastExtractSession.ValidatedExtractedData = AppJson.Serialize(validatedNutritionData);

@@ -1,0 +1,44 @@
+NUTRITION_FACT_VALIDATION_TABLE[1]
+| question | answer |
+| ------- | -------- |
+| Do product image have nutrition fact panel ? | Yes |
+END__NUTRITION__FACT__VALIDATION__TABLE[1]
+
+NUTRITION_FACT_TABLE[1]
+| Nutrient Name | nutrient name descriptor | Amount per Serving | parenthetical statement about amount per serving | % Daily Value and footnote symbol if avail | blend ingredients(if nutrient is a blend / mix) (nullable) |
+| ------- | -------- | -------- | -------- | -------- | -------- |
+| Total Fat |  | 1g |  | 1% |  |
+| Saturated Fat |  | 0.5g |  | 3% |  |
+| Trans Fat |  | 0g |  | 0% |  |
+| Cholesterol |  | 0mg |  | 0% |  |
+| Sodium |  | 1190mg |  | 52% |  |
+| Total Carbohydrate |  | 51g |  | 19% |  |
+| Dietary Fiber |  | 1g |  | 4% |  |
+| Total Sugars |  | 0g |  |  |  |
+| Includes | Added Sugars | 0g |  | 0% |  |
+| Protein |  | 4g |  |  |  |
+| Vitamin D |  | 0mcg |  | 0% |  |
+| Calcium |  | 20mg |  | 2% |  |
+| Iron |  | 1mg |  | 6% |  |
+| Potassium |  | 120mg |  | 2% |  |
+END__NUTRITION__FACT__TABLE[1]
+
+HEADER_TABLE[1]
+| Serving Per Container | Serving Size | Equivalent Serving Size | Amount Per Serving name | Calories |
+| ------- | -------- | -------- | -------- | -------- |
+|  | 1 pack | (65g) | Amount per serving | 230 |
+END__HEADER__TABLE[1]
+
+FOOTNOTE_TABLE[1]
+| footnote content at bottom of nutrition fact | footnote content in english only(include footnote symbol if avail) |
+| ------- | -------- |
+| *The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice. | *The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice. |
+END__FOOTNOTE__TABLE[1]
+
+DEBUG_TABLE
+| question(question from debug list below) | gemini answer |
+| ------- | -------- |
+| gemini answer me how many nutrition fact tables from provided images? are they the same one ? | 1; Yes |
+| are they in dual - column format? and tell me why? tell me why you create only one nutrition fact table for dual - column nutrition fact panel format ? remember dual - column label format must be recorded as multiple nutrition fact markdown tables. | No; The image shows a single-column nutrition facts panel.  There is only one nutrition facts table because the provided image does not contain a dual-column nutrition facts panel. |
+END__DEBUG__TABLE
+

@@ -6,26 +6,41 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
 {
     public class NutritionFactValidation
     {
-
         private readonly IMapper _mapper;
-
         public NutritionFactValidation(IMapper mapper)
         {
             _mapper = mapper;
         }
 
-        public ValidateNutritionFactData Validate(NutritionFactData nutritionFactData)
+        public ValidateNutritionFactData handleValidateNutritionFact(NutritionFactData nutritionFactData)
         {
-            
             var validatedNutritionFactData = _mapper.Map<ValidateNutritionFactData>(nutritionFactData);
+
+            var validatedFactPanelList = new List<ValidatedFactPanel>();
             
-            validatedNutritionFactData.ValidatedNutrients = validateNutrientDescriptor(validatedNutritionFactData.ValidatedNutrients);
-            validatedNutritionFactData.ValidatedNutrients = validateNutrientName(validatedNutritionFactData.ValidatedNutrients);
-            validatedNutritionFactData.ValidatedNutrients = validateAmount(validatedNutritionFactData.ValidatedNutrients);
-            validatedNutritionFactData.ValidatedNutrients = validateBlendIngredients(validatedNutritionFactData.ValidatedNutrients);
-            validatedNutritionFactData.ValidatedNutrients = validatePercentDailyValue(validatedNutritionFactData.ValidatedNutrients);
+            foreach(var factPanel in nutritionFactData.FactPanelsData) {
+                var validatedFactPanel = handleValidatedFactPanel(factPanel);
+                if(validatedFactPanel != null) {
+                    validatedFactPanelList.Add(validatedFactPanel);
+                }
+            }
+
+            validatedNutritionFactData.ValidatedFactPanels = validatedFactPanelList;
 
             return validatedNutritionFactData;
+        }
+        
+        private ValidatedFactPanel handleValidatedFactPanel(FactPanel factPanel)
+        {
+            var validatedFactPanel = _mapper.Map<ValidatedFactPanel>(factPanel);
+            
+            validatedFactPanel.ValidatedNutrients = validateNutrientDescriptor(validatedFactPanel.ValidatedNutrients);
+            validatedFactPanel.ValidatedNutrients = validateNutrientName(validatedFactPanel.ValidatedNutrients);
+            validatedFactPanel.ValidatedNutrients = validateAmount(validatedFactPanel.ValidatedNutrients);
+            validatedFactPanel.ValidatedNutrients = validateBlendIngredients(validatedFactPanel.ValidatedNutrients);
+            validatedFactPanel.ValidatedNutrients = validatePercentDailyValue(validatedFactPanel.ValidatedNutrients);
+
+            return validatedFactPanel;
         }
 
 
@@ -95,45 +110,4 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
         }
 
     }
-}   
-
-
-
-//   let amountPerServing = modifiedNutrient?.amountPerServing?.trim();
-
-//   if (amountPerServing?.includes('%')) {
-//     modifiedNutrient['dailyValue'] = amountPerServing;
-//     modifiedNutrient['amountPerServing'] = '';
-//     return;
-//   }
-
-//   if (!amountPerServing) return;
-
-//   // Check for special cases like "less than 1g" or "<1g"
-//   const specialCaseMatch = amountPerServing.match(
-//     /(less than|<)?\s*(\d+(\.\d+)?)([a-zA-Z]+)/i
-//   );
-//   if (specialCaseMatch) {
-//     const prefix = specialCaseMatch[1] ? specialCaseMatch[1].trim() + ' ' : '';
-//     const numericPart = specialCaseMatch[2];
-//     const uom = specialCaseMatch[4].toLowerCase() as keyof typeof uomMap;
-
-//     const uomMap = {
-//       g: 'GRAM',
-//       mg: 'MILLIGRAM',
-//       kg: 'KILOGRAM',
-//       mcg: 'MICROGRAM',
-//       oz: 'OUNCE',
-//       lb: 'POUND',
-//     };
-
-//     const fullUOM = uomMap?.[uom];
-
-//     // Set the amount to include the prefix (e.g., "<1" or "less than 1")
-//     modifiedNutrient['amount'] = prefix + numericPart;
-
-//     // Set the analyticalValue to the numeric part of the amount
-//     modifiedNutrient['analyticalValue'] = parseFloat(numericPart);
-
-//     modifiedNutrient['uom'] = fullUOM;
-//     return;
+}
