@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyApi.Application.Common.Utils;
+using Application.Common.Dto.Extraction;
 using Newtonsoft.Json.Linq;
-using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {
@@ -13,7 +12,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
         public string? FullResult { get; set; }
 
         public string? ConcatText { get; set; }
-
+        
         public FirstProductAttributeInfo? ParsedResult { get; set; }
         //! DEV
         public JArray? ParsedFullResult { get; set; }

@@ -28,7 +28,4 @@ namespace MyApi.Infrastructure.Persistence.Configurations
             builder.HasIndex(e => new { e.ProductId, e.SourceType, e.CreatedAt });
         }
     }
-
-    //DBCC CHECKIDENT ('dbo.ExtractSessions', RESEED, 8);
-
 }

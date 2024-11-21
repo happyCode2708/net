@@ -4,18 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core;
 using MediatR;
-using MyApi.Application.Common.Interfaces;
-using MyApi.Application.Handlers.Products.Queries.QueryProductList;
+using MyApi.Application.Common.Interfaces; 
 using MyApi.Core.Controllers;
-using static MyApi.Application.Common.Dto.GridDto;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Application.Common.Dto;
 using AutoMapper;
 using MyApi.Domain.Models;
-using MyApi.Application.Common.Utils;
-using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
-using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Dto.Product;
+using Application.Common.Dto.Grid;
+using Application.Common.Dto.Extraction;
+using MyApi.Application.Common.Utils.Base;  
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
@@ -32,7 +29,6 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
             private readonly IProductServices _productServices;
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-
             public Handler(IProductServices productServices, IApplicationDbContext context, IMapper mapper)
             {
                 _productServices = productServices;

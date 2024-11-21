@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using MyApi.Application.Common.Dto;
+// using MyApi.Application.Common.Dto;
 using MyApi.Domain.Models;
-using static MyApi.Application.Common.Dto.GridDto;
-using MyApi.Application.Common.Interfaces;
-using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
-using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Utils.ExtractionParser.FirstAttr;
+using Application.Common.Utils.ExtractionParser.SecondAttr;
+using Application.Common.Dto.Grid;
+using Application.Common.Dto.Product;
+using Application.Common.Dto.Extraction;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {

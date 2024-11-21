@@ -1,6 +1,5 @@
+using Application.Common.Dto.Extraction;
 using AutoMapper;
-using MyApi.Application.Common.Utils.ExtractedDataValidation;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 
 namespace MyApi.Application.Common.Mappings.Products
 {

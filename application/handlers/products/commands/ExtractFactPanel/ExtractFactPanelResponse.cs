@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Dto.Extraction;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 {

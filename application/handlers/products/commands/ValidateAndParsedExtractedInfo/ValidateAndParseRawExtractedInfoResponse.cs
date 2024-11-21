@@ -1,8 +1,8 @@
 
+using Application.Common.Dto.Extraction;
 using Microsoft.Identity.Client;
 using MyApi.Application.Common.Utils;
-using MyApi.Application.Common.Utils.ExtractedDataValidation;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Utils.ExtractionParser.Nutrition;
 using MyApi.Domain.Models;
 
 namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo {

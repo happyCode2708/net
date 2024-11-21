@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Dto.Image;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client.Extensions.Msal;
 using MyApi.Application.Common.Configs;

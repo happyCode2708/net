@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using MyApi.Application.Handlers.Products.Queries.ExtractProductInfo;
 using MyApi.Core.Controllers;
 using MyApi.Application.Handlers.Products.Commands.CreateProduct;
 using MyApi.Application.Handlers.Products.Commands.CreateProductWithImages;
@@ -20,21 +19,6 @@ namespace MyApi.Controllers
     [Route("api/pim")]
     public class ProductController : BaseApiController
     {
-        [HttpGet("get-product-extraction-info")]
-        // [Permissions(AppPermissions.VIEW_PRODUCTS, AppPermissions.EDIT_PRODUCT)]
-        // [ProducesResponseType(typeof(GetProductIngredientsResponse), 200)]
-        public async Task<IActionResult> GetProductIngredients([FromQuery] int productId)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await QueryAsync(new GetExtractProductInfoQuery(productId));
-
-            return Ok(result);
-        }
         [HttpGet("get-product-list")]
         public async Task<IActionResult> GetProductList([FromQuery] string? searchText, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {

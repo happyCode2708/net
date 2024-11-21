@@ -17,6 +17,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
 using MyApi.Application.Common.Utils;
+using Application.Common.Dto.Gemini;
 
 namespace MyApi.Application.Services
 {
@@ -35,9 +36,11 @@ namespace MyApi.Application.Services
         {
             var defaultGenerativeConfig = new GeminiConfig(_credentialConfig);
 
-            if (generativeOptions.ModelId.HasValue)
+            var requireModelId = generativeOptions.ModelId;
+
+            if (requireModelId.HasValue)
             {
-                var changeModelConfig = GenerativeModelDict.Map[generativeOptions.ModelId.Value];
+                var changeModelConfig = GenerativeDict.GetModel[requireModelId.Value];
                 defaultGenerativeConfig.SetModelId(changeModelConfig);
             }
 
@@ -137,7 +140,7 @@ namespace MyApi.Application.Services
 
                 // Add metadata part
                 var metadataContent = new StringContent(metadataJson, Encoding.UTF8, "application/json");
-                metadataContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                metadataContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
                     Name = "\"metadata\""
                 };
@@ -146,8 +149,8 @@ namespace MyApi.Application.Services
                 // Add file part
                 var fileBytes = await File.ReadAllBytesAsync(imagePath);
                 var fileContent = new ByteArrayContent(fileBytes);
-                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
-                fileContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
                     Name = "\"file\"",
                     FileName = $"\"{fileName}\""

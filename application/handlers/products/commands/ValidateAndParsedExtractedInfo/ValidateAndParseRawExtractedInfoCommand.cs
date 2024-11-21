@@ -2,9 +2,9 @@ using MediatR;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Core.Controllers;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Application.Common.Utils;
+using MyApi.Application.Common.Utils.Base;
 using MyApi.Domain.Models;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
+using Application.Common.Utils.ExtractionParser.Nutrition;
 using AutoMapper;
 using MyApi.Application.Common.Utils.ExtractedDataValidation;
 
@@ -25,7 +25,6 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
             private IApplicationDbContext _context;
 
             private readonly IMapper _mapper;
-
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
@@ -56,7 +55,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
                 if (requestObject.SourceType == ExtractSourceType.NutritionFact)
                 {
 
-                    var newParsedNutritionData = NutritionFactParserUtils.ParseMarkdownResponse(rawExtractData);
+                    var newParsedNutritionData = NutritionParser.ParseMarkdownResponse(rawExtractData);
 
                     var nutritionValidator = new NutritionFactValidation(_mapper);
 

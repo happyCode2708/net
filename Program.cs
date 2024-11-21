@@ -7,6 +7,7 @@ using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Services;
 using MyApi.Infrastructure.Persistence;
 using AutoMapper;
+using MyApi.Application.Common.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 

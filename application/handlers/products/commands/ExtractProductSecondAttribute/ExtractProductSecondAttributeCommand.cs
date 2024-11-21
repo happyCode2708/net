@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Core.Controllers;
 using MyApi.Application.Common.Enums;
-using MyApi.Application.Common.Utils.ParseExtractedResult.NutritionFactParserUtils;
 using MyApi.Domain.Models;
-using MyApi.Application.Common.Utils.ParseExtractedResult.SecondAttributeParserUtils;
+using Application.Common.Utils.ExtractionParser.SecondAttr;
+using Application.Common.Dto.Generative;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
@@ -91,7 +91,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                     var result = await _generativeServices.GenerateContentAsync(generativeOptions);
 
                     // Parse nutrition facts from markdown response
-                    var parsedSecondAttributeData = !String.IsNullOrEmpty(result.ConcatResult) ? SecondAttributeParserUtilsParser.ParseResult(result.ConcatResult) : null;
+                    var parsedSecondAttributeData = !String.IsNullOrEmpty(result.ConcatResult) ? SecondAttributeParser.ParseResult(result.ConcatResult) : null;
 
                     // Update extract session with results
                     // extractSession.RawExtractData = result.RawResult;

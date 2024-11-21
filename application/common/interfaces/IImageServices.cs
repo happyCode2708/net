@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Dto.Image;
 using MyApi.Domain.Models;
 
 namespace MyApi.Application.Common.Interfaces
@@ -15,13 +16,5 @@ namespace MyApi.Application.Common.Interfaces
         Task DeleteImage(string imageId, CancellationToken cancellationToken = default);
 
         Task<SaveStaticFileReturn> SaveStaticFile(IFormFile file);
-    }
-
-    public class SaveStaticFileReturn
-    {
-        public string OriginFileName { get; set; }
-        public string StoredFileName { get; set; }
-        public string FilePath { get; set; }
-        public string FileUrl { get; set; }
     }
 }

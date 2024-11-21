@@ -30,7 +30,7 @@ namespace MyApi.Application.Common.Configs
             set => _projectId = value;
         }
 
-        private string _modelId = GenerativeModelDict.Map[GenerativeModelEnum.Gemini_1_5_Flash_002];
+        private string _modelId = GenerativeDict.GetModel[GenerativeModelEnum.Gemini_1_5_Flash_002];
 
         public string ModelId
         {

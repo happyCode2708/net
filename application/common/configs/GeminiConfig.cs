@@ -7,6 +7,7 @@ using MyApi.Application.Common.Dict;
 using MyApi.Application.Common.Enums;
 using System.Text.Json.Serialization;
 using Application.Common.Interfaces;
+using Application.Common.Dto.Generative;
 
 namespace MyApi.Application.Common.Configs
 {
@@ -23,7 +24,7 @@ namespace MyApi.Application.Common.Configs
         }
 
 
-        private string _modelId = GenerativeModelDict.Map[GenerativeModelEnum.Gemini_1_5_Flash_002];
+        private string _modelId = GenerativeDict.GetModel[GenerativeModelEnum.Gemini_1_5_Flash_002];
 
         public string ModelId
         {

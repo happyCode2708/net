@@ -16,7 +16,8 @@ using Microsoft.OpenApi.Any;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
-using MyApi.Application.Common.Utils;
+using Application.Common.Dto.Generative;
+using MyApi.Application.Common.Utils.Base;
 
 namespace MyApi.Application.Services
 {
@@ -37,6 +38,7 @@ namespace MyApi.Application.Services
             _credentialConfig = credentialConfig;
             _httpClientFactory = httpClientFactory;
             _setupGoogleTokenTask = SetupGoogleTokenAsync();
+        
         }
 
         private async Task SetupGoogleTokenAsync()
@@ -70,9 +72,11 @@ namespace MyApi.Application.Services
 
             var defaultGenerativeConfig = new GenerativeConfig(_credentialConfig);
 
-            if (generativeOptions.ModelId.HasValue)
+            var requireModelId = generativeOptions.ModelId;
+
+            if (requireModelId.HasValue)
             {
-                var changeModelConfig = GenerativeModelDict.Map[generativeOptions.ModelId.Value];
+                var changeModelConfig = GenerativeDict.GetModel[requireModelId.Value];
                 defaultGenerativeConfig.SetModelId(changeModelConfig);
             }
 

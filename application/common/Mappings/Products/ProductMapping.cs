@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Domain.Models;
 using AutoMapper;
-using MyApi.Application.Common.Dto;
-using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Handlers.Products.Queries.QueryProductList;
+using Application.Common.Dto.Product;
 
 namespace MyApi.Application.Common.Mappings.Products
 {

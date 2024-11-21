@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Application.Common.Dto;
-using MyApi.Application.Common.Interfaces;
+using Application.Common.Dto.Product;
+using Application.Common.Interfaces;
 using MyApi.Domain.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using MyApi.Application.Common.Interfaces;
 
 namespace MyApi.Application.Services
 {
@@ -76,11 +77,8 @@ namespace MyApi.Application.Services
 
             // }).ToListAsync();
 
-            // var productGridList = await query.ProjectTo<ProductGridItem>(_mapper.ConfigurationProvider).ToListAsync();
 
             var productGridList = await query.Select(p => _mapper.Map<ProductGridItem>(p)).ToListAsync();
-
-            // var product = _mapper.Map<Product>(request.Dto);
 
             var result = new GetProductGridItemReturn
             {
