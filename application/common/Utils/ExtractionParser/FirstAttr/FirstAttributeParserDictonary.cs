@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Dto.Extraction;
 
 namespace Application.Common.Utils.ExtractionParser.FirstAttr
 {
@@ -11,7 +12,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         {
             { "label item", "labelItem"},
             { "label item type on product (answer is \"certification label\"/ \"label text\"/ \"other\") (if type \"other\" tell me what type you think it belong to)", "labelItemType"},
-            { "what label item say?", "labelText"}
+            { "what label item say ?", "labelText"}
         };
 
         public static Dictionary<string, string> LabelInfoAnalysisHeaderDict = new Dictionary<string, string>
@@ -32,7 +33,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 
         public static Dictionary<string, string> AttributeInfoHeaderDict = new Dictionary<string, string>
         {
-            { "grade(answer are 'A' / 'B')", "attributeName"},
+            { "grade(answer are 'A' / 'B')", "grade"},
             { "juice percent(answer is number)", "juicePercent"}
         };
 
@@ -42,5 +43,9 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
             { "is product claim that ? (answer is yes/no/unknown)", "isClaimed"}
         };
 
+        public static Dictionary<string, Type> FieldTypeLabelInfoAnalysisDict = new Dictionary<string, Type>
+        {
+            { "mentionedNotContainItems", typeof(string[])}
+        };
     }
 }

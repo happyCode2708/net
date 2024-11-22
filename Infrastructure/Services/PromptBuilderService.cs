@@ -511,7 +511,7 @@ Example 2: ""CONTAINS 6 LIVE AND ACTIVE CULTURES S. THERMOPHILUSB, L. CASEI, L. 
 
 TABLE FORMAT:
 INGREDIENT_TABLE
-| product type from nutrition panel ? (answer is ""nutrition facts"" / ""supplement facts"" / ""unknown"") | prefix text of ingredient list (answer are ""other ingredients:"" / ""ingredients:"") | ingredient statement | ingredient break-down list from ingredient statement (each ingredient splitted by ""/"") | live and active cultures list statement | live and active cultures break-down list (each item splitted by ""/"")  | 
+| product type from nutrition panel ? (answer is ""nutrition facts"" / ""supplement facts"" / ""unknown"") | prefix text of ingredient list (answer are ""other ingredients:"" / ""ingredients:"") | ingredient statement | ingredient break-down list from ingredient statement (each ingredient splitted by ""/"") | live and active cultures list statement | live and active cultures break-down list (each item splitted by ""/"")  |
 | ------- | ------- | -------- | -------- | -------- | -------- |
 END_INGREDIENT_TABLE
 
@@ -617,7 +617,7 @@ ATTRIBUTE_TABLE
 | grade(answer are 'A' / 'B') | juice percent(answer is number) |
 | ------- | ------- |
 END_ATTRIBUTE_TABLE
-            ";
+";
     }
 
     public string MakeSecondAttributePrompt(string? ocrText)

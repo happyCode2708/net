@@ -33,7 +33,7 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
 
         private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string> headerMapping = null)
         {
-            var tableContent = GetContentBetween(input, tableName, $"END__{tableName}");
+            var tableContent = GetContentBetween(input, tableName, $"END_{tableName}");
 
             var rows = tableContent.Split("\n").ToList();
 
@@ -47,7 +47,7 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
                 var rowData = ParseTableRow(rows[i]);
                 var rowDict = new Dictionary<string, string>();
 
-                for (int j = 2; i < headers.Count; j++)
+                for (int j = 0; j < rowData.Count; j++)
                 {
                     var fieldKey = headerMapping != null && headerMapping.ContainsKey(headers[j]) ? headerMapping[headers[j]] : headers[j];
                     rowDict[fieldKey] = rowData[j];
@@ -60,17 +60,10 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
 
         private static List<string> ParseTableRow(string rowContent)
         {
-            return rowContent.Split('|').Select(cell =>
-            {
-                if (!String.IsNullOrEmpty(cell))
-                {
-                    return cell.Trim();
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }).ToList();
+            var rowCells = rowContent.Split('|');
+
+            return rowCells.Select(cell => cell.Trim())
+                .ToList().GetRange(1, rowCells.Length - 2);
         }
 
         private static string GetContentBetween(string input, string startMarker, string endMarker)

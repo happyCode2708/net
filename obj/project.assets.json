@@ -1121,6 +1121,15 @@
           }
         }
       },
+      "OneOf/3.0.271": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        }
+      },
       "Swashbuckle.AspNetCore/6.4.0": {
         "type": "package",
         "dependencies": {
@@ -3751,6 +3760,21 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+    "OneOf/3.0.271": {
+      "sha512": "pqpqeK8xQGggExhr4tesVgJkjdn+9HQAO0QgrYV2hFjE3y90okzk1kQMntMiUOGfV7FrCUfKPaVvPBD4IANqKg==",
+      "type": "package",
+      "path": "oneof/3.0.271",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/OneOf.dll",
+        "lib/net45/OneOf.dll",
+        "lib/netstandard1.3/OneOf.dll",
+        "lib/netstandard2.0/OneOf.dll",
+        "oneof.3.0.271.nupkg.sha512",
+        "oneof.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/6.4.0": {
       "sha512": "eUBr4TW0up6oKDA5Xwkul289uqSMgY0xGN4pnbOIBqCcN9VKGGaPvHX3vWaG/hvocfGDP+MGzMA0bBBKz2fkmQ==",
       "type": "package",
@@ -5079,6 +5103,7 @@
       "Microsoft.AspNetCore.OpenApi >= 8.0.8",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.8",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.8",
+      "OneOf >= 3.0.271",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "System.Net.Http.Json >= 8.0.0"
     ]
@@ -5156,6 +5181,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[8.0.8, )"
+          },
+          "OneOf": {
+            "target": "Package",
+            "version": "[3.0.271, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

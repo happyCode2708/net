@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Application.Common.Dto.Extraction;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyApi.Application.Common.Utils.Base;
 // using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
 
@@ -21,7 +22,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
             result.CookingInstructions = ParseSection<CookingInstructions>(input, "COOKING_INSTRUCTION_OBJECT");
             result.InformationInstructions = ParseSection<InformationInstructions>(input, "INFORMATION_INSTRUCTION");
             result.LabelingInfo = ParseTableSection(input, "LABELING_INFO_TABLE", FirstAttributeParserDictionary.LabelInfoHeaderDict);
-            result.LabelingInfoAnalysis = ParseTableSection(input, "LABELING_INFO_ANALYSIS_TABLE");
+            result.LabelingInfoAnalysis = ParseTableSection(input, "LABELING_INFO_ANALYSIS_TABLE", FirstAttributeParserDictionary.LabelInfoAnalysisHeaderDict);
             result.AllergenInfo = ParseSection<AllergenInfo>(input, "ALLERGEN_OBJECT");
             result.HeaderInfo = ParseSection<HeaderInfo>(input, "HEADER_OBJECT");
             result.BaseCertifierClaims = ParseTableSection(input, "BASE_CERTIFIER_CLAIM_TABLE", FirstAttributeParserDictionary.BaseCertifierClaimInfoHeaderDict);
@@ -55,13 +56,23 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string> headerMapping = null)
         {
             var content = GetContentBetween(input, tableName, $"END_{tableName}");
-            if (string.IsNullOrEmpty(content)) return new List<Dictionary<string, string>>();
+
+            var result = new List<Dictionary<string, string>>();
+
+
+            if (string.IsNullOrEmpty(content))
+            {
+                return result;
+            };
 
             var rows = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            if (rows.Length < 2) return new List<Dictionary<string, string>>();
+
+            if (rows.Length < 2)
+            {
+                return result;
+            };
 
             var headers = ParseTableRow(rows[0]); //* get default headers from the first row
-            var result = new List<Dictionary<string, string>>();
 
             for (int i = 2; i < rows.Length; i++)
             {
@@ -75,7 +86,9 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
                         ? headerMapping[originalHeader]
                         : originalHeader;
 
-                    rowDict[mappedHeader] = j < rowData.Count ? rowData[j] : string.Empty;
+                    var cellValue = rowData[j];
+
+                    rowDict[mappedHeader] = cellValue;
                 }
 
                 result.Add(rowDict);
@@ -86,9 +99,10 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 
         private static List<string> ParseTableRow(string row)
         {
-            return row.Split('|')
-                .Select(cell => cell.Trim())
-                .ToList();
+            var rowCells = row.Split('|');
+
+            return rowCells.Select(cell => cell.Trim())
+                .ToList().GetRange(1, rowCells.Length - 2);
         }
 
         private static string GetContentBetween(string input, string startMarker, string endMarker)

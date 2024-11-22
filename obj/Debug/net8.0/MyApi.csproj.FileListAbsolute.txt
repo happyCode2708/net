@@ -459,3 +459,5 @@ D:\source\ocr_net\net\obj\Debug\net8.0\refint\MyApi.dll
 D:\source\ocr_net\net\obj\Debug\net8.0\MyApi.pdb
 D:\source\ocr_net\net\obj\Debug\net8.0\MyApi.genruntimeconfig.cache
 D:\source\ocr_net\net\obj\Debug\net8.0\ref\MyApi.dll
+D:\source\ocr_net\net\bin\Debug\net8.0\application\common\Utils\ExtractionParser\FirstAttr\reference\supplyChain.json
+D:\source\ocr_net\net\bin\Debug\net8.0\OneOf.dll

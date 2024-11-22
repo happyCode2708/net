@@ -16,7 +16,5 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
         public FirstProductAttributeInfo? ParsedResult { get; set; }
         //! DEV
         public JArray? ParsedFullResult { get; set; }
-        //! DEV
-        public string? Prompt { get; set; }
     }
 }

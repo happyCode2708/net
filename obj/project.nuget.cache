@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Z2pXiBfJBVYfqJDTc6mdrFFeV6soWfTrzAQ5Cu1qHQcDZB5xz8P7Es7E/bKd2zn58ypENjgTJH+hDiF8CQ2TIQ==",
+  "dgSpecHash": "Ix+GxDdlwRuM8B+fF1GE/fUT0BhXkG4JpaC6kLB67M5Ny3cBkOAvevTtU9Wu+JRj+Z06F5LR9CgJudU+UIrupQ==",
   "success": true,
   "projectFilePath": "D:\\source\\ocr_net\\net\\MyApi.csproj",
   "expectedPackageFiles": [
@@ -61,6 +61,7 @@
     "C:\\Users\\nnqduy\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\nnqduy\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\nnqduy\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\nnqduy\\.nuget\\packages\\oneof\\3.0.271\\oneof.3.0.271.nupkg.sha512",
     "C:\\Users\\nnqduy\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\nnqduy\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\nnqduy\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

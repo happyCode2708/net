@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using OneOf;
 
 namespace Application.Common.Dto.Extraction
 {
@@ -16,9 +17,15 @@ namespace Application.Common.Dto.Extraction
         public List<Dictionary<string, string>> IngredientInfo { get; set; }
         public MarketingInfo MarketingInfo { get; set; }
         public List<AddressData> AddressData { get; set; }
-        public SupplyChainInfo SupplyChainInfo { get; set; }
+        public SupplyChainInfo? SupplyChainInfo { get; set; }
         public List<Dictionary<string, string>> AttributeInfo { get; set; }
     }
+
+    // public class LabelingInfoAnalysisValue {
+    //     public OneOf<string, string[]>? Value { get; set; }
+    //     public LabelingInfoAnalysisValue(string value) => Value = value;
+    //     public LabelingInfoAnalysisValue(string[] value) => Value = value;
+    // } 
 
     public class StorageInstructions
     {
@@ -94,10 +101,35 @@ namespace Application.Common.Dto.Extraction
     public class SupplyChainInfo
     {
         [JsonPropertyName("address and phone number info")]
-        public List<string> AddressAndPhoneInfo { get; set; }
+        public List<AddressInfo>? AddressAndPhoneInfo { get; set; }
         [JsonPropertyName("country info")]
-        public CountryInfo CountryInfo { get; set; }
+        public CountryInfo? CountryInfo { get; set; }
     }
+
+
+    public class AddressInfo
+    {
+        [JsonPropertyName("prefix address")]
+        public string PrefixAddress { get; set; }
+        [JsonPropertyName("address type")]
+        public string AddressType { get; set; }
+        [JsonPropertyName("full address statement")]
+        public string FullAddressStatement { get; set; }
+        [JsonPropertyName("company name")]
+        public string CompanyName { get; set; } 
+        [JsonPropertyName("street number")]
+        public string StreetNumber { get; set; }
+        [JsonPropertyName("street name")]
+        public string StreetName { get; set; }  
+        [JsonPropertyName("city")]
+        public string City { get; set; }
+        [JsonPropertyName("state")]
+        public string State { get; set; }
+        [JsonPropertyName("zipCode")]
+        public string ZipCode { get; set; }
+        [JsonPropertyName("phone number")]
+        public string PhoneNumber { get; set; }
+    }   
 
     public class CountryInfo
     {

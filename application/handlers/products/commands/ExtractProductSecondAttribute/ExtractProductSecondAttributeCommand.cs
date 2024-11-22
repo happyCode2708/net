@@ -10,6 +10,9 @@ using MyApi.Application.Common.Enums;
 using MyApi.Domain.Models;
 using Application.Common.Utils.ExtractionParser.SecondAttr;
 using Application.Common.Dto.Generative;
+using MyApi.Application.Common.Dict;
+using Application.Common.Dto.Gemini;
+using MyApi.Application.Common.Utils.Base;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
@@ -27,19 +30,21 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
             private IGenerativeServices _generativeServices;
             private IApplicationDbContext _context;
             private IPromptBuilderService _promptBuilderServices;
+            private IGeminiServices _geminiServices;
 
-
-            public Handler(IGenerativeServices generativeServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices)
+            public Handler(IGenerativeServices generativeServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IGeminiServices geminiServices)
             {
                 _generativeServices = generativeServices;
                 _context = context;
                 _promptBuilderServices = promptBuilderServices;
+                _geminiServices = geminiServices;
             }
 
             public async Task<ResponseModel<ExtractProductSecondAttributeResponse>> Handle(ExtractProductSecondAttributeCommand request, CancellationToken cancellationToken)
             {
                 var requestObject = request.Request;
                 var productId = requestObject.ProductId;
+                var serviceType = requestObject.ServiceType;
 
                 // Get product with images from database
                 var product = await _context.Products
@@ -79,32 +84,46 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
                 try
                 {
-                    // Setup AI analysis options
-                    var generativeOptions = new GenerativeContentOptions
-                    {
-                        ImagePathList = imagePathList,
-                        Prompt = _promptBuilderServices.MakeSecondAttributePrompt(null),
-                        ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
-                    };
+                    IGenerateContentResult result;
+                    var prompt = _promptBuilderServices.MakeSecondAttributePrompt(null);
 
-                    // Get AI analysis results
-                    var result = await _generativeServices.GenerateContentAsync(generativeOptions);
+                    if (serviceType == GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Gemini])
+                    {
+                        var generativeOptions = new GeminiGenerativeContentOptions
+                        {
+                            ImagePathList = imagePathList,
+                            Prompt = _promptBuilderServices.MakeSecondAttributePrompt(null),
+                            ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
+                        };
+                        result = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
+
+                    }
+                    else
+                    {
+                        var generativeOptions = new GenerativeContentOptions
+                        {
+                            ImagePathList = imagePathList,
+                            Prompt = _promptBuilderServices.MakeSecondAttributePrompt(null),
+                            ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
+                        };
+                        result = await _generativeServices.GenerateContentAsync(generativeOptions);
+                    }
+
 
                     // Parse nutrition facts from markdown response
                     var parsedSecondAttributeData = !String.IsNullOrEmpty(result.ConcatResult) ? SecondAttributeParser.ParseResult(result.ConcatResult) : null;
 
                     // Update extract session with results
-                    // extractSession.RawExtractData = result.RawResult;
-                    // extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
-                    // extractSession.Status = ExtractStatus.Completed;
-                    // extractSession.CompletedAt = DateTime.UtcNow;
+                    extractSession.RawExtractData = result.RawResult;
+                    extractSession.ExtractedData = AppJson.Serialize(parsedSecondAttributeData);
+                    extractSession.Status = ExtractStatus.Completed;
+                    extractSession.CompletedAt = DateTime.UtcNow;
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     var response = new ExtractProductSecondAttributeResponse
                     {
                         FullResult = result.RawResult,
-                        ParsedFullResult = result.JsonParsedRawResult,
                         ConcatText = result.ConcatResult,
                         ParsedResult = parsedSecondAttributeData
                     };
@@ -113,9 +132,9 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                 }
                 catch (Exception ex)
                 {
-                    // extractSession.Status = ExtractStatus.Failed;
-                    // extractSession.ErrorMessage = ex.Message;
-                    // extractSession.CompletedAt = DateTime.UtcNow;
+                    extractSession.Status = ExtractStatus.Failed;
+                    extractSession.ErrorMessage = ex.Message;
+                    extractSession.CompletedAt = DateTime.UtcNow;
                     await _context.SaveChangesAsync(cancellationToken);
 
                     throw;
