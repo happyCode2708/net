@@ -9,15 +9,10 @@ namespace MyApi.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        public DbSet<Product> Products { get; set; }
-        public DbSet<ExtractSession> ExtractSessions { get; set; }
-
-
-        /// <summary>
-        /// Overwrite the SaveChanges
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        DbSet<Product> Products { get; set; }
+        DbSet<ExtractSession> ExtractSessions { get; set; }
+        DbSet<Image> Images { get; set; }
+        DbSet<ProductImage> ProductImages { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     }

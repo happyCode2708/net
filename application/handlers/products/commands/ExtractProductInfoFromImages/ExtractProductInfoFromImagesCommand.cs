@@ -36,11 +36,14 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromIma
 
             private IPromptBuilderService _promptBuilderService;
 
-            public Handler(IGenerativeServices generativeService, IPromptBuilderService PromptBuilderService, IApplicationDbContext Context)
+            private IImageServices _imageServices;
+
+            public Handler(IGenerativeServices generativeService, IPromptBuilderService PromptBuilderService, IApplicationDbContext Context, IImageServices imageServices)
             {
                 _generativeServices = generativeService;
                 _promptBuilderService = PromptBuilderService;
                 _context = Context;
+                _imageServices = imageServices;
             }
 
             public async Task<ResponseModel<ExtractProductInfoFromImageResponse>> Handle(ExtractProductInfoFromImagesCommand request, CancellationToken cancellationToken)
@@ -62,7 +65,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromIma
                 // Safely extract paths from non-null images
                 var imagePathList = product.ProductImages
                     .Where(pi => pi.Image != null)
-                    .Select(pi => pi.Image!.Path)
+                    .Select(pi => _imageServices.GetImagePath(pi.Image))
                     .ToList();
 
                 var generativeOptions = new GenerativeContentOptions

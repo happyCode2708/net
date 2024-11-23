@@ -12,8 +12,8 @@ using MyApi.Infrastructure.Persistence;
 namespace MyApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241114170735_AddSessionExtraction")]
-    partial class AddSessionExtraction
+    [Migration("20241123145548_UpdateImageWithMetaAndRemovePath")]
+    partial class UpdateImageWithMetaAndRemovePath
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,9 @@ namespace MyApi.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("ValidatedExtractedData")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId", "SourceType", "CreatedAt");
@@ -76,15 +79,32 @@ namespace MyApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("OriginFileName")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Extension")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Path")
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ImageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StoredFileName")
+                    b.Property<string>("ImageSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRaw")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OriginalFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -92,16 +112,12 @@ namespace MyApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
@@ -145,7 +161,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>

@@ -31,13 +31,14 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
             private IApplicationDbContext _context;
             private IPromptBuilderService _promptBuilderServices;
             private IGeminiServices _geminiServices;
-
-            public Handler(IGenerativeServices generativeServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IGeminiServices geminiServices)
+            private IImageServices _imageServices;
+            public Handler(IGenerativeServices generativeServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IGeminiServices geminiServices, IImageServices imageServices)
             {
                 _generativeServices = generativeServices;
                 _context = context;
                 _promptBuilderServices = promptBuilderServices;
                 _geminiServices = geminiServices;
+                _imageServices = imageServices;
             }
 
             public async Task<ResponseModel<ExtractProductSecondAttributeResponse>> Handle(ExtractProductSecondAttributeCommand request, CancellationToken cancellationToken)
@@ -60,7 +61,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                 // Extract image paths
                 var imagePathList = product.ProductImages
                     .Where(pi => pi.Image != null)
-                    .Select(pi => pi.Image!.Path)
+                    .Select(pi => _imageServices.GetImagePath(pi.Image))
                     .ToList();
 
                 if (!imagePathList.Any())

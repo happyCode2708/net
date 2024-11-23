@@ -15,33 +15,21 @@ namespace MyApi.Infrastructure.Persistence
         {
         }
 
-        // Define your DbSets (tables) here
-        // public DbSet<YourEntity> YourEntities { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ExtractSession> ExtractSessions { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-
-            // Product 
-            modelBuilder.Entity<Product>().HasKey(p => p.Id);
-            modelBuilder.Entity<Product>().Property(p => p.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1);
-            modelBuilder.Entity<Product>().HasIndex(p => p.UniqueId).IsUnique();
-
-
-            modelBuilder.Entity<Image>().HasKey(i => i.Id);
-            modelBuilder.Entity<Image>().Property(i => i.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1);
-            modelBuilder.Entity<Image>().HasIndex(i => i.UniqueId).IsUnique();
-
-            modelBuilder.Entity<ProductImage>().HasKey(pi => new { pi.ProductId, pi.ImageId });
-
-            modelBuilder.Entity<ProductImage>().HasOne(pi => pi.Product).WithMany(p => p.ProductImages).HasForeignKey(pi => pi.ProductId);
-
-            modelBuilder.Entity<ProductImage>().HasOne(pi => pi.Image).WithMany(i => i.ProductImages).HasForeignKey(pi => pi.ImageId);
         }
 
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
 }

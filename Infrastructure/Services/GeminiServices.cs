@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 using MyApi.Application.Common.Utils;
 using Application.Common.Dto.Gemini;
 
-namespace MyApi.Application.Services
+namespace MyApi.Infrastructure.Services
 {
     public class GeminiServices : IGeminiServices
     {

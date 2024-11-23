@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Application.Common.Interfaces;
 
-namespace MyApi.Application.Services
+namespace MyApi.Infrastructure.Services
 {
   public class PromptBuilderService : IPromptBuilderService
   {

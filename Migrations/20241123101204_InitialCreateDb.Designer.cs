@@ -12,8 +12,8 @@ using MyApi.Infrastructure.Persistence;
 namespace MyApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241118155521_makeSureAutoIncrementOne")]
-    partial class makeSureAutoIncrementOne
+    [Migration("20241123101204_InitialCreateDb")]
+    partial class InitialCreateDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,7 +104,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
@@ -148,7 +148,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using Application.Common.Dto.Image;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client.Extensions.Msal;
 using MyApi.Application.Common.Configs;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Domain.Models;
@@ -16,49 +16,103 @@ namespace MyApi.Application.Services
 
         private readonly StorageConfig _storageConfig;
 
-        public ImageServices(IOptions<StorageConfig> storageConfig)
+        private readonly IApplicationDbContext _context;
+
+        public ImageServices(
+            IOptions<StorageConfig> storageConfig,
+            IApplicationDbContext context)
         {
             _storageConfig = storageConfig.Value;
+            _context = context;
         }
 
-        public async Task<SaveStaticFileReturn> SaveStaticFile(IFormFile file)
+        public async Task<SaveStaticFileReturn> SaveStaticFile(
+            IFormFile file,
+            int? thumbnailSize = null,
+            string? existingImageName = null)
         {
-
-            var originFileName = file.FileName;
-            var originFileNameWithoutExtension = Path.GetFileNameWithoutExtension(originFileName);
-            var fileExt = Path.GetExtension(originFileName);
-
-            var uuid = Guid.NewGuid().ToString();
-
-            var newStoredFileName = $"{uuid}__{originFileName}";
-
-
-            var filePath = Path.Combine(_storageConfig.AssetPath, newStoredFileName);
-            Console.WriteLine($"filePath = {filePath}");
-            var fileDir = Path.GetDirectoryName(filePath);
-            Console.WriteLine($"fileDir = {fileDir}");
-
-            Directory.CreateDirectory(fileDir);
-
-            using var stream = File.Create(filePath);
-            await file.CopyToAsync(stream);
-            stream.Close();
-
-            var result = new SaveStaticFileReturn
+            try
             {
-                OriginFileName = originFileName,
-                StoredFileName = newStoredFileName,
-                FilePath = filePath,
-                FileUrl = Path.Combine(_storageConfig.AssetPathRequest, newStoredFileName)
-            };
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("File is empty");
+                }
 
-            return result;
+                // Generate file name
+                string imageName;
+                string storedFileName;
+                string fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!string.IsNullOrEmpty(existingImageName))
+                {
+                    // Use existing filename for thumbnails
+                    imageName = existingImageName;
+                    storedFileName = $"{existingImageName}{fileExtension}";
+                }
+                else
+                {
+                    // Create new filename for original image
+                    var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+                    var shortUuid = Guid.NewGuid().ToString("N").Substring(0, 8);
+                    imageName = $"{timestamp}_{shortUuid}";
+                    storedFileName = $"{timestamp}_{shortUuid}{fileExtension}";
+                }
+
+                // Determine subfolder path
+                string subFolder;
+                if (thumbnailSize.HasValue)
+                {
+                    subFolder = Path.Combine("images", "thumbnails", thumbnailSize.Value.ToString());
+                }
+                else
+                {
+                    subFolder = Path.Combine("images", "originals");
+                }
+
+                var fullDirectoryPath = Path.Combine(_storageConfig.AssetPath, subFolder);
+                var filePath = Path.Combine(fullDirectoryPath, storedFileName);
+
+                // Ensure path is normalized
+                filePath = Path.GetFullPath(filePath);
+
+                // Validate path
+                if (!filePath.StartsWith(_storageConfig.AssetPath))
+                {
+                    throw new SecurityException("Invalid file path");
+                }
+
+                if (!Directory.Exists(fullDirectoryPath))
+                {
+                    Directory.CreateDirectory(fullDirectoryPath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var normalizedSubFolder = subFolder.Replace(Path.DirectorySeparatorChar, '/');
+                var fileUrl = $"{_storageConfig.AssetPathRequest.TrimEnd('/')}/{normalizedSubFolder}/{storedFileName}";
+
+                return new SaveStaticFileReturn
+                {
+                    OriginFullFileName = file.FileName,
+                    StoredFullFileName = storedFileName,
+                    ImageName = imageName,
+                    ThumbnailSize = thumbnailSize,
+                    Extension = fileExtension
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error saving file", ex);
+            }
         }
 
-        public Task<Image> AddImage(Image image, CancellationToken cancellationToken = default)
+        public async Task<Image> AddImage(Image image, CancellationToken cancellationToken = default)
         {
-
-            throw new NotImplementedException();
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync(cancellationToken);
+            return image;
         }
 
         public Task DeleteImage(string ImageId, CancellationToken cancellationToken = default)
@@ -69,6 +123,26 @@ namespace MyApi.Application.Services
         public Task ReplaceImage(string originImageId, IFormFile newImageFile, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
+        }
+
+        public string GetImageUrl(Image image, int? thumbnailSize = null)
+        {
+            string subFolder = thumbnailSize.HasValue
+                ? $"images/thumbnails/{thumbnailSize.Value}"
+                : "images/originals";
+
+            var normalizedPath = _storageConfig.AssetPathRequest.TrimEnd('/');
+            return $"{normalizedPath}/{subFolder}/{image.ImageName}{image.Extension}";
+        }
+
+        public string GetImagePath(Image image, int? thumbnailSize = null)
+        {
+            string subFolder = thumbnailSize.HasValue
+                ? Path.Combine("images", "thumbnails", thumbnailSize.Value.ToString())
+                : Path.Combine("images", "originals");
+
+            var path = Path.Combine(_storageConfig.AssetPath, subFolder, $"{image.ImageName}{image.Extension}");
+            return Path.GetFullPath(path);
         }
     }
 }

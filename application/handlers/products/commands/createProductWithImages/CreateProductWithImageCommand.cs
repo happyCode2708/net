@@ -53,11 +53,16 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
 
                         var image = new Image
                         {
-                            OriginFileName = saveStaticResult.OriginFileName,
-                            StoredFileName = saveStaticResult.StoredFileName,
-                            Url = saveStaticResult.FileUrl,
-                            Path = saveStaticResult.FilePath,
+                            ImageName = saveStaticResult.ImageName,
+                            Extension = saveStaticResult.Extension,
+                            OriginalFileName = saveStaticResult.OriginFullFileName,
+                            FileSize = file.Length,
+                            MimeType = file.ContentType,
+                            CreatedAt = DateTime.UtcNow
                         };
+
+                        image = await _imageServices.AddImage(image, cancellationToken);
+
 
                         newProductWithImages.ProductImages.Add(new ProductImage
                         {
@@ -77,8 +82,8 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
                     Upc12 = newProductWithImages.Upc12,
                     ProductImages = newProductWithImages.ProductImages.Select(pi => new CreateProductWithImagesResponseProductImageDto
                     {
-                        FileName = pi.Image.OriginFileName,
-                        FileUrl = pi.Image.Url,
+                        FileName = pi.Image.OriginalFileName,
+                        FileUrl = _imageServices.GetImageUrl(pi.Image),
                     }).ToList(),
                 };
 

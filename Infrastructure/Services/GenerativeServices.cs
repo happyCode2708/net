@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 using Application.Common.Dto.Generative;
 using MyApi.Application.Common.Utils.Base;
 
-namespace MyApi.Application.Services
+namespace MyApi.Infrastructure.Services
 {
     public class GenerativeServices : IGenerativeServices
     {
@@ -38,7 +38,7 @@ namespace MyApi.Application.Services
             _credentialConfig = credentialConfig;
             _httpClientFactory = httpClientFactory;
             _setupGoogleTokenTask = SetupGoogleTokenAsync();
-        
+
         }
 
         private async Task SetupGoogleTokenAsync()

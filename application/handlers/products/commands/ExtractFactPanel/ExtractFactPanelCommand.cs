@@ -36,7 +36,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
             private IPromptBuilderService _promptBuilderServices;
             private IMapper _mapper;
             private ILogger<ExtractFactPanelCommand> _logger;
-            public Handler(IGenerativeServices generativeServices, IGeminiServices geminiServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IMapper mapper, ILogger<ExtractFactPanelCommand> logger)
+            private IImageServices _imageServices;
+            public Handler(IGenerativeServices generativeServices, IGeminiServices geminiServices, IApplicationDbContext context, IPromptBuilderService promptBuilderServices, IMapper mapper, ILogger<ExtractFactPanelCommand> logger, IImageServices imageServices)
             {
                 _generativeServices = generativeServices;
                 _geminiServices = geminiServices;
@@ -44,6 +45,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                 _promptBuilderServices = promptBuilderServices;
                 _mapper = mapper;
                 _logger = logger;
+                _imageServices = imageServices;
             }
 
             public async Task<ResponseModel<ExtractFactPanelResponse>> Handle(ExtractFactPanelCommand request, CancellationToken cancellationToken)
@@ -66,7 +68,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                 // Extract image paths
                 var imagePathList = product.ProductImages
                     .Where(pi => pi.Image != null)
-                    .Select(pi => pi.Image!.Path)
+                    .Select(pi => _imageServices.GetImagePath(pi.Image))
                     .ToList();
 
                 if (!imagePathList.Any())

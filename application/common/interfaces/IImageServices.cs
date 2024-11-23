@@ -15,6 +15,8 @@ namespace MyApi.Application.Common.Interfaces
 
         Task DeleteImage(string imageId, CancellationToken cancellationToken = default);
 
-        Task<SaveStaticFileReturn> SaveStaticFile(IFormFile file);
+        Task<SaveStaticFileReturn> SaveStaticFile(IFormFile file, int? thumbnailSize = null, string? existingImageName = null);
+        string GetImageUrl(Image image, int? thumbnailSize = null);
+        string GetImagePath(Image image, int? thumbnailSize = null);
     }
 }
