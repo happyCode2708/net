@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+# Tạo thư mục để mount secrets
+RUN mkdir -p /etc/company_secrets/prompts

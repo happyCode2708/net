@@ -95,3 +95,6 @@ Desktop.ini
 
 # Ignore env
 .env
+
+# Ignore secrets
+Prompt/*

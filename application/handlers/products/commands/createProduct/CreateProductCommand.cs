@@ -55,8 +55,6 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProduct
 
 
                 return ResponseModel<CreateProductResponse>.Success(productResponse, "create product successfully");
-
-                // throw new NotImplementedException();
             }
         }
     }

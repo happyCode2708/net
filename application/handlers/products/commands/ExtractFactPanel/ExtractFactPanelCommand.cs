@@ -94,7 +94,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                 {
                     IGenerateContentResult result;
 
-                    var prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count);
+                    var prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt_secret("", imagePathList.Count);
 
                     if (serviceType == GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Gemini])
                     {
@@ -125,7 +125,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     // Parse nutrition facts from markdown response
                     var parsedNutritionData = !String.IsNullOrEmpty(result.ConcatResult) ? NutritionParser.ParseMarkdownResponse(result.ConcatResult) : null;
 
-                    var validatedNutritionFactData = parsedNutritionData != null 
+                    var validatedNutritionFactData = parsedNutritionData != null
                         ? new NutritionFactValidation(_mapper).handleValidateNutritionFact(parsedNutritionData)
                         : null;
 
@@ -134,7 +134,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                     extractSession.ExtractedData = System.Text.Json.JsonSerializer.Serialize(parsedNutritionData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
-                    extractSession.ValidatedExtractedData = validatedNutritionFactData != null 
+                    extractSession.ValidatedExtractedData = validatedNutritionFactData != null
                         ? AppJson.Serialize(validatedNutritionFactData)
                         : null;
 

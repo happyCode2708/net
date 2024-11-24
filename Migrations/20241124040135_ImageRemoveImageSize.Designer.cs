@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApi.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using MyApi.Infrastructure.Persistence;
 namespace MyApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241124040135_ImageRemoveImageSize")]
+    partial class ImageRemoveImageSize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ProductId", "SourceType", "CreatedAt");
 
-                    b.ToTable("ExtractSessions", (string)null);
+                    b.ToTable("ExtractSessions");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Image", b =>
@@ -110,7 +113,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
@@ -139,7 +142,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ProductImage", b =>
@@ -154,7 +157,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>

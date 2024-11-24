@@ -2,6 +2,7 @@ using Microsoft.Extensions.FileProviders;
 using Extensions;
 using MyApi.Infrastructure;
 using DotNetEnv;
+using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +14,14 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 //* static config
-var assetPath = builder.Configuration["StorageConfig:AssetPath"];
+var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? builder.Configuration["StorageConfig:AssetPath"];
 var assetPathRequest = builder.Configuration["StorageConfig:AssetPathRequest"];
 
 //* Register AutoMapper
 
 var app = builder.Build();
+
+app.UseDbReSeed();
 
 //* apply migrations
 if (app.Environment.IsDevelopment())
@@ -44,11 +47,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapControllers(); // This enables routing for controllers.
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

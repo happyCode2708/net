@@ -68,17 +68,24 @@ namespace MyApi.Application.Services
                     subFolder = Path.Combine("images", "originals");
                 }
 
-                var fullDirectoryPath = Path.Combine(_storageConfig.AssetPath, subFolder);
+                var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH");
+
+                if (string.IsNullOrEmpty(assetPath))
+                {
+                    assetPath = _storageConfig.DefaultAssetPath;
+                }
+
+                var fullDirectoryPath = Path.Combine(assetPath, subFolder);
                 var filePath = Path.Combine(fullDirectoryPath, storedFileName);
 
                 // Ensure path is normalized
                 filePath = Path.GetFullPath(filePath);
 
                 // Validate path
-                if (!filePath.StartsWith(_storageConfig.AssetPath))
-                {
-                    throw new SecurityException("Invalid file path");
-                }
+                // if (!filePath.StartsWith(_storageConfig.AssetPath))
+                // {
+                //     throw new SecurityException("Invalid file path");
+                // }
 
                 if (!Directory.Exists(fullDirectoryPath))
                 {

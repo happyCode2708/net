@@ -17,8 +17,7 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
 
     public class CreateProductWithImagesResponseProductImageDto
     {
-        public string FileName { get; set; }
-
-        public string FileUrl { get; set; }
+        public string OriginalFileName { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

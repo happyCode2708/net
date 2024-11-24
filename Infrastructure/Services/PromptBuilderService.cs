@@ -3,11 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyApi.Application.Common.Interfaces;
+using System.IO;
 
 namespace MyApi.Infrastructure.Services
 {
   public class PromptBuilderService : IPromptBuilderService
   {
+
+    public string MakeMarkdownNutritionPrompt_secret(string? ocrText, int ImageCount)
+    {
+
+      var ocr = !String.IsNullOrEmpty(ocrText) ? $@"
+      OCR texts from provided images:
+      {ocrText}
+      " : "";
+
+      // Lấy đường dẫn từ biến môi trường
+      var templatePath = Environment.GetEnvironmentVariable("NUTRITION_PROMPT_TEMPLATE_PATH");
+      if (string.IsNullOrEmpty(templatePath))
+      {
+        throw new InvalidOperationException("NUTRITION_PROMPT_TEMPLATE_PATH environment variable is not set");
+      }
+
+      // Đọc nội dung từ file
+      string promptTemplate;
+      try
+      {
+        // Sử dụng Directory.GetCurrentDirectory() thay vì AppDomain.CurrentDomain.BaseDirectory
+        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), templatePath);
+        promptTemplate = File.ReadAllText(fullPath);
+      }
+      catch (Exception ex)
+      {
+        throw new InvalidOperationException($"Could not read prompt template file: {ex.Message}");
+      }
+
+      return $@"{ocr}{promptTemplate}";
+    }
     public string MakeMarkdownNutritionPrompt(string? ocrText, int ImageCount)
     {
 
@@ -172,7 +204,6 @@ debug list:
 
 VALIDATION AND FIX BUGS:
 1) To avoid any deduction and ensure accuracy.
-promt
 2) Product info could contain multiple languages info. Only return provided info in english.
 
 3) result must be in order and include all tables content below (note their formats right below TABLE FORMAT: or INFO FORMAT:)

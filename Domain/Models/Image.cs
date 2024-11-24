@@ -12,7 +12,6 @@ namespace MyApi.Domain.Models
         // Metadata
         public long FileSize { get; set; }
         public string MimeType { get; set; }
-        public string ImageSize { get; set; }
         public bool IsRaw { get; set; }
         public string Extension { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
