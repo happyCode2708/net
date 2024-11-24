@@ -18,12 +18,16 @@ namespace MyApi.Application.Services
 
         private readonly IApplicationDbContext _context;
 
+        private readonly IAssetPathService _assetPathService;
+
         public ImageServices(
             IOptions<StorageConfig> storageConfig,
-            IApplicationDbContext context)
+            IApplicationDbContext context,
+            IAssetPathService assetPathService)
         {
             _storageConfig = storageConfig.Value;
             _context = context;
+            _assetPathService = assetPathService;
         }
 
         public async Task<SaveStaticFileReturn> SaveStaticFile(
@@ -68,12 +72,13 @@ namespace MyApi.Application.Services
                     subFolder = Path.Combine("images", "originals");
                 }
 
-                var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH");
+                // var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH");
 
-                if (string.IsNullOrEmpty(assetPath))
-                {
-                    assetPath = _storageConfig.DefaultAssetPath;
-                }
+                // if (string.IsNullOrEmpty(assetPath))
+                // {
+                //     assetPath = _storageConfig.DefaultAssetPath;
+                // }
+                var assetPath = _assetPathService.GetAssetPath();
 
                 var fullDirectoryPath = Path.Combine(assetPath, subFolder);
                 var filePath = Path.Combine(fullDirectoryPath, storedFileName);
@@ -148,7 +153,8 @@ namespace MyApi.Application.Services
                 ? Path.Combine("images", "thumbnails", thumbnailSize.Value.ToString())
                 : Path.Combine("images", "originals");
 
-            var path = Path.Combine(_storageConfig.AssetPath, subFolder, $"{image.ImageName}{image.Extension}");
+            var assetPath = _assetPathService.GetAssetPath();
+            var path = Path.Combine(assetPath, subFolder, $"{image.ImageName}{image.Extension}");
             return Path.GetFullPath(path);
         }
     }

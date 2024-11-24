@@ -7,6 +7,7 @@ using MyApi.Infrastructure.Persistence;
 using MyApi.Infrastructure.Services;
 using MediatR;
 using MyApi.Application.Common.Configs;
+using MyApi.Application.Common.Utils.Base;
 
 
 namespace MyApi.Infrastructure;
@@ -43,6 +44,8 @@ public static class DependencyInjection
         configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
         dbHost, dbPort, dbName, dbUser, dbPassword);
+
+    AppConsole.WriteLineObject("connection string", connectionString);
 
     services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
@@ -88,6 +91,7 @@ public static class DependencyInjection
     services.AddControllers().AddNewtonsoftJson();
 
     services.AddMediatR(typeof(Program).Assembly);
+    services.AddScoped<IAssetPathService, AssetPathService>();
 
     return services;
   }

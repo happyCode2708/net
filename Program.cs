@@ -27,6 +27,7 @@ app.UseDbReSeed();
 if (app.Environment.IsDevelopment())
 {
     app.ApplyMigrations();
+    app.UseDeveloperExceptionPage();
 }
 
 //* use cors policy

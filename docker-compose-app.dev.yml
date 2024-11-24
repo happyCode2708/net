@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=${DB_HOST},${DB_PORT};Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;
       - ASSET_PATH=${ASSET_PATH}
     ports:
       - '8080:80'
@@ -15,8 +15,6 @@ services:
     networks:
       - ocr_network
     restart: unless-stopped
-
 networks:
   ocr_network:
-    # external: true
-    driver: bridge
+    external: true
