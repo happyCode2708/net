@@ -4,7 +4,7 @@ using MyApi.Infrastructure.Persistence;
 
 namespace Infrastructure.Extensions
 {
-  public static class DbInitializerExtension
+  public static class DbReseedExtension
   {
     public static IApplicationBuilder UseDbReSeed(this IApplicationBuilder app)
     {

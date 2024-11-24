@@ -79,10 +79,10 @@ public static class DependencyInjection
     {
       options.AddPolicy("AllowNextJsApp", policy =>
       {
-        policy.WithOrigins("http://localhost:3000") // Replace with your Next.js app URL
+        policy.WithOrigins("http://localhost:3000") //replace with front end host
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); // if you need to send cookies or auth headers
+              .AllowCredentials(); //* allow cookies on header
       });
     });
 

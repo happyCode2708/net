@@ -1,5 +1,4 @@
 using Microsoft.Extensions.FileProviders;
-using Extensions;
 using MyApi.Infrastructure;
 using DotNetEnv;
 using Infrastructure.Extensions;
