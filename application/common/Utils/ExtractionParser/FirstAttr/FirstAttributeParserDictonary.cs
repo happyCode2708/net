@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Common.Dto.Extraction;
-
 namespace Application.Common.Utils.ExtractionParser.FirstAttr
 {
     public static class FirstAttributeParserDictionary
@@ -11,7 +5,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         public static Dictionary<string, string> LabelInfoHeaderDict = new Dictionary<string, string>
         {
             { "label item", "labelItem"},
-            { "label item type on product (answer is \"certification label\"/ \"label text\"/ \"other\") (if type \"other\" tell me what type you think it belong to)", "labelItemType"},
+            { "label item type on product (answer is \"certification label\"/\"label text\"/\"other\") (if type \"other\" tell me what type you think it belong to)", "labelItemType"},
             { "what label item say ?", "labelText"}
         };
 

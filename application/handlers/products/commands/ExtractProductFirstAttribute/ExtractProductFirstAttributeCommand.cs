@@ -85,10 +85,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
                 try
                 {
+                    IGenerateContentResult generatedResult;
 
-                    IGenerateContentResult result;
-
-                    // Setup AI analysis options
                     var prompt = _promptBuilderServices.MakeFirstAttributePrompt(null);
 
                     if (serviceType == GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Gemini])
@@ -101,8 +99,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                             ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                         };
 
-                        // Get AI analysis results
-                        result = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
+                        generatedResult = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
                     }
                     else
                     {
@@ -114,31 +111,27 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                             ModelId = GenerativeModelEnum.Gemini_1_5_Pro_002,
                         };
 
-                        result = await _generativeServices.GenerateContentAsync(generativeOptions);
+                        generatedResult = await _generativeServices.GenerateContentAsync(generativeOptions);
                     }
 
 
-                    // Parse nutrition facts from markdown response
-                    var parsedFirstAttribute = !String.IsNullOrEmpty(result.ConcatResult) ? FirstAttributeParser.ParseResult(result.ConcatResult) : null;
-
-                    // var validatedFirstAttribute = parsedFirstAttribute != null 
-                    //     ? new (_mapper).handleValidateFirstAttribute(parsedFirstAttribute)
-                    //     : null;
+                    // Parse first attribute group response data
+                    var parsedFirstAttribute = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? FirstAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
 
                     // Update extract session with results
-                    extractSession.RawExtractData = result.ConcatResult;
+                    extractSession.RawExtractData = generatedResult.ConcatResult;
                     extractSession.ExtractedData = AppJson.Serialize(parsedFirstAttribute);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
-                    extractSession.ValidatedExtractedData = null;
+                    extractSession.ValidatedExtractedData = null; //* in progress
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     var response = new ExtractProductFirstAttributeResponse
                     {
-                        FullResult = result.RawResult,
-                        ConcatText = result.ConcatResult,
-                        ParsedResult = parsedFirstAttribute,
+                        // FullResult = result.RawResult,
+                        // ConcatText = result.ConcatResult,
+                        ExtractedInfo = parsedFirstAttribute,
                     };
 
                     return ResponseModel<ExtractProductFirstAttributeResponse>.Success(response);

@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Application.Common.Dto.Extraction;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace Application.Common.Utils.ExtractionParser.SecondAttr
 {
@@ -10,23 +9,22 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
         {
             var result = new SecondAttributeProductInfo();
 
-            var tableDict = new SecondAttributeParserDictionary();
 
-            result.SugarClaim = ParseTableSection(input, "SUGAR_CLAIM_TABLE", tableDict.SugarClaimHeaderDict);
+            result.SugarClaim = ParseTableSection(input, "SUGAR_CLAIM_TABLE", SecondAttributeParserDictionary.SugarClaimHeaderDict);
 
-            result.FatClaim = ParseTableSection(input, "FAT_CLAIM_TABLE", tableDict.FatClaimHeaderDict);
+            result.FatClaim = ParseTableSection(input, "FAT_CLAIM_TABLE", SecondAttributeParserDictionary.FatClaimHeaderDict);
 
-            result.ProcessClaim = ParseTableSection(input, "PROCESS_CLAIM_TABLE", tableDict.ProcessClaimHeaderDict);
+            result.ProcessClaim = ParseTableSection(input, "PROCESS_CLAIM_TABLE", SecondAttributeParserDictionary.ProcessClaimHeaderDict);
 
-            result.CalorieClaim = ParseTableSection(input, "CALORIE_CLAIM_TABLE", tableDict.CalorieClaimHeaderDict);
+            result.CalorieClaim = ParseTableSection(input, "CALORIE_CLAIM_TABLE", SecondAttributeParserDictionary.CalorieClaimHeaderDict);
 
-            result.SaltClaim = ParseTableSection(input, "SALT_CLAIM_TABLE", tableDict.SaltClaimHeaderDict);
+            result.SaltClaim = ParseTableSection(input, "SALT_CLAIM_TABLE", SecondAttributeParserDictionary.SaltClaimHeaderDict);
 
-            result.FirstExtraClaim = ParseTableSection(input, "FIRST_EXTRA_CLAIM_TABLE", tableDict.ExtraClaimHeaderDict);
+            result.FirstExtraClaim = ParseTableSection(input, "FIRST_EXTRA_CLAIM_TABLE", SecondAttributeParserDictionary.ExtraClaimHeaderDict);
 
-            result.SecondExtraClaim = ParseTableSection(input, "SECOND_EXTRA_CLAIM_TABLE", tableDict.ExtraClaimHeaderDict);
+            result.SecondExtraClaim = ParseTableSection(input, "SECOND_EXTRA_CLAIM_TABLE", SecondAttributeParserDictionary.ExtraClaimHeaderDict);
 
-            result.ThirdExtraClaim = ParseTableSection(input, "THIRD_EXTRA_CLAIM_TABLE", tableDict.ExtraClaimHeaderDict);
+            result.ThirdExtraClaim = ParseTableSection(input, "THIRD_EXTRA_CLAIM_TABLE", SecondAttributeParserDictionary.ExtraClaimHeaderDict);
 
             return result;
         }
@@ -72,7 +70,5 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
             var match = Regex.Match(input, pattern, RegexOptions.Singleline);
             return match.Success ? match.Groups[1].Value.Trim() : string.Empty;
         }
-
-
     }
 }

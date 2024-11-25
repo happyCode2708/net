@@ -36,7 +36,7 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
 
                 var productRequest = request.Request;
 
-                var newProductWithImages = new Product
+                var newProduct = new Product
                 {
                     IxoneID = productRequest?.IxoneID,
                     Upc12 = productRequest?.Upc12,
@@ -64,30 +64,30 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
                         image = await _imageServices.AddImage(image, cancellationToken);
 
 
-                        newProductWithImages.ProductImages.Add(new ProductImage
+                        newProduct.ProductImages.Add(new ProductImage
                         {
-                            Product = newProductWithImages,
+                            Product = newProduct,
                             Image = image,
                         });
 
                     }
                 }
 
-                await _productServices.AddProduct(newProductWithImages);
+                await _productServices.AddProduct(newProduct);
 
-                var newProductWithImagesResponse = new CreateProductWithImagesResponse
+                var newProductResponse = new CreateProductWithImagesResponse
                 {
-                    ProductId = newProductWithImages.Id,
-                    IxoneID = newProductWithImages.IxoneID,
-                    Upc12 = newProductWithImages.Upc12,
-                    ProductImages = newProductWithImages.ProductImages.Select(pi => new CreateProductWithImagesResponseProductImageDto
+                    ProductId = newProduct.Id,
+                    IxoneID = newProduct.IxoneID,
+                    Upc12 = newProduct.Upc12,
+                    ProductImages = newProduct.ProductImages.Select(pi => new CreateProductWithImagesResponseProductImageDto
                     {
                         OriginalFileName = pi.Image.OriginalFileName,
                         ImageUrl = _imageServices.GetImageUrl(pi.Image),
                     }).ToList(),
                 };
 
-                return ResponseModel<CreateProductWithImagesResponse>.Success(newProductWithImagesResponse);
+                return ResponseModel<CreateProductWithImagesResponse>.Success(newProductResponse, "successfully created product");
 
             }
         }

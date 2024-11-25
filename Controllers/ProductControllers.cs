@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
 using MyApi.Core.Controllers;
 using MyApi.Application.Handlers.Products.Commands.CreateProduct;
 using MyApi.Application.Handlers.Products.Commands.CreateProductWithImages;
-using MyApi.Application.Handlers.Products.Commands.ExtractProductInfoFromImages;
 using MyApi.Application.Handlers.Products.Queries.QueryProductList;
 using MyApi.Application.Handlers.Products.Commands.ExtractFactPanel;
 using MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute;
@@ -19,6 +13,7 @@ namespace MyApi.Controllers
     [Route("api/pim")]
     public class ProductController : BaseApiController
     {
+        // api api/pim/get-product-list
         [HttpGet("get-product-list")]
         public async Task<IActionResult> GetProductList([FromQuery] string? searchText, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
@@ -30,8 +25,6 @@ namespace MyApi.Controllers
                 PageSize = pageSize,
             };
 
-            Console.WriteLine(pageSize);
-
             var result = await QueryAsync(new QueryProductList(query));
 
             return Ok(result);
@@ -41,30 +34,15 @@ namespace MyApi.Controllers
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
         {
 
-            // if (!ModelState.IsValid)
-            // {
-            //     return BadRequest(ModelState);
-            // }
-
             var result = await CommandAsync(new CreateProductCommand(request));
 
             return Ok(result);
-
         }
         // api api/pim/create-product
         [HttpPost("create-product-with-images")]
         public async Task<IActionResult> CreateProductWithImages([FromForm] CreateProductWithImagesRequest request)
         {
-
             var result = await CommandAsync(new CreateProductWithImageCommand(request));
-
-            return Ok(result);
-        }
-        // api api/pim/extract-product-with-images
-        [HttpPost("extract-product-with-images")]
-        public async Task<IActionResult> ExtractProductInfoFromImages(ExtractProductInfoFromImagesRequest request)
-        {
-            var result = await CommandAsync(new ExtractProductInfoFromImagesCommand(request));
 
             return Ok(result);
         }

@@ -9,12 +9,10 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 {
     public class ExtractProductFirstAttributeResponse
     {
-        public string? FullResult { get; set; }
+        // public string? FullResult { get; set; }
 
-        public string? ConcatText { get; set; }
-        
-        public FirstProductAttributeInfo? ParsedResult { get; set; }
-        //! DEV
-        public JArray? ParsedFullResult { get; set; }
+        // public string? ConcatText { get; set; }
+
+        public FirstProductAttributeInfo? ExtractedInfo { get; set; }
     }
 }

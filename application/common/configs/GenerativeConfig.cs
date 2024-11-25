@@ -10,7 +10,7 @@ using Application.Common.Interfaces;
 
 namespace MyApi.Application.Common.Configs
 {
-    public class GenerativeConfig: IGenerativeConfig
+    public class GenerativeConfig : IGenerativeConfig
     {
 
         public List<object> SafetySettings { get; set; }

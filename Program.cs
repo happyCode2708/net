@@ -1,4 +1,3 @@
-using Microsoft.Extensions.FileProviders;
 using MyApi.Infrastructure;
 using DotNetEnv;
 using Infrastructure.Extensions;
@@ -6,17 +5,10 @@ using Infrastructure.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
-
 builder.Configuration.AddEnvironmentVariables();
 
 //* add infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
-
-//* static config
-var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? builder.Configuration["StorageConfig:AssetPath"];
-var assetPathRequest = builder.Configuration["StorageConfig:AssetPathRequest"];
-
-//* Register AutoMapper
 
 var app = builder.Build();
 
@@ -32,11 +24,8 @@ if (app.Environment.IsDevelopment())
 //* use cors policy
 app.UseCors("AllowNextJsApp");
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), assetPath)),
-    RequestPath = assetPathRequest,
-});
+app.UseStaticFilesByAssetPath(builder.Configuration);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

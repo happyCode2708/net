@@ -85,7 +85,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
                 try
                 {
-                    IGenerateContentResult result;
+                    IGenerateContentResult generatedResult;
                     var prompt = _promptBuilderServices.MakeSecondAttributePrompt(null);
 
                     if (serviceType == GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Gemini])
@@ -93,10 +93,10 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                         var generativeOptions = new GeminiGenerativeContentOptions
                         {
                             ImagePathList = imagePathList,
-                            Prompt = _promptBuilderServices.MakeSecondAttributePrompt(null),
+                            Prompt = prompt,
                             ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                         };
-                        result = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
+                        generatedResult = await _geminiServices.GenerateContentWithApiKeyAsync(generativeOptions);
 
                     }
                     else
@@ -104,29 +104,30 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                         var generativeOptions = new GenerativeContentOptions
                         {
                             ImagePathList = imagePathList,
-                            Prompt = _promptBuilderServices.MakeSecondAttributePrompt(null),
+                            Prompt = prompt,
                             ModelId = GenerativeModelEnum.Gemini_1_5_Flash_002,
                         };
-                        result = await _generativeServices.GenerateContentAsync(generativeOptions);
+                        generatedResult = await _generativeServices.GenerateContentAsync(generativeOptions);
                     }
 
 
-                    // Parse nutrition facts from markdown response
-                    var parsedSecondAttributeData = !String.IsNullOrEmpty(result.ConcatResult) ? SecondAttributeParser.ParseResult(result.ConcatResult) : null;
+                    // Parse second attribute group response data
+                    var parsedSecondAttributeData = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? SecondAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
 
                     // Update extract session with results
-                    extractSession.RawExtractData = result.RawResult;
+                    extractSession.RawExtractData = generatedResult.RawResult;
                     extractSession.ExtractedData = AppJson.Serialize(parsedSecondAttributeData);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
+                    extractSession.ValidatedExtractedData = null; //* in progress
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     var response = new ExtractProductSecondAttributeResponse
                     {
-                        FullResult = result.RawResult,
-                        ConcatText = result.ConcatResult,
-                        ParsedResult = parsedSecondAttributeData
+                        // FullResult = result.RawResult,
+                        // ConcatText = result.ConcatResult,
+                        ExtractedInfo = parsedSecondAttributeData
                     };
 
                     return ResponseModel<ExtractProductSecondAttributeResponse>.Success(response);

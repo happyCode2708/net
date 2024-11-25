@@ -1,10 +1,6 @@
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Application.Common.Dto.Extraction;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyApi.Application.Common.Utils.Base;
-// using MyApi.Application.Common.Utils.ParseExtractedResult.FirstAttributeParserUtils;
 
 namespace Application.Common.Utils.ExtractionParser.FirstAttr
 {
@@ -15,8 +11,6 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         {
             var result = new FirstProductAttributeInfo();
 
-            // var tableDict = FirstAttributeParserDictionary;
-            // Parse all sections
             result.StorageInstructions = ParseSection<StorageInstructions>(input, "STORAGE_INSTRUCTION");
             result.UsageInstructions = ParseSection<UsageInstructions>(input, "USAGE_INSTRUCTION");
             result.CookingInstructions = ParseSection<CookingInstructions>(input, "COOKING_INSTRUCTION_OBJECT");
@@ -111,18 +105,5 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
             var match = Regex.Match(input, pattern, RegexOptions.Singleline);
             return match.Success ? match.Groups[1].Value.Trim() : string.Empty;
         }
-
-        // private static string RemoveSplash(string input)
-        // {
-        //     var removedSplash = input.Replace(@"\/", "/")
-        //     .Replace(@"\""", "\"")
-        //     .Replace(@"\n", "\n")
-        //     .Replace(@"\r", "\r")
-        //     .Replace(@"\t", "\t");
-
-        //     return removedSplash;
-        // }
     }
-
-
 }

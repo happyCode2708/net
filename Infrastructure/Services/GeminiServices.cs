@@ -46,6 +46,8 @@ namespace MyApi.Infrastructure.Services
 
             var contents = new List<object>();
 
+            // var partRequest = new List<object>();
+
             // Add image parts if present
             if (generativeOptions.ImagePathList?.Any() == true)
             {
@@ -173,32 +175,8 @@ namespace MyApi.Infrastructure.Services
                 return responseJson.GetProperty("file").GetProperty("uri").GetString();
             }
 
-
-
-
-            // private string ExtractTextFromResponse(string response)
-            // {
-            //     // Implement response parsing based on the actual response format
-            //     // This is a placeholder - adjust according to actual response structure
-            //     var responseObj = JsonSerializer.Deserialize<JsonElement>(response);
-            //     return responseObj.GetProperty("candidates")[0]
-            //         .GetProperty("content")
-            //         .GetProperty("parts")[0]
-            //         .GetProperty("text")
-            //         .GetString();
-            // }
         }
-
-        // public class InlineData
-        // {
-        //     public string mimeType { get; set; }
-        //     public string data { get; set; }
-        // }
-
-        // public class ImageObject
-        // {
-        //     public InlineData inlineData { get; set; }
-        // }
     }
+
 }
 

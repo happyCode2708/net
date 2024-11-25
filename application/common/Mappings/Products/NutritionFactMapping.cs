@@ -22,7 +22,7 @@ namespace MyApi.Application.Common.Mappings.Products
                .ForMember(
                     dest => dest.ValidatedNutrients,
                     opt => opt.MapFrom(src => src.Nutrients)
-                );;
+                ); ;
 
             CreateMap<NutritionFactData, ValidateNutritionFactData>();
         }

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MyApi.Infrastructure.Persistence;
 
-namespace Extensions
+namespace Infrastructure.Extensions
 {
-  public static class MigrationExtensions
+  public static class WebApplicationExtensions
   {
     public static void ApplyMigrations(this WebApplication app)
     {

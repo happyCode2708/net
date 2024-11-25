@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using MyApi.Infrastructure.Persistence;
 
 namespace Infrastructure.Extensions
 {
-  public static class DbReseedExtension
+  public static class ApplicationBuilderExtensions
   {
     public static IApplicationBuilder UseDbReSeed(this IApplicationBuilder app)
     {
@@ -16,11 +16,26 @@ namespace Infrastructure.Extensions
       return app;
     }
 
+    public static IApplicationBuilder UseStaticFilesByAssetPath(this IApplicationBuilder app, IConfiguration configuration)
+    {
+      using (var scope = app.ApplicationServices.CreateScope())
+      {
+        var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? configuration["StorageConfig:DefaultAssetPath"];
+        var assetPathRequest = configuration["StorageConfig:AssetPathRequest"];
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+          FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), assetPath)),
+          RequestPath = assetPathRequest
+        });
+      }
+      return app;
+    }
+
     private static void ReSeedDb(ApplicationDbContext context)
     {
       try
       {
-        // Lấy max ID hiện tại
         var maxIdExtractSessions = context.ExtractSessions.Max(e => (int?)e.Id) ?? 0;
         var maxIdProducts = context.Products.Max(e => (int?)e.Id) ?? 0;
         var maxIdImages = context.Images.Max(e => (int?)e.Id) ?? 0;
@@ -44,7 +59,6 @@ namespace Infrastructure.Extensions
       }
       catch (Exception ex)
       {
-        // Log error nếu cần
         Console.WriteLine($"Error during database initialization: {ex.Message}");
       }
     }

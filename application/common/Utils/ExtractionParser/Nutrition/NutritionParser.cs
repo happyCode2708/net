@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Application.Common.Dto.Extraction;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.ObjectPool;
 using MyApi.Application.Common.Utils.Base;
 
 namespace Application.Common.Utils.ExtractionParser.Nutrition
@@ -23,7 +16,7 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
 
             var sections = markdownResponse.Split("END_");
 
-            AppConsole.WriteLineObject("sections",sections);
+            AppConsole.WriteLineObject("sections", sections);
 
             int panelIndex = 0;
 
@@ -49,7 +42,7 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
 
                     var lines = section.Split('\n')
                         .Skip(3) // Skip header and separator
-                        .Where(l => !l.Contains("---")); 
+                        .Where(l => !l.Contains("---"));
                     foreach (var line in lines)
                     {
                         if (string.IsNullOrWhiteSpace(line) || !line.Contains("|")) continue;
@@ -88,12 +81,13 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
                         foreach (var line in lines)
                         {
 
-                            if (line.Contains("Equivalent Serving Size")) {
+                            if (line.Contains("Equivalent Serving Size"))
+                            {
                                 isLineDataValid = true;
                                 continue;
                             };
 
-                            if(!isLineDataValid) continue;
+                            if (!isLineDataValid) continue;
 
                             var parts = line
                                 .Split('|')
@@ -144,29 +138,33 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
             return match.Success ? int.Parse(match.Groups[1].Value) : 0;
         }
 
-        private static Dictionary<string, string> ParseTableVertical(string tableContent, Dictionary<string, string> keyMapping = null) {
+        private static Dictionary<string, string> ParseTableVertical(string tableContent, Dictionary<string, string> keyMapping = null)
+        {
             var rows = tableContent.Split('\n').Where(r => !string.IsNullOrEmpty(r)).ToArray();
 
             var result = new Dictionary<string, string>();
 
             var startWriteRowData = false;
 
-            foreach (var row in rows) {
-                if(row.Contains("---") && row.Contains('|')) {
+            foreach (var row in rows)
+            {
+                if (row.Contains("---") && row.Contains('|'))
+                {
                     startWriteRowData = true;
                     continue;
                 }
 
-                if(!startWriteRowData) continue;
-                
+                if (!startWriteRowData) continue;
+
                 var rowContent = ParseTableRow(row);
 
-                for (int i = 1; i < rowContent.Count; i++) {
+                for (int i = 1; i < rowContent.Count; i++)
+                {
                     var originalFieldKey = rowContent[0];
 
 
                     var fieldKey = keyMapping != null && keyMapping.ContainsKey(originalFieldKey) ? keyMapping[originalFieldKey] : originalFieldKey;
-                    
+
                     result[fieldKey] = rowContent[i];
                 }
             }
@@ -174,9 +172,9 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
             return result;
         }
 
-         private static List<string> ParseTableRow(string row)
+        private static List<string> ParseTableRow(string row)
         {
-            return  row.Split('|')
+            return row.Split('|')
                 .Where(cell => !string.IsNullOrEmpty(cell))
                 .Select(cell => cell.Trim())
                 .ToList();

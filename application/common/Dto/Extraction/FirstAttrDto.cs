@@ -116,11 +116,11 @@ namespace Application.Common.Dto.Extraction
         [JsonPropertyName("full address statement")]
         public string FullAddressStatement { get; set; }
         [JsonPropertyName("company name")]
-        public string CompanyName { get; set; } 
+        public string CompanyName { get; set; }
         [JsonPropertyName("street number")]
         public string StreetNumber { get; set; }
         [JsonPropertyName("street name")]
-        public string StreetName { get; set; }  
+        public string StreetName { get; set; }
         [JsonPropertyName("city")]
         public string City { get; set; }
         [JsonPropertyName("state")]
@@ -129,7 +129,7 @@ namespace Application.Common.Dto.Extraction
         public string ZipCode { get; set; }
         [JsonPropertyName("phone number")]
         public string PhoneNumber { get; set; }
-    }   
+    }
 
     public class CountryInfo
     {
@@ -155,7 +155,7 @@ namespace Application.Common.Dto.Extraction
         [JsonPropertyName("allergens list from manufacturing equipments or from facility")]
         public List<string> AllergensList { get; set; }
         [JsonPropertyName("allergens list not present in facility")]
-        public List<string> NotPresentList { get; set; }
+        public List<string> NotPresentInFacilityList { get; set; }
     }
 
     public class AllergenNotContain
