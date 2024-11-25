@@ -80,6 +80,8 @@ Desktop.ini
 
 # Ignore macOS file system logs
 .DS_Store
+.AppleDouble
+.LSOverride
 
 # Ignore VSCode generated files
 .vscode/
@@ -99,3 +101,7 @@ Desktop.ini
 
 # Ignore secrets
 Prompt/*
+
+# complie
+bin/
+obj/

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Domain.Models;

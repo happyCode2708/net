@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Application.Common.Dto.Grid
 {
     public class PaginationInfo
     {
-        // Current page number (1-based indexing)
+        //* Current page number (1-based indexing)
         public int PageNumber { get; set; }
 
-        // Number of items per page
+        //* Number of items per page
         public int PageSize { get; set; }
 
-        // Total number of items in the dataset
+        //* Total number of items in the dataset
         public int Count { get; set; }
 
-        // Total number of pages, calculated based on TotalItems and PageSize
+        //* Total number of pages, calculated based on TotalItems and PageSize
         public int TotalPages
         {
             get
@@ -25,7 +20,7 @@ namespace Application.Common.Dto.Grid
             }
         }
 
-        // Boolean to check if there's a previous page
+        //* Boolean to check if there's a previous page
         public bool HasPreviousPage
         {
             get
@@ -34,7 +29,7 @@ namespace Application.Common.Dto.Grid
             }
         }
 
-        // Boolean to check if there's a next page
+        //* Boolean to check if there's a next page
         public bool HasNextPage
         {
             get

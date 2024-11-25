@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,8 +16,18 @@ namespace MyApi.Infrastructure.Persistence.Configurations
                 .UseIdentityColumn(1, 1)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             builder.Property(e => e.CreatedAt).IsRequired();
-            builder.Property(e => e.Status).IsRequired();
-            builder.Property(e => e.SourceType).IsRequired();
+            builder
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.Value,
+                    v => ExtractStatus.Parse(v)
+                ).IsRequired();
+            builder
+                .Property(e => e.SourceType)
+                .HasConversion(
+                    v => v.Value,
+                    v => ExtractSourceType.Parse(v)
+                ).IsRequired();
             builder.Property(e => e.ExtractorVersion).IsRequired();
             builder.Property(e => e.ErrorMessage).IsRequired(false);
             builder.Property(e => e.RawExtractData).IsRequired(false);

@@ -1,29 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace MyApi.Domain.Models
 {
-    public enum ExtractSourceType
+
+    public class ExtractSourceType
     {
-        NutritionFact = 0,
-        ProductFirstAttribute = 1,
-        ProductSecondAttribute = 2
+        public static readonly ExtractSourceType NutritionFact = new("NutritionFact");
+        public static readonly ExtractSourceType FirstAttribute = new("FirstAttribute");
+        public static readonly ExtractSourceType SecondAttribute = new("SecondAttribute");
+
+        public string Value { get; }
+
+        private ExtractSourceType(string value)
+        {
+            Value = value;
+        }
+
+        public override string ToString() => Value;
+
+        public static ExtractSourceType Parse(string value)
+        {
+            if (value == NutritionFact.Value) return NutritionFact;
+            if (value == FirstAttribute.Value) return FirstAttribute;
+            if (value == SecondAttribute.Value) return SecondAttribute;
+            throw new Exception($"Invalid extract source type: {value}");
+        }
+
     }
 
-    public enum ExtractStatus
+    public class ExtractStatus
     {
-        Pending = 0,
-        Processing = 1,
-        Completed = 2,
-        Failed = 3
+        public static readonly ExtractStatus Pending = new("Pending");
+        public static readonly ExtractStatus Processing = new("Processing");
+        public static readonly ExtractStatus Completed = new("Completed");
+        public static readonly ExtractStatus Failed = new("Failed");
+
+        public string Value { get; }
+
+        private ExtractStatus(string value)
+        {
+            Value = value;
+        }
+        public override string ToString() => Value;
+
+        public static ExtractStatus Parse(string value)
+        {
+            if (value == Pending.Value) return Pending;
+            if (value == Processing.Value) return Processing;
+            if (value == Completed.Value) return Completed;
+            if (value == Failed.Value) return Failed;
+            throw new Exception($"Invalid extract status: {value}");
+        }
     }
 
     public class ExtractSession
     {
         public int Id { get; set; }
-        public ExtractSourceType SourceType { get; set; }
+        public ExtractSourceType? SourceType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public ExtractStatus Status { get; set; }

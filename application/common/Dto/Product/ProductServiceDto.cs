@@ -16,7 +16,6 @@ namespace Application.Common.Dto.Product
 
     public class GetProductGridItemReturn
     {
-        // [JsonIgnore]
         public List<ProductGridItem> ProductGridData;
         public int TotalCount;
 
@@ -40,6 +39,6 @@ namespace Application.Common.Dto.Product
 
     public class GetProductGridOptions
     {
-        public Boolean IncludeImages { get; set; } = false;
+        public bool IncludeImages { get; set; } = false;
     }
 }

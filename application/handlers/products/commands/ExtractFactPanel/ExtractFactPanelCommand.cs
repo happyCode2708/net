@@ -117,7 +117,6 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
                         generatedResult = await _generativeServices.GenerateContentAsync(generativeOptions);
                     }
 
-
                     // Parse nutrition facts from response
                     var parsedNutritionData = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? NutritionParser.ParseMarkdownResponse(generatedResult.ConcatResult) : null;
 

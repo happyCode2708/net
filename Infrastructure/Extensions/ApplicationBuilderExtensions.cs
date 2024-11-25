@@ -11,7 +11,7 @@ namespace Infrastructure.Extensions
       using (var scope = app.ApplicationServices.CreateScope())
       {
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        ReSeedDb(context);
+        ReseedDb(context);
       }
       return app;
     }
@@ -32,7 +32,7 @@ namespace Infrastructure.Extensions
       return app;
     }
 
-    private static void ReSeedDb(ApplicationDbContext context)
+    private static void ReseedDb(ApplicationDbContext context)
     {
       try
       {

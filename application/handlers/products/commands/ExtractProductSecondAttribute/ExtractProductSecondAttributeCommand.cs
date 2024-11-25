@@ -75,7 +75,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
                     ProductId = productId,
                     CreatedAt = DateTime.UtcNow,
                     Status = ExtractStatus.Processing,
-                    SourceType = ExtractSourceType.ProductSecondAttribute,
+                    SourceType = ExtractSourceType.SecondAttribute,
                     ExtractorVersion = "1.0",
                     ProductItem = product
                 };

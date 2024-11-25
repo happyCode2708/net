@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Core;
 using MediatR;
-using MyApi.Application.Common.Interfaces; 
+using MyApi.Application.Common.Interfaces;
 using MyApi.Core.Controllers;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
@@ -12,7 +7,7 @@ using MyApi.Domain.Models;
 using Application.Common.Dto.Product;
 using Application.Common.Dto.Grid;
 using Application.Common.Dto.Extraction;
-using MyApi.Application.Common.Utils.Base;  
+using MyApi.Application.Common.Utils.Base;
 
 namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
@@ -56,9 +51,9 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 
                 var searchProductGridResult = await _productServices.GetProductGrid(getProductGridProps);
 
-                // Get latest extraction results for products grouped by sourceType
                 var productIds = searchProductGridResult.ProductGridData.Select(p => p.Id).ToList();
 
+                // Get latest extraction results for products grouped by sourceType
                 var latestExtractionsOfProductList = await _context.ExtractSessions
                     .Where(e => productIds.Contains(e.ProductId))
                     .GroupBy(g => new { g.ProductId, g.SourceType })
@@ -72,8 +67,8 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                     var latestExtractionsOfProductItems = latestExtractionsOfProductList.Where(e => e.ProductId == p.Id).ToList();
 
                     var nutritionInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.NutritionFact && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
-                    var firstAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductFirstAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
-                    var SecondAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.ProductSecondAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
+                    var firstAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.FirstAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
+                    var secondAttributeInfo = latestExtractionsOfProductItems.Where(e => e.SourceType == ExtractSourceType.SecondAttribute && !String.IsNullOrEmpty(e.ExtractedData)).FirstOrDefault();
 
                     p.ExtractionData = new ProductExtractionData
                     {
@@ -89,9 +84,9 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                         },
                         SecondAttributeInfo = new SecondAttributeExtractResult
                         {
-                            Data = !String.IsNullOrEmpty(SecondAttributeInfo?.ExtractedData) ? AppJson.Deserialize<SecondAttributeProductInfo>(SecondAttributeInfo.ExtractedData) : null,
+                            Data = !String.IsNullOrEmpty(secondAttributeInfo?.ExtractedData) ? AppJson.Deserialize<SecondAttributeProductInfo>(secondAttributeInfo.ExtractedData) : null,
                             ExtractionStatus = firstAttributeInfo?.Status,
-                        },                    
+                        },
                     };
                 });
 
