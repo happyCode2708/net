@@ -28,7 +28,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 
             return result;
         }
-        private static T ParseSection<T>(string input, string sectionName)
+        private static T? ParseSection<T>(string input, string sectionName)
         {
             var content = GetContentBetween(input, sectionName, $"END_{sectionName}");
 
@@ -36,7 +36,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 
             try
             {
-                parsedContent = !string.IsNullOrEmpty(content) ? AppJson.Deserialize<T>(content) : default;
+                parsedContent = !string.IsNullOrEmpty(content) ? AppJson.Deserialize<T>(content) : default(T);
             }
             catch (Exception e)
             {

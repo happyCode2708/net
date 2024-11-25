@@ -1,23 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-using Microsoft.Win32.SafeHandles;
 using MyApi.Application.Common.Configs;
 using MyApi.Application.Common.Interfaces;
-using MyApi.Domain.Models;
-using Google.Apis.Auth.OAuth2;
 using System.Text;
 using MyApi.Application.Common.Dict;
-using Microsoft.OpenApi.Any;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
-using MyApi.Application.Common.Utils;
 using Application.Common.Dto.Gemini;
+using MyApi.Application.Common.Utils.Base;
 
 namespace MyApi.Infrastructure.Services
 {
@@ -46,9 +36,6 @@ namespace MyApi.Infrastructure.Services
 
             var contents = new List<object>();
 
-            // var partRequest = new List<object>();
-
-            // Add image parts if present
             if (generativeOptions.ImagePathList?.Any() == true)
             {
                 foreach (var imagePath in generativeOptions.ImagePathList)
@@ -170,11 +157,10 @@ namespace MyApi.Infrastructure.Services
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var responseJson = JsonSerializer.Deserialize<JsonElement>(responseContent);
+                var responseJson = AppJson.Deserialize<JsonElement>(responseContent);
 
-                return responseJson.GetProperty("file").GetProperty("uri").GetString();
+                return responseJson.GetProperty("file").GetProperty("uri").GetString() ?? string.Empty;
             }
-
         }
     }
 

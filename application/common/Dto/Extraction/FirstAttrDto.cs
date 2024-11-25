@@ -5,18 +5,18 @@ namespace Application.Common.Dto.Extraction
 {
     public class FirstProductAttributeInfo
     {
-        public StorageInstructions StorageInstructions { get; set; }
-        public UsageInstructions UsageInstructions { get; set; }
-        public CookingInstructions CookingInstructions { get; set; }
-        public InformationInstructions InformationInstructions { get; set; }
+        public StorageInstructions? StorageInstructions { get; set; }
+        public UsageInstructions? UsageInstructions { get; set; }
+        public CookingInstructions? CookingInstructions { get; set; }
+        public InformationInstructions? InformationInstructions { get; set; }
         public List<Dictionary<string, string>> LabelingInfo { get; set; }
         public List<Dictionary<string, string>> LabelingInfoAnalysis { get; set; }
-        public AllergenInfo AllergenInfo { get; set; }
-        public HeaderInfo HeaderInfo { get; set; }
+        public AllergenInfo? AllergenInfo { get; set; }
+        public HeaderInfo? HeaderInfo { get; set; }
         public List<Dictionary<string, string>> BaseCertifierClaims { get; set; }
         public List<Dictionary<string, string>> IngredientInfo { get; set; }
-        public MarketingInfo MarketingInfo { get; set; }
-        public List<AddressData> AddressData { get; set; }
+        public MarketingInfo? MarketingInfo { get; set; }
+        public List<AddressData>? AddressData { get; set; }
         public SupplyChainInfo? SupplyChainInfo { get; set; }
         public List<Dictionary<string, string>> AttributeInfo { get; set; }
     }
@@ -95,7 +95,8 @@ namespace Application.Common.Dto.Extraction
 
     public class AddressData
     {
-        // Add properties as needed
+        [JsonPropertyName("address info text")]
+        public string? AddressText { get; set; }
     }
 
     public class SupplyChainInfo

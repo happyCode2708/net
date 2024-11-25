@@ -16,8 +16,6 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
 
             var sections = markdownResponse.Split("END_");
 
-            AppConsole.WriteLineObject("sections", sections);
-
             int panelIndex = 0;
 
             foreach (var section in sections)

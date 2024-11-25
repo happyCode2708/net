@@ -27,7 +27,7 @@ namespace MyApi.Infrastructure.Services
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        private string _accessToken;
+        private string _accessToken = string.Empty;
 
         private readonly Task _setupGoogleTokenTask;
 
@@ -95,17 +95,6 @@ namespace MyApi.Infrastructure.Services
                 }).ToList();
             }
 
-            //* this code is for writeline only -- down
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true, // For pretty JSON output
-                                      // ReferenceHandler = ReferenceHandler.Preserve // Handle circular references
-            };
-
-            string json = JsonSerializer.Serialize(imageListInRequest, options);
-            Console.WriteLine(json); // Lo
-            //* this code is for writeline only -- up
-
             if (!String.IsNullOrWhiteSpace(generativeOptions.Prompt))
             {
                 var geminiText = new { text = generativeOptions.Prompt, };
@@ -129,8 +118,6 @@ namespace MyApi.Infrastructure.Services
                 generationConfig = defaultGenerativeConfig.GenerationConfig,
                 safetySettings = defaultGenerativeConfig.SafetySettings,
             };
-
-            Console.WriteLine($"url: {defaultGenerativeConfig.Url}");
 
             var httpClient = _httpClientFactory.CreateClient();
 
