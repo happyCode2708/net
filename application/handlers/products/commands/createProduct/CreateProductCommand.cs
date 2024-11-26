@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Options;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Domain.Models;
 using MyApi.Core.Controllers;

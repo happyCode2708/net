@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Common.Utils.Base
@@ -42,7 +38,6 @@ namespace MyApi.Application.Common.Utils.Base
                     return (T)(object)JToken.Parse(value);
                 }
 
-                // Các trường hợp khác sử dụng System.Text.Json
                 return JsonSerializer.Deserialize<T>(value, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
@@ -55,7 +50,6 @@ namespace MyApi.Application.Common.Utils.Base
             }
             catch (Exception ex)
             {
-                // Thêm thông tin về JSON input vào message lỗi để debug
                 var truncatedValue = value?.Length > 100 ? value.Substring(0, 100) + "..." : value;
                 throw new JsonException($"Error deserializing to type {typeof(T).Name}. Input JSON: {truncatedValue}. Error: {ex.Message}", ex);
             }

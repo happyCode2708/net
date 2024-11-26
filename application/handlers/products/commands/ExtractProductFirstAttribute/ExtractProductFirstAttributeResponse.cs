@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Common.Dto.Extraction;
-using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
 {

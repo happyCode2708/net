@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Application.Common.Dto.Extraction;
-using MyApi.Application.Common.Utils.Base;
 
 namespace Application.Common.Utils.ExtractionParser.Nutrition
 {
