@@ -105,3 +105,6 @@ Prompt/*
 # complie
 bin/
 obj/
+
+# assets
+assets/

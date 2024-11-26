@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Expressions;
 using MyApi.Domain.Models;
 
 namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo
@@ -7,6 +8,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
     public class ValidateAndParseRawExtractedInfoRequest
     {
         public int ProductId;
-        public ExtractSourceType? SourceType;
+        //! fix later
+        public string? SourceType;
     }
 }

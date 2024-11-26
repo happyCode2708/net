@@ -6,7 +6,7 @@ namespace MyApi.Domain.Models
         public static readonly ExtractSourceType NutritionFact = new("NutritionFact");
         public static readonly ExtractSourceType FirstAttribute = new("FirstAttribute");
         public static readonly ExtractSourceType SecondAttribute = new("SecondAttribute");
-
+        // private char v;
         public string Value { get; }
 
         private ExtractSourceType(string value)

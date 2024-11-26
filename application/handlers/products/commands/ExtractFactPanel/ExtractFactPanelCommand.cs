@@ -133,8 +133,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                     var response = new ExtractFactPanelResponse
                     {
-                        // FullResult = result.RawResult,
-                        // ConcatText = result.ConcatResult,
+                        FullResult = generatedResult.RawResult,
+                        ConcatText = generatedResult.ConcatResult,
                         ExtractedInfo = parsedNutritionData
                     };
 

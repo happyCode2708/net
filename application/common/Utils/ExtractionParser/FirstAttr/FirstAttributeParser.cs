@@ -6,7 +6,6 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 {
     public class FirstAttributeParser
     {
-
         public static FirstProductAttributeInfo ParseResult(string input)
         {
             var result = new FirstProductAttributeInfo();

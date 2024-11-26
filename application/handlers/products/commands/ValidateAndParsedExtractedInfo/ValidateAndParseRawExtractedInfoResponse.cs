@@ -14,5 +14,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
     {
         public NutritionFactData? NutritionFactData { get; set; }
         public ValidateNutritionFactData? ValidatedNutritionFactData { get; set; }
+        public FirstProductAttributeInfo? FirstAttributeData { get; set; }
+        public ValidatedFirstAttributeData? ValidatedFirstAttributeData { get; set; }
     }
 }

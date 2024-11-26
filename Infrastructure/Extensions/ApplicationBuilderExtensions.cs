@@ -20,8 +20,16 @@ namespace Infrastructure.Extensions
     {
       using (var scope = app.ApplicationServices.CreateScope())
       {
+
         var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? configuration["StorageConfig:DefaultAssetPath"];
         var assetPathRequest = configuration["StorageConfig:AssetPathRequest"];
+
+        var staticPath = Path.Combine(Directory.GetCurrentDirectory(), assetPath);
+
+        if (!Directory.Exists(staticPath))
+        {
+          Directory.CreateDirectory(staticPath);
+        }
 
         app.UseStaticFiles(new StaticFileOptions
         {
