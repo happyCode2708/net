@@ -15,7 +15,6 @@ namespace MyApi.Infrastructure.Services
 
         public string GetAssetPath()
         {
-            // Ưu tiên lấy từ env variable trước
             var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH");
 
             if (!string.IsNullOrEmpty(assetPath))

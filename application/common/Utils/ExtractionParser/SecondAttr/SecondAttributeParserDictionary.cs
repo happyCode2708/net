@@ -6,14 +6,14 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
             { "sugar item", "sugarItem" },
             { "is item mentioned on provided images ? (answer is yes / no / unknown) ?", "isMentioned" },
             { "How product state about it ?", "productStatement" },
-            { "do you know it through those sources of info ? (multiple sources allowed and split by \"/\") (answer are \"ingredient list\",\"marketing text on product\", \"nutrition fact panel\", \"others\")", "infoSources" },
+            { "do you know it through those sources of info ? (multiple sources allowed and split by \"\"/\"\") (answer are \"\"ingredient list\"\",\"\"marketing text on product\"\", \"\"nutrition fact panel\"\", \"\"others\"\")", "infoSources" },
             { "return exact sentence or phrase on provided image that prove it", "proofText" }
         };
 
         public static Dictionary<string, string> FatClaimHeaderDict = new Dictionary<string, string> {
             { "fat claim", "fatClaim" },
             { "does product claim that fat claim ? (answer are yes / no / unknown) (unknown when not mentioned)", "isClaimed" },
-            { "do you know it through those sources of info ? (multiple sources allowed) (answer are \"ingredient list\", \"nutrition fact panel\", \"marketing text on product\", \"others\")", "infoSources" },
+            { "do you know it through those sources of info ? (multiple sources allowed) (answer are \"\"ingredient list\"\", \"\"nutrition fact panel\"\", \"\"marketing text on product\"\", \"\"others\"\")", "infoSources" },
             { "how do you know that ? and give me you explain(answer in string)", "explanation" }
         };
 
