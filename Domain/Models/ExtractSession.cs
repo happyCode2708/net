@@ -6,7 +6,6 @@ namespace MyApi.Domain.Models
         public static readonly ExtractSourceType NutritionFact = new("NutritionFact");
         public static readonly ExtractSourceType FirstAttribute = new("FirstAttribute");
         public static readonly ExtractSourceType SecondAttribute = new("SecondAttribute");
-        // private char v;
         public string Value { get; }
 
         private ExtractSourceType(string value)
@@ -18,9 +17,12 @@ namespace MyApi.Domain.Models
 
         public static ExtractSourceType Parse(string value)
         {
-            if (value == NutritionFact.Value) return NutritionFact;
-            if (value == FirstAttribute.Value) return FirstAttribute;
-            if (value == SecondAttribute.Value) return SecondAttribute;
+            if (string.Equals(value, NutritionFact.Value, StringComparison.OrdinalIgnoreCase))
+                return NutritionFact;
+            if (string.Equals(value, FirstAttribute.Value, StringComparison.OrdinalIgnoreCase))
+                return FirstAttribute;
+            if (string.Equals(value, SecondAttribute.Value, StringComparison.OrdinalIgnoreCase))
+                return SecondAttribute;
             throw new Exception($"Invalid extract source type: {value}");
         }
 

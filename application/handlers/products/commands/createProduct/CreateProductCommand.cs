@@ -18,8 +18,6 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProduct
 
         public class Handler : IRequestHandler<CreateProductCommand, ResponseModel<CreateProductResponse>>
         {
-
-            private readonly IApplicationDbContext _context;
             private readonly IProductServices _productServices;
 
             public Handler(IProductServices productServices)

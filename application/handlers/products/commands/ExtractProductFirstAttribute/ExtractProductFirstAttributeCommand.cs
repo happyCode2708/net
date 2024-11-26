@@ -114,10 +114,12 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
 
                     // Parse first attribute group response data
-                    FirstProductAttributeInfo parsedFirstAttribute = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? FirstAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
+                    var parsedFirstAttribute = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? FirstAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
 
 
-                    var ValidatedFirstAttributeData = new FirstAttributeValidation().handleValidateFirstAttribute(parsedFirstAttribute);
+                    var ValidatedFirstAttributeData = parsedFirstAttribute != null
+                        ? new FirstAttributeValidation().handleValidateFirstAttribute(parsedFirstAttribute)
+                        : null;
 
                     // Update extract session with results
                     extractSession.RawExtractData = generatedResult.ConcatResult;

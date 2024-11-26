@@ -2,12 +2,8 @@ version: '3.8'
 services:
   db:
     image: mcr.microsoft.com/azure-sql-edge
-    env_file:
-      - .env.development
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=${DB_PASSWORD}
-      - DB_USER=${DB_USER}
     ports:
       - '${DB_PORT}:1433'
     volumes:

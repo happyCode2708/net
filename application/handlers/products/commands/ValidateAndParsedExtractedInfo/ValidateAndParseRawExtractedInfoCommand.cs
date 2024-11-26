@@ -14,11 +14,11 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
 {
     public class ValidateAndParseRawExtractedInfoCommand : IRequest<ResponseModel<ValidateAndParseRawExtractedInfoResponse>>
     {
-        public ValidateAndParseRawExtractedInfoRequest Request;
+        public ValidateAndParseRawExtractedInfoRequest Request { get; }
 
         public ValidateAndParseRawExtractedInfoCommand(ValidateAndParseRawExtractedInfoRequest request)
         {
-            Request = request;
+            Request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         public class Handler : IRequestHandler<ValidateAndParseRawExtractedInfoCommand, ResponseModel<ValidateAndParseRawExtractedInfoResponse>>
@@ -37,7 +37,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
             {
                 var requestObject = request.Request;
 
-                var sourceType = ExtractSourceType.Parse(requestObject.SourceType);
+                var sourceType = requestObject.SourceType;
 
                 if (sourceType == null)
                 {

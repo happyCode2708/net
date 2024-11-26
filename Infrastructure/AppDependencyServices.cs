@@ -1,13 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Services;
 using MyApi.Infrastructure.Persistence;
 using MyApi.Infrastructure.Services;
 using MediatR;
 using MyApi.Application.Common.Configs;
-using MyApi.Application.Common.Utils.Base;
+using Newtonsoft.Json.Serialization;
 
 namespace MyApi.Infrastructure
 {
@@ -37,7 +35,7 @@ namespace MyApi.Infrastructure
       var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
       var dbName = Environment.GetEnvironmentVariable("DB_NAME");
       var dbUser = Environment.GetEnvironmentVariable("DB_USER");
-      var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+      var dbPassword = Environment.GetEnvironmentVariable("SA_PASSWORD");
 
       var connectionString = string.Format(
           configuration.GetConnectionString("DefaultConnection")
@@ -45,9 +43,14 @@ namespace MyApi.Infrastructure
           dbHost, dbPort, dbName, dbUser, dbPassword);
 
       services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseSqlServer(connectionString));
-
-      AppConsole.WriteLine("Db connection", "Connected to DB successfully");
+          options.UseSqlServer(connectionString,
+              sqlServerOptionsAction: sqlOptions =>
+              {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+              }));
 
       return services;
     }
@@ -87,7 +90,10 @@ namespace MyApi.Infrastructure
 
       services.AddEndpointsApiExplorer();
       services.AddSwaggerGen();
-      services.AddControllers().AddNewtonsoftJson();
+      services.AddControllers().AddJsonOptions(options =>
+      {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+      });
 
       services.AddMediatR(typeof(Program).Assembly);
       services.AddScoped<IAssetPathService, AssetPathService>();

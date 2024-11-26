@@ -52,17 +52,17 @@ namespace Infrastructure.Extensions
         if (maxIdExtractSessions > 0)
         {
           context.Database.ExecuteSqlRaw(
-              $"DBCC CHECKIDENT ('dbo.ExtractSessions', RESEED, {maxIdExtractSessions});");
+              "DBCC CHECKIDENT ('dbo.ExtractSessions', RESEED, {0})", maxIdExtractSessions);
         }
         if (maxIdProducts > 0)
         {
           context.Database.ExecuteSqlRaw(
-              $"DBCC CHECKIDENT ('dbo.Products', RESEED, {maxIdProducts});");
+              "DBCC CHECKIDENT ('dbo.Products', RESEED, {0})", maxIdProducts);
         }
         if (maxIdImages > 0)
         {
           context.Database.ExecuteSqlRaw(
-              $"DBCC CHECKIDENT ('dbo.Images', RESEED, {maxIdImages});");
+              "DBCC CHECKIDENT ('dbo.Images', RESEED, {0})", maxIdImages);
         }
       }
       catch (Exception ex)
