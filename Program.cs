@@ -4,7 +4,10 @@ using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load();
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+var envFileName = $".env.{environment.ToLower()}";
+DotNetEnv.Env.Load(envFileName);
+// DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 
 //* add infrastructure services

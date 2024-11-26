@@ -9,6 +9,8 @@ using Application.Common.Dto.Generative;
 using MyApi.Application.Common.Dict;
 using Application.Common.Dto.Gemini;
 using MyApi.Application.Common.Utils.Base;
+using Application.Common.Dto.Extraction;
+using Application.Common.Utils.ExtractionValidator;
 
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttribute
@@ -112,21 +114,24 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
 
                     // Parse first attribute group response data
-                    var parsedFirstAttribute = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? FirstAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
+                    FirstProductAttributeInfo parsedFirstAttribute = !String.IsNullOrEmpty(generatedResult.ConcatResult) ? FirstAttributeParser.ParseResult(generatedResult.ConcatResult) : null;
+
+
+                    var ValidatedFirstAttributeData = new FirstAttributeValidation().handleValidateFirstAttribute(parsedFirstAttribute);
 
                     // Update extract session with results
                     extractSession.RawExtractData = generatedResult.ConcatResult;
                     extractSession.ExtractedData = AppJson.Serialize(parsedFirstAttribute);
                     extractSession.Status = ExtractStatus.Completed;
                     extractSession.CompletedAt = DateTime.UtcNow;
-                    extractSession.ValidatedExtractedData = null; //* in progress
+                    extractSession.ValidatedExtractedData = AppJson.Serialize(ValidatedFirstAttributeData);
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     var response = new ExtractProductFirstAttributeResponse
                     {
-                        // FullResult = result.RawResult,
-                        // ConcatText = result.ConcatResult,
+                        FullResult = generatedResult.RawResult,
+                        ConcatText = generatedResult.ConcatResult,
                         ExtractedInfo = parsedFirstAttribute,
                     };
 

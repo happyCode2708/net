@@ -47,6 +47,8 @@ namespace MyApi.Infrastructure
       services.AddDbContext<ApplicationDbContext>(options =>
           options.UseSqlServer(connectionString));
 
+      AppConsole.WriteLine("Db connection", "Connected to DB successfully");
+
       return services;
     }
 

@@ -45,7 +45,9 @@ namespace MyApi.Application.Common.Utils.Base
                     NumberHandling = JsonNumberHandling.AllowReadingFromString,
                     AllowTrailingCommas = true,
                     ReadCommentHandling = JsonCommentHandling.Skip,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    WriteIndented = true,
                 });
             }
             catch (Exception ex)

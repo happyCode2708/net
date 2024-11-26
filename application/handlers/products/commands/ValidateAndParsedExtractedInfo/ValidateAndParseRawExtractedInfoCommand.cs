@@ -7,6 +7,8 @@ using MyApi.Domain.Models;
 using Application.Common.Utils.ExtractionParser.Nutrition;
 using AutoMapper;
 using MyApi.Application.Common.Utils.ExtractedDataValidation;
+using Application.Common.Utils.ExtractionParser.FirstAttr;
+using Application.Common.Utils.ExtractionValidator;
 
 namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtractedInfo
 {
@@ -35,14 +37,15 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
             {
                 var requestObject = request.Request;
 
-                if (requestObject.SourceType == null)
+                var sourceType = ExtractSourceType.Parse(requestObject.SourceType);
+
+                if (sourceType == null)
                 {
                     return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Source type is required");
                 }
 
 
-                var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == requestObject.SourceType).OrderByDescending(e => e.CompletedAt).FirstAsync();
-
+                var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == sourceType).OrderByDescending(e => e.CompletedAt).FirstAsync();
 
                 var rawExtractData = lastExtractSession.RawExtractData;
 
@@ -52,7 +55,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
                 }
 
 
-                if (requestObject.SourceType == ExtractSourceType.NutritionFact)
+                if (sourceType == ExtractSourceType.NutritionFact)
                 {
 
                     var newParsedNutritionData = NutritionParser.ParseMarkdownResponse(rawExtractData);
@@ -73,7 +76,34 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
                             NutritionFactData = newParsedNutritionData,
                             ValidatedNutritionFactData = validatedNutritionData
                         },
-                        SourceType = requestObject.SourceType
+                        SourceType = sourceType
+                    };
+
+                    return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Success(response);
+                }
+
+
+                if (sourceType == ExtractSourceType.FirstAttribute)
+                {
+                    var newParsedFirstAttributeData = FirstAttributeParser.ParseResult(rawExtractData);
+
+                    var firstAttributeValidator = new FirstAttributeValidation();
+                    var validatedFirstAttributeData = firstAttributeValidator.handleValidateFirstAttribute(newParsedFirstAttributeData);
+
+                    //* update to current session
+                    lastExtractSession.ExtractedData = AppJson.Serialize(newParsedFirstAttributeData);
+                    lastExtractSession.ValidatedExtractedData = AppJson.Serialize(validatedFirstAttributeData);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    var response = new ValidateAndParseRawExtractedInfoResponse
+                    {
+                        ParsedAndValidatedResult = new ParsedAndValidatedResult
+                        {
+                            FirstAttributeData = newParsedFirstAttributeData,
+                            ValidatedFirstAttributeData = validatedFirstAttributeData
+                        },
+                        SourceType = sourceType
                     };
 
                     return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Success(response);

@@ -4,7 +4,14 @@ namespace MyApi.Application.Common.Utils.Base
     {
         public static void WriteLine<T>(string name, T value)
         {
-            Console.WriteLine($"{name}: {value}");
+            if (value == null)
+            {
+                Console.WriteLine($"{name}");
+            }
+            else
+            {
+                Console.WriteLine($"{name}: {value}");
+            }
         }
         public static void WriteLineObject<T>(string name, T value)
         {
