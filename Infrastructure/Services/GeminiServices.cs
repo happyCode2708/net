@@ -5,7 +5,6 @@ using MyApi.Application.Common.Interfaces;
 using System.Text;
 using MyApi.Application.Common.Dict;
 using System.Text.Json;
-// using Newtonsoft.Json.Linq;
 
 using Application.Common.Dto.Gemini;
 using MyApi.Application.Common.Utils.Base;
@@ -87,27 +86,35 @@ namespace MyApi.Infrastructure.Services
 
             var response = await httpClient.PostAsJsonAsync(apiUrl, requestBody);
 
+            var result = new GeminiGenerateContentResult
+            {
+                RawResult = null,
+                JsonParsedRawResult = null,
+                ConcatResult = null,
+            };
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
+                var responseString = await response.Content.ReadAsStringAsync();
 
-                if (!String.IsNullOrEmpty(result))
+                if (!String.IsNullOrEmpty(responseString))
                 {
-                    var resultObject = JsonSerializer.Deserialize<JsonObject>(result);
+                    var resultObject = JsonSerializer.Deserialize<JsonObject>(responseString);
                     var candidates = resultObject?["candidates"]?.AsArray();
 
                     var concatResult = String.Join("", candidates?.Select(r => r?["content"]?["parts"]?.AsArray()?.FirstOrDefault()?["text"]?.GetValue<string>() ?? "").Where(c => c != null)!);
 
-                    return new GeminiGenerateContentResult
+                    result = new GeminiGenerateContentResult
                     {
-                        RawResult = result,
+                        RawResult = responseString,
                         JsonParsedRawResult = resultObject,
                         ConcatResult = concatResult
                     };
+
+                    return result;
                 }
 
-                return new GeminiGenerateContentResult();
+                return result;
             }
             else
             {

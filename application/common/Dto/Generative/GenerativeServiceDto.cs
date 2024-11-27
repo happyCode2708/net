@@ -8,9 +8,9 @@ namespace Application.Common.Dto.Generative
 {
     public class GenerateContentResult : IGenerateContentResult
     {
-        public required string? ConcatResult { get; set; }
-        public required string? RawResult { get; set; }
-        public JsonArray? JsonParsedRawResult { get; set; }
+        public string? ConcatResult { get; set; }
+        public string? RawResult { get; set; }
+        public JsonNode? JsonParsedRawResult { get; set; }
     }
 
     public class GenerativeContentOptions : IGenerativeContentOptions

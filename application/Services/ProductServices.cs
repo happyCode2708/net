@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Dto.Product;
-using Application.Common.Interfaces;
 using MyApi.Domain.Models;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MyApi.Application.Common.Interfaces;
 
 namespace MyApi.Application.Services
@@ -53,7 +47,6 @@ namespace MyApi.Application.Services
                 query = query.Include(p => p.ProductImages!).ThenInclude(pi => pi.Image);
             }
 
-
             if (!String.IsNullOrEmpty(searchText))
             {
                 query = query.Where(p =>
@@ -70,7 +63,6 @@ namespace MyApi.Application.Services
             {
                 query = query.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
             }
-
 
             var productGridList = await query.Select(p => _mapper.Map<ProductGridItem>(p)).ToListAsync();
 

@@ -1,9 +1,9 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Services;
 using MyApi.Infrastructure.Persistence;
 using MyApi.Infrastructure.Services;
-using MediatR;
 using MyApi.Application.Common.Configs;
 
 namespace MyApi.Infrastructure

@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace MyApi.Domain.Models
 {
     public class Product

@@ -123,6 +123,7 @@ namespace MyApi.Infrastructure.Services
             {
                 RawResult = null,
                 ConcatResult = null,
+                JsonParsedRawResult = null,
             };
 
             if (response.IsSuccessStatusCode)

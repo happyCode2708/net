@@ -7,6 +7,6 @@ namespace MyApi.Domain.Common
 {
     public class BaseEntity
     {
-        
+
     }
 }

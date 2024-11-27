@@ -7,17 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 var envFileName = $".env.{environment.ToLower()}";
 DotNetEnv.Env.Load(envFileName);
-// DotNetEnv.Env.Load();
+
 builder.Configuration.AddEnvironmentVariables();
 
-//* add infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseDbReSeed();
 
-//* apply migrations
 if (app.Environment.IsDevelopment())
 {
     app.ApplyMigrations();

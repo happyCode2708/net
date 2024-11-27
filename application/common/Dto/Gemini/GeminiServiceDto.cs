@@ -15,6 +15,6 @@ namespace Application.Common.Dto.Gemini
     {
         public string? ConcatResult { get; set; }
         public string? RawResult { get; set; }
-        public JsonObject? JsonParsedRawResult { get; set; }
+        public JsonNode? JsonParsedRawResult { get; set; }
     }
 }

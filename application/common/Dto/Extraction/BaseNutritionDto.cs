@@ -13,7 +13,6 @@ namespace Application.Common.Dto.Extraction
     {
         public string? NutrientName { get; set; }
         public string? Descriptor { get; set; }
-        // public string? AmountPerServing { get; set; }
         public string? ParentheticalStatement { get; set; }
         public string? DailyValue { get; set; }
         public string? BlendIngredients { get; set; }

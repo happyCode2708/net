@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 // using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Common.Utils.Base
@@ -22,12 +23,26 @@ namespace MyApi.Application.Common.Utils.Base
                 return default;
             }
 
+            //* for newton
+            if (typeof(T) == typeof(JObject))
+            {
+                return (T)(object)JObject.Parse(value);
+            }
+            if (typeof(T) == typeof(JArray))
+            {
+                return (T)(object)JArray.Parse(value);
+            }
+            if (typeof(T) == typeof(JToken))
+            {
+                return (T)(object)JToken.Parse(value);
+            }
+
             try
             {
                 return JsonSerializer.Deserialize<T>(value, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    PropertyNamingPolicy = null,
                     NumberHandling = JsonNumberHandling.AllowReadingFromString,
                     AllowTrailingCommas = true,
                     ReadCommentHandling = JsonCommentHandling.Skip,

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using OneOf;
+using Newtonsoft.Json;
+
 
 namespace Application.Common.Dto.Extraction
 {
@@ -23,56 +24,56 @@ namespace Application.Common.Dto.Extraction
 
     public class StorageInstructions
     {
-        [JsonPropertyName("storage instructions")]
+        [JsonProperty("storage instructions")]
         public List<string>? Instructions { get; set; }
     }
 
     public class UsageInstructions
     {
-        [JsonPropertyName("usage instructions")]
+        [JsonProperty("usage instructions")]
         public List<string>? Instructions { get; set; }
     }
 
     public class CookingInstructions
     {
         public List<Recipe>? Recipes { get; set; }
-        [JsonPropertyName("all other text or paragraph about cooking info")]
+        [JsonProperty("all other text or paragraph about cooking info")]
         public List<string>? AdditionalInfo { get; set; }
     }
 
     public class Recipe
     {
-        [JsonPropertyName("recipe name")]
+        [JsonProperty("recipe name")]
         public string? Name { get; set; }
-        [JsonPropertyName("recipe ingredient list")]
+        [JsonProperty("recipe ingredient list")]
         public List<string>? Ingredients { get; set; }
-        [JsonPropertyName("cooking steps")]
+        [JsonProperty("cooking steps")]
         public List<string>? Steps { get; set; }
     }
 
     public class InformationInstructions
     {
-        [JsonPropertyName("information instructions")]
+        [JsonProperty("information instructions")]
         public List<string>? Instructions { get; set; }
     }
 
     public class AllergenInfo
     {
-        [JsonPropertyName("allergens contain")]
+        [JsonProperty("allergens contain")]
         public AllergenContain? AllergensContain { get; set; }
-        [JsonPropertyName("allergens on equipments or in facility")]
+        [JsonProperty("allergens on equipments or in facility")]
         public AllergenFacility? AllergensFacility { get; set; }
-        [JsonPropertyName("allergens product info state not contain")]
+        [JsonProperty("allergens product info state not contain")]
         public AllergenNotContain? AllergensNotContain { get; set; }
-        [JsonPropertyName("allergen information statements")]
+        [JsonProperty("allergen information statements")]
         public List<string>? InformationStatements { get; set; }
     }
 
     public class HeaderInfo
     {
-        [JsonPropertyName("product info")]
+        [JsonProperty("product info")]
         public ProductBasicInfo? ProductInfo { get; set; }
-        [JsonPropertyName("product size")]
+        [JsonProperty("product size")]
         public ProductSize? Size { get; set; }
     }
 
@@ -83,91 +84,91 @@ namespace Application.Common.Dto.Extraction
 
     public class Website
     {
-        [JsonPropertyName("website link")]
+        [JsonProperty("website link")]
         public string? Link { get; set; }
     }
 
     public class AddressData
     {
-        [JsonPropertyName("address info text")]
+        [JsonProperty("address info text")]
         public string? AddressText { get; set; }
     }
 
     public class SupplyChainInfo
     {
-        [JsonPropertyName("address and phone number info")]
+        [JsonProperty("address and phone number info")]
         public List<AddressInfo>? AddressAndPhoneInfo { get; set; }
-        [JsonPropertyName("country info")]
+        [JsonProperty("country info")]
         public CountryInfo? CountryInfo { get; set; }
     }
 
 
     public class AddressInfo
     {
-        [JsonPropertyName("prefix address")]
+        [JsonProperty("prefix address")]
         public string? PrefixAddress { get; set; }
-        [JsonPropertyName("address type")]
+        [JsonProperty("address type")]
         public string? AddressType { get; set; }
-        [JsonPropertyName("full address statement")]
+        [JsonProperty("full address statement")]
         public string? FullAddressStatement { get; set; }
-        [JsonPropertyName("company name")]
+        [JsonProperty("company name")]
         public string? CompanyName { get; set; }
-        [JsonPropertyName("street number")]
+        [JsonProperty("street number")]
         public string? StreetNumber { get; set; }
-        [JsonPropertyName("street name")]
+        [JsonProperty("street name")]
         public string? StreetName { get; set; }
-        [JsonPropertyName("city")]
+        [JsonProperty("city")]
         public string? City { get; set; }
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public string? State { get; set; }
-        [JsonPropertyName("zipCode")]
+        [JsonProperty("zipCode")]
         public string? ZipCode { get; set; }
-        [JsonPropertyName("phone number")]
+        [JsonProperty("phone number")]
         public string? PhoneNumber { get; set; }
     }
 
     public class CountryInfo
     {
-        [JsonPropertyName("statement indicate from which nation product was made in")]
+        [JsonProperty("statement indicate from which nation product was made in")]
         public List<string>? MadeInStatements { get; set; }
-        [JsonPropertyName("country of origin from made in statement")]
+        [JsonProperty("country of origin from made in statement")]
         public List<string>? CountriesOfOrigin { get; set; }
     }
 
     // Additional nested classes
     public class AllergenContain
     {
-        [JsonPropertyName("all statements about allergens product contain")]
+        [JsonProperty("all statements about allergens product contain")]
         public List<string>? Statements { get; set; }
-        [JsonPropertyName("allergens contain statement break-down list")]
+        [JsonProperty("allergens contain statement break-down list")]
         public List<string>? BreakdownList { get; set; }
     }
 
     public class AllergenFacility
     {
-        [JsonPropertyName("all statements about allergens on manufacturing equipments or from facility")]
+        [JsonProperty("all statements about allergens on manufacturing equipments or from facility")]
         public List<string>? Statements { get; set; }
-        [JsonPropertyName("allergens list from manufacturing equipments or from facility")]
+        [JsonProperty("allergens list from manufacturing equipments or from facility")]
         public List<string>? AllergensList { get; set; }
-        [JsonPropertyName("allergens list not present in facility")]
+        [JsonProperty("allergens list not present in facility")]
         public List<string>? NotPresentInFacilityList { get; set; }
     }
 
     public class AllergenNotContain
     {
-        [JsonPropertyName("exact all texts or statements on images about allergens that product does not contain")]
+        [JsonProperty("exact all texts or statements on images about allergens that product does not contain")]
         public List<string>? Statements { get; set; }
-        [JsonPropertyName("allergens product does not contain break-down list")]
+        [JsonProperty("allergens product does not contain break-down list")]
         public List<string>? BreakdownList { get; set; }
     }
 
     public class ProductBasicInfo
     {
-        [JsonPropertyName("product name")]
+        [JsonProperty("product name")]
         public string? ProductName { get; set; }
-        [JsonPropertyName("company name")]
+        [JsonProperty("company name")]
         public string? CompanyName { get; set; }
-        [JsonPropertyName("brand name")]
+        [JsonProperty("brand name")]
         public string? BrandName { get; set; }
     }
 
@@ -175,15 +176,15 @@ namespace Application.Common.Dto.Extraction
     {
         [JsonPropertyName("full statement about product size")]
         public string? FullStatement { get; set; }
-        [JsonPropertyName("primary size")]
+        [JsonProperty("primary size")]
         public string? PrimarySize { get; set; }
-        [JsonPropertyName("secondary size")]
+        [JsonProperty("secondary size")]
         public string? SecondarySize { get; set; }
-        [JsonPropertyName("third size")]
+        [JsonProperty("third size")]
         public string? ThirdSize { get; set; }
-        [JsonPropertyName("count")]
+        [JsonProperty("count")]
         public string? Count { get; set; }
-        [JsonPropertyName("count uom")]
+        [JsonProperty("count uom")]
         public string? CountUom { get; set; }
     }
 }

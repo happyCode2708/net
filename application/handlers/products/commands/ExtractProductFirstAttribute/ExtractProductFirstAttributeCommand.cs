@@ -143,8 +143,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
                     var response = new ExtractProductFirstAttributeResponse
                     {
-                        FullResult = generatedResult.RawResult,
-                        ConcatText = generatedResult.ConcatResult,
+                        // FullResult = generatedResult.JsonParsedRawResult,
+                        // ConcatText = generatedResult.ConcatResult,
                         ExtractedInfo = parsedFirstAttribute,
                     };
 

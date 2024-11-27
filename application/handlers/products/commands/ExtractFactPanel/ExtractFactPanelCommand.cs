@@ -10,7 +10,6 @@ using Application.Common.Dto.Gemini;
 using Application.Common.Dto.Generative;
 using MyApi.Application.Common.Utils.ExtractedDataValidation;
 using MyApi.Application.Common.Utils.Base;
-using MyApi.Application.Common.Dict;
 
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 {
@@ -97,6 +96,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                 try
                 {
+
                     IGenerateContentResult generatedResult;
 
                     var prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count);
@@ -142,8 +142,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                     var response = new ExtractFactPanelResponse
                     {
-                        FullResult = generatedResult.RawResult,
-                        ConcatText = generatedResult.ConcatResult,
+                        // FullResult = generatedResult.JsonParsedRawResult,
+                        // ConcatText = generatedResult.ConcatResult,
                         ExtractedInfo = parsedNutritionData
                     };
 

@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using Application.Common.Dto.Extraction;
 using MyApi.Application.Common.Utils.Base;
+using Newtonsoft.Json;
+
 
 namespace Application.Common.Utils.ExtractionParser.FirstAttr
 {
@@ -30,20 +32,22 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         private static T? ParseSection<T>(string input, string sectionName)
         {
             var content = GetContentBetween(input, sectionName, $"END_{sectionName}");
-
             T? parsedContent = default;
 
             try
             {
-                parsedContent = !string.IsNullOrEmpty(content) ? AppJson.Deserialize<T>(content) : default(T);
+                if (!string.IsNullOrEmpty(content))
+                {
+                    parsedContent = JsonConvert.DeserializeObject<T>(content);
+                }
             }
             catch (Exception e)
             {
-                AppConsole.WriteLine("parse section error", e.Message);
+                AppConsole.WriteLine($"Parse section error for {sectionName}", e.Message);
+                return parsedContent;
             }
 
             return parsedContent;
-
         }
 
         private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string>? headerMapping = null)
