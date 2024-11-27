@@ -8,8 +8,8 @@ namespace Application.Common.Dto.Generative
 {
     public class GenerateContentResult : IGenerateContentResult
     {
-        public string? ConcatResult { get; set; }
-        public string? RawResult { get; set; }
+        public required string? ConcatResult { get; set; }
+        public required string? RawResult { get; set; }
         public JsonArray? JsonParsedRawResult { get; set; }
     }
 

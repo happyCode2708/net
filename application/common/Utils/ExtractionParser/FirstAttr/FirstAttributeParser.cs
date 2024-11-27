@@ -31,7 +31,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         {
             var content = GetContentBetween(input, sectionName, $"END_{sectionName}");
 
-            T parsedContent = default;
+            T? parsedContent = default;
 
             try
             {
@@ -46,7 +46,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
 
         }
 
-        private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string> headerMapping = null)
+        private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string>? headerMapping = null)
         {
             var content = GetContentBetween(input, tableName, $"END_{tableName}");
 

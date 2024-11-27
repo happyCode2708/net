@@ -39,18 +39,28 @@ namespace MyApi.Application.Services
             var pageSize = productFilter.PageSize;
             var pageNumber = productFilter.PageNumber;
 
+
+            var result = new GetProductGridItemReturn
+            {
+                ProductGridData = new List<ProductGridItem>(),
+            };
+
+
             var includeImages = productOptions?.IncludeImages ?? false;
 
             if (includeImages)
             {
-                query = query.Include(p => p.ProductImages).ThenInclude(pi => pi.Image);
+                query = query.Include(p => p.ProductImages!).ThenInclude(pi => pi.Image);
             }
 
 
-            if (!String.IsNullOrEmpty(productFilter.SearchText))
+            if (!String.IsNullOrEmpty(searchText))
             {
-
-                query = query.Where(p => p.IxoneID.Contains(searchText) || p.Upc12.Contains(searchText) || p.Id.ToString().Contains(searchText));
+                query = query.Where(p =>
+                    (p.IxoneID != null && p.IxoneID.Contains(searchText)) ||
+                    (p.Upc12 != null && p.Upc12.Contains(searchText)) ||
+                    p.Id.ToString().Contains(searchText)
+                );
             }
 
             //* get totalCount;
@@ -62,29 +72,10 @@ namespace MyApi.Application.Services
             }
 
 
-            // var productGridList = await query.Select(p => new ProductGridItem
-            // {
-            //     Id = p.Id,
-            //     UniqueId = p.UniqueId,
-            //     IxoneID = p.IxoneID,
-            //     Upc12 = p.Upc12,
-            //     CreatedAt = p.CreatedAt,
-            //     ProductImages = includeImages ? p.ProductImages.Select(pi => new ProductImageDto
-            //     {
-            //         ImageId = pi.Image.Id,
-            //         Url = pi.Image.Url,
-            //     }).ToList() : new List<ProductImageDto>(),
-
-            // }).ToListAsync();
-
-
             var productGridList = await query.Select(p => _mapper.Map<ProductGridItem>(p)).ToListAsync();
 
-            var result = new GetProductGridItemReturn
-            {
-                ProductGridData = productGridList,
-                TotalCount = totalCount,
-            };
+            result.ProductGridData = productGridList;
+            result.TotalCount = totalCount;
 
             return result;
 

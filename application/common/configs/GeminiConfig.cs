@@ -3,6 +3,7 @@ using MyApi.Application.Common.Dict;
 using MyApi.Application.Common.Enums;
 using Application.Common.Interfaces;
 using Application.Common.Dto.Generative;
+using Application.Common.Types.Generative;
 
 namespace MyApi.Application.Common.Configs
 {
@@ -43,7 +44,10 @@ namespace MyApi.Application.Common.Configs
         public GeminiConfig(IOptions<CredentialConfig> credentialConfig)
         {
             _credentialConfig = credentialConfig.Value;
-            SetGoogleApiKey(_credentialConfig.GoogleApiKey);
+            if (_credentialConfig.GoogleApiKey != null)
+            {
+                SetGoogleApiKey(_credentialConfig.GoogleApiKey);
+            }
 
             SafetySettings = new List<object>
                    {

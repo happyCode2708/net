@@ -7,6 +7,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
     public class ExtractFactPanelRequest
     {
         public int ProductId { get; set; }
-        public string? ServiceType { get; set; } = GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Generative];
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public GenerativeServiceTypeEnum ServiceType { get; set; } = GenerativeServiceTypeEnum.Gemini;
     }
 }

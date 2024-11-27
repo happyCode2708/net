@@ -29,7 +29,7 @@ namespace Application.Common.Utils.ExtractionParser.SecondAttr
             return result;
         }
 
-        private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string> headerMapping = null)
+        private static List<Dictionary<string, string>> ParseTableSection(string input, string tableName, Dictionary<string, string>? headerMapping = null)
         {
             var tableContent = GetContentBetween(input, tableName, $"END_{tableName}");
 

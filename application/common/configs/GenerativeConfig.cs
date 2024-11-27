@@ -33,7 +33,7 @@ namespace MyApi.Application.Common.Configs
             set => _modelId = value;
         }
 
-        public string Token { get; set; }
+        public string? Token { get; set; }
         private readonly CredentialConfig _credentialConfig;
         public string EndPoint => $"{LocationId}-aiplatform.googleapis.com";
         public string Url => $"https://{EndPoint}/v1/projects/{ProjectId}/locations/{LocationId}/publishers/google/models/{ModelId}:streamGenerateContent";
@@ -43,6 +43,11 @@ namespace MyApi.Application.Common.Configs
             _credentialConfig = credentialConfig.Value;
             var credential = _credentialConfig.Google;
 
+            if (credential != null)
+            {
+                Token = credential;
+            };
+
             SafetySettings = new List<object>
                    {
                     new { category = "HARM_CATEGORY_HATE_SPEECH", threshold = "BLOCK_MEDIUM_AND_ABOVE" },
@@ -51,7 +56,6 @@ namespace MyApi.Application.Common.Configs
                     new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_MEDIUM_AND_ABOVE" }
                 };
 
-            Token = credential;
 
             //* generationConfig
             GenerationConfig = new GenerationConfigModel

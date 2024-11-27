@@ -7,6 +7,6 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
     public class ValidateAndParseRawExtractedInfoRequest
     {
         public int ProductId { get; set; }
-        public string? SourceType { get; set; }
+        public required string SourceType { get; set; }
     }
 }

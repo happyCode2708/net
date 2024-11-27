@@ -10,8 +10,12 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
 
             var result = new NutritionFactData()
             {
+                NutritionFactCheckers = new Dictionary<string, string>(),
                 FactPanelsData = new List<FactPanel>()
             };
+
+            if (markdownResponse == null) return result;
+
 
             var sections = markdownResponse.Split("END_");
 
@@ -33,7 +37,8 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
                         result.FactPanelsData.Add(new FactPanel
                         {
                             Nutrients = new List<Nutrient>(),
-                            Footnotes = new List<string>()
+                            Footnotes = new List<string>(),
+                            Header = new PanelHeaderInfo()
                         });
                     }
 
@@ -62,6 +67,7 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
                                 DailyValue = string.IsNullOrWhiteSpace(parts[4]) ? null : parts[4],
                                 BlendIngredients = parts.Length > 5 && !string.IsNullOrWhiteSpace(parts[5]) ? parts[5] : null
                             });
+
                         }
                     }
                 }
@@ -135,7 +141,7 @@ namespace Application.Common.Utils.ExtractionParser.Nutrition
             return match.Success ? int.Parse(match.Groups[1].Value) : 0;
         }
 
-        private static Dictionary<string, string> ParseTableVertical(string tableContent, Dictionary<string, string> keyMapping = null)
+        private static Dictionary<string, string> ParseTableVertical(string tableContent, Dictionary<string, string>? keyMapping = null)
         {
             var rows = tableContent.Split('\n').Where(r => !string.IsNullOrEmpty(r)).ToArray();
 

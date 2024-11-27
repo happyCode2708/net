@@ -14,12 +14,13 @@ namespace MyApi.Core.Controllers
     [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase
     {
-        private IMediator _mediator;
+        private IMediator? _mediator;
 
         /// <summary>
         /// common Mediator object
         /// </summary>
-        private IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        private IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()
+                                       ?? throw new InvalidOperationException("IMediator service is not available.");
 
 
         /// <summary>
@@ -75,18 +76,18 @@ namespace MyApi.Core.Controllers
             return Mediator.Send(request);
         }
 
-        protected OkObjectResult ReturnObject<T>(T data, bool isSuccess = true, string message = null, string exception = null)
+        protected OkObjectResult ReturnObject<T>(T data, bool isSuccess = true, string? message = null, string? exception = null)
         {
             var responseModel = new ResponseModel<T>(data) { IsSuccess = isSuccess, Message = message, Exception = exception };
             return Ok(responseModel);
         }
 
-        protected OkObjectResult ReturnSuccess(string message = null, string exception = null)
+        protected OkObjectResult ReturnSuccess(string? message = null, string? exception = null)
         {
             var responseModel = new ResponseModel { IsSuccess = true, Message = message, Exception = exception };
             return Ok(responseModel);
         }
-        protected OkObjectResult ReturnFailure(string message = null, string exception = null)
+        protected OkObjectResult ReturnFailure(string? message = null, string? exception = null)
         {
             var responseModel = new ResponseModel { IsSuccess = false, Message = message, Exception = exception };
             return Ok(responseModel);

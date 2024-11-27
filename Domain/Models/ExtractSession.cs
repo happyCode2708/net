@@ -31,10 +31,10 @@ namespace MyApi.Domain.Models
 
         public string? ErrorMessage { get; set; }
         public int ProductId { get; set; }
-        public Product ProductItem { get; set; }
+        public required Product ProductItem { get; set; }
         public string? RawExtractData { get; set; }
         public string? ExtractedData { get; set; }
         public string? ValidatedExtractedData { get; set; }
-        public string ExtractorVersion { get; set; } // extractor version
+        public string? ExtractorVersion { get; set; } // extractor version
     }
 }

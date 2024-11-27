@@ -14,9 +14,9 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
     public class QueryProductListResponse
     {
-        public List<ProductGridItemWithExtractionResult> ProductList { get; set; }
+        public List<ProductGridItemWithExtractionResult>? ProductList { get; set; }
 
-        public PaginationInfo Pagination { get; set; }
+        public PaginationInfo? Pagination { get; set; }
     }
 
     public class ProductGridItemWithExtractionResult : ProductGridItem

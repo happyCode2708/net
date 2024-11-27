@@ -35,13 +35,16 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
             {
                 var request = queryProductList.Request;
 
+                var pageNumber = request.PageNumber;
+                var pageSize = request.PageSize;
+
                 var getProductGridProps = new GetProductGridProps
                 {
                     Filter = new GetProductGridFiler
                     {
                         SearchText = request.SearchText,
-                        PageNumber = request.PageNumber,
-                        PageSize = request.PageSize
+                        PageNumber = pageNumber,
+                        PageSize = pageSize
                     },
                     Options = new GetProductGridOptions
                     {
@@ -100,7 +103,7 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
                 {
                     response.Pagination = new PaginationInfo
                     {
-                        Count = searchProductGridResult.TotalCount,
+                        Count = searchProductGridResult?.TotalCount ?? 0,
                         PageNumber = request.PageNumber.Value,
                         PageSize = request.PageSize.Value
                     };

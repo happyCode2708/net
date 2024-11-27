@@ -11,11 +11,5 @@ namespace MyApi.Application.Common.Dict
             {GenerativeModelEnum.Gemini_1_5_Flash_002, "gemini-1.5-flash-002"},
             {GenerativeModelEnum.Gemini_1_5_Pro_002,  "gemini-1.5-pro-002"}
         };
-
-        public static Dictionary<GenerativeServiceTypeEnum, string> GetServiceType = new Dictionary<GenerativeServiceTypeEnum, string>
-        {
-            {GenerativeServiceTypeEnum.Gemini, "gemini"},
-            {GenerativeServiceTypeEnum.Generative, "generative"}
-        };
     }
 }

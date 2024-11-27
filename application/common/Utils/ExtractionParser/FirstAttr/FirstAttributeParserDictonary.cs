@@ -6,6 +6,7 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
         {
             { "label item", "labelItem"},
             { "label item type on product (answer is \"certification label\"/\"label text\"/\"other\") (if type \"other\" tell me what type you think it belong to)", "labelItemType"},
+            { "label item type on product (answer is \"certification label\"/ \"label text\"/ \"other\") (if type \"other\" tell me what type you think it belong to)", "labelItemType"},
             { "what label item say ?", "labelText"}
         };
 
@@ -20,9 +21,9 @@ namespace Application.Common.Utils.ExtractionParser.FirstAttr
             { "product type from nutrition panel ? (answer is \"nutrition facts\" / \"supplement facts\" / \"unknown\")", "productType"},
             { "prefix text of ingredient list (answer are \"other ingredients:\" / \"ingredients:\")", "ingredientPrefix"},
             { "ingredient statement", "ingredientStatement"},
-            { "ingredient break-down list from ingredient statement (each ingredient splitted by \"/\")", "ingredientBreakDownList"},
+            { "ingredient break-down list from ingredient statement (each ingredient split by \"/\")", "ingredientBreakDownList"},
             { "live and active cultures list statement", "liveAndActiveCulturesListStatement"},
-            { "live and active cultures break-down list (each item splitted by \"/\")", "liveAndActiveCulturesBreakDownList"}
+            { "live and active cultures break-down list (each item split by \"/\")", "liveAndActiveCulturesBreakDownList"}
         };
 
         public static Dictionary<string, string> AttributeInfoHeaderDict = new Dictionary<string, string>

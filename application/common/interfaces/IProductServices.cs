@@ -6,13 +6,9 @@ namespace MyApi.Application.Common.Interfaces
     public interface IProductServices
     {
         Task<Product> AddProduct(Product product, CancellationToken cancellationToken = default);
-
         Task<GetProductGridItemReturn> GetProductGrid(GetProductGridProps props);
-
         Task UpdateProduct(Product product, CancellationToken cancellationToken = default);
-
         Task DeleteProduct(int productId, CancellationToken cancellationToken = default);
-
         Task DeleteImageFromProduct(int productId, List<string> imageIds, CancellationToken cancellationToken = default);
         Task AddImageToProduct(int productId, List<string> imageIds, CancellationToken cancellationToken = default);
 

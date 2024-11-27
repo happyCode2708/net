@@ -38,6 +38,8 @@ namespace MyApi.Infrastructure.Services
             {
                 GoogleCredential credential;
 
+                if (String.IsNullOrEmpty(_credentialConfig.Value.Google)) return;
+
                 byte[] decodedBytes = System.Convert.FromBase64String(_credentialConfig.Value.Google);
                 string jsonContent = System.Text.Encoding.UTF8.GetString(decodedBytes);
                 using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonContent)))
@@ -117,18 +119,28 @@ namespace MyApi.Infrastructure.Services
 
             var response = await httpClient.PostAsJsonAsync(defaultGenerativeConfig.Url, requestBody);
 
+            var generateResult = new GenerateContentResult()
+            {
+                RawResult = null,
+                ConcatResult = null,
+            };
 
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
                 if (!String.IsNullOrEmpty(result))
                 {
-                    var resultInArray = JsonSerializer.Deserialize<JsonArray>(result);
+                    var resultInArray = AppJson.Deserialize<JsonArray>(result);
+
+                    if (resultInArray == null)
+                    {
+                        return generateResult;
+                    }
 
                     var concatResult = String.Join("", resultInArray.Select(r =>
-                        r.AsObject()["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.GetValue<string>() ?? ""));
+                        r?.AsObject()["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.GetValue<string>() ?? ""));
 
-                    var generateResult = new GenerateContentResult
+                    generateResult = new GenerateContentResult
                     {
                         RawResult = result,
                         JsonParsedRawResult = JsonSerializer.Deserialize<JsonArray>(result),
@@ -139,11 +151,7 @@ namespace MyApi.Infrastructure.Services
                 }
                 else
                 {
-                    return new GenerateContentResult
-                    {
-                        RawResult = null,
-                        ConcatResult = null,
-                    };
+                    return generateResult;
                 }
             }
             else
@@ -156,12 +164,12 @@ namespace MyApi.Infrastructure.Services
 
     public class InlineData
     {
-        public string mimeType { get; set; }
-        public string data { get; set; }
+        public required string mimeType { get; set; }
+        public required string data { get; set; }
     }
 
     public class ImageObject
     {
-        public InlineData inlineData { get; set; }
+        public required InlineData inlineData { get; set; }
     }
 }

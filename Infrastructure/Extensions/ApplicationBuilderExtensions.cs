@@ -21,7 +21,7 @@ namespace Infrastructure.Extensions
       using (var scope = app.ApplicationServices.CreateScope())
       {
 
-        var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? configuration["StorageConfig:DefaultAssetPath"];
+        var assetPath = Environment.GetEnvironmentVariable("ASSET_PATH") ?? configuration["StorageConfig:DefaultAssetPath"] ?? "./assets";
         var assetPathRequest = configuration["StorageConfig:AssetPathRequest"];
 
         var staticPath = Path.Combine(Directory.GetCurrentDirectory(), assetPath);

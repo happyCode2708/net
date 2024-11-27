@@ -58,6 +58,9 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
             foreach (var nutrient in validatedNutrients)
             {
                 var nutrientName = nutrient.NutrientName;
+
+                if (nutrientName == null) continue;
+
                 //* special case for nutrient name
                 if (nutrientName.Contains("sugar added"))
                 {
@@ -77,8 +80,10 @@ namespace MyApi.Application.Common.Utils.ExtractedDataValidation
 
             var uomMap = NutritionFactValidationDictionary.NutrientUomDictionary;
 
+
             foreach (var nutrient in validatedNutrients)
             {
+
                 var amountPerServing = nutrient.AmountPerServing?.Amount?.Trim();
 
                 if (string.IsNullOrEmpty(amountPerServing)) continue;

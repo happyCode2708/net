@@ -37,14 +37,23 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
             {
                 var requestObject = request.Request;
 
-                var sourceType = requestObject.SourceType;
+                var sourceType = requestObject.SourceType?.ToString();
 
-                var parsedSourceType = (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), sourceType, true);
-
-                if (parsedSourceType == null)
+                if (sourceType == null)
                 {
                     return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Source type is required");
                 }
+
+                ExtractSourceType parsedSourceType;
+                try
+                {
+                    parsedSourceType = (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), sourceType, true);
+                }
+                catch (Exception ex)
+                {
+                    return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail($"Invalid source type: {ex.Message}");
+                }
+
 
                 var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), sourceType)).OrderByDescending(e => e.CompletedAt).FirstAsync();
 

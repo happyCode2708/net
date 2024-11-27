@@ -6,6 +6,6 @@ namespace MyApi.Application.Handlers.Products.Commands.CreateProductWithImages
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string? IxoneID { get; set; }
         public string? Upc12 { get; set; }
-        public List<IFormFile> Files { get; set; }
+        public required List<IFormFile> Files { get; set; }
     }
 }

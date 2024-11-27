@@ -46,7 +46,18 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
             {
                 var requestObject = request.Request;
                 var productId = requestObject.ProductId;
-                var serviceType = requestObject.ServiceType;
+                var serviceType = requestObject.ServiceType.ToString();
+
+                GenerativeServiceTypeEnum parsedServiceType;
+
+                try
+                {
+                    parsedServiceType = (GenerativeServiceTypeEnum)Enum.Parse(typeof(GenerativeServiceTypeEnum), serviceType, true);
+                }
+                catch (Exception ex)
+                {
+                    return ResponseModel<ExtractFactPanelResponse>.Fail($"Invalid service type: {ex.Message}");
+                }
 
                 // Get product with images from database
                 var product = await _context.Products
@@ -90,7 +101,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 
                     var prompt = _promptBuilderServices.MakeMarkdownNutritionPrompt("", imagePathList.Count);
 
-                    if (serviceType == GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Gemini])
+                    if (parsedServiceType == GenerativeServiceTypeEnum.Gemini)
                     {
                         var generativeOptions = new GeminiGenerativeContentOptions
                         {

@@ -3,7 +3,7 @@ namespace Application.Common.Dto.Extraction
 
     public class ValidatedNutrient : BaseNutrient
     {
-        public AmountPerServingDto? AmountPerServing { get; set; }
+        public required AmountPerServingDto AmountPerServing { get; set; }
     }
 
     public class AmountPerServingDto
@@ -15,11 +15,11 @@ namespace Application.Common.Dto.Extraction
 
     public class ValidateNutritionFactData : BaseNutritionFactData
     {
-        public List<ValidatedFactPanel> ValidatedFactPanels { get; set; }
+        public List<ValidatedFactPanel>? ValidatedFactPanels { get; set; }
     };
 
     public class ValidatedFactPanel : BaseFactPanel
     {
-        public List<ValidatedNutrient> ValidatedNutrients { get; set; }
+        public required List<ValidatedNutrient> ValidatedNutrients { get; set; }
     }
 }

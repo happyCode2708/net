@@ -8,13 +8,10 @@ namespace MyApi.Application.Common.Interfaces
         Task<GenerateContentResult> GenerateContentAsync(GenerativeContentOptions GenerateOptions);
     }
 
-
     public interface IGenerativeContentOptions
     {
         List<string>? ImagePathList { get; set; }
-
         string? Prompt { get; set; }
-
         GenerativeModelEnum? ModelId { get; set; }
     }
 
