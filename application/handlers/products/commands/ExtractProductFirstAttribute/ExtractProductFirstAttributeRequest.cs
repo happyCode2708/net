@@ -5,7 +5,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 {
     public class ExtractProductFirstAttributeRequest
     {
-        public int ProductId;
-        public string? ServiceType = GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Generative];
+        public int ProductId { get; set; }
+        public string? ServiceType { get; set; } = GenerativeDict.GetServiceType[GenerativeServiceTypeEnum.Generative];
     }
 }

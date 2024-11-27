@@ -12,8 +12,6 @@ using MyApi.Application.Common.Utils.ExtractedDataValidation;
 using MyApi.Application.Common.Utils.Base;
 using MyApi.Application.Common.Dict;
 
-
-
 namespace MyApi.Application.Handlers.Products.Commands.ExtractFactPanel
 {
     public class ExtractFactPanelCommand : IRequest<ResponseModel<ExtractFactPanelResponse>>

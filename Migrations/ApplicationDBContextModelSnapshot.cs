@@ -67,7 +67,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ProductId", "SourceType", "CreatedAt");
 
-                    b.ToTable("ExtractSessions");
+                    b.ToTable("ExtractSessions", (string)null);
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Image", b =>
@@ -112,7 +112,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.Product", b =>
@@ -141,7 +141,7 @@ namespace MyApi.Migrations
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ProductImage", b =>
@@ -156,7 +156,7 @@ namespace MyApi.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("MyApi.Domain.Models.ExtractSession", b =>

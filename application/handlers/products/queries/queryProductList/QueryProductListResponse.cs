@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-// using MyApi.Application.Common.Dto;
 using MyApi.Domain.Models;
 using Application.Common.Utils.ExtractionParser.FirstAttr;
 using Application.Common.Utils.ExtractionParser.SecondAttr;
@@ -15,10 +14,9 @@ namespace MyApi.Application.Handlers.Products.Queries.QueryProductList
 {
     public class QueryProductListResponse
     {
-        [JsonIgnore]
-        public List<ProductGridItemWithExtractionResult> ProductList;
+        public List<ProductGridItemWithExtractionResult> ProductList { get; set; }
 
-        public PaginationInfo Pagination;
+        public PaginationInfo Pagination { get; set; }
     }
 
     public class ProductGridItemWithExtractionResult : ProductGridItem

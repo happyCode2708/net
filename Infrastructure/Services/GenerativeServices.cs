@@ -5,7 +5,8 @@ using MyApi.Application.Common.Interfaces;
 using Google.Apis.Auth.OAuth2;
 using System.Text;
 using MyApi.Application.Common.Dict;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Application.Common.Dto.Generative;
 using MyApi.Application.Common.Utils.Base;
 
@@ -122,14 +123,15 @@ namespace MyApi.Infrastructure.Services
                 var result = await response.Content.ReadAsStringAsync();
                 if (!String.IsNullOrEmpty(result))
                 {
-                    JArray resultInArray = JArray.Parse(result);
+                    var resultInArray = JsonSerializer.Deserialize<JsonArray>(result);
 
-                    var concatResult = String.Join("", resultInArray.Select(r => r["candidates"]?.First?["content"]?["parts"]?.First?["text"]));
+                    var concatResult = String.Join("", resultInArray.Select(r =>
+                        r.AsObject()["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.GetValue<string>() ?? ""));
 
                     var generateResult = new GenerateContentResult
                     {
                         RawResult = result,
-                        JsonParsedRawResult = AppJson.Deserialize<JArray>(result),
+                        JsonParsedRawResult = JsonSerializer.Deserialize<JsonArray>(result),
                         ConcatResult = concatResult,
                     };
 
@@ -137,7 +139,6 @@ namespace MyApi.Infrastructure.Services
                 }
                 else
                 {
-
                     return new GenerateContentResult
                     {
                         RawResult = null,
@@ -164,4 +165,3 @@ namespace MyApi.Infrastructure.Services
         public InlineData inlineData { get; set; }
     }
 }
-

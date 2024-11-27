@@ -10,8 +10,6 @@ namespace MyApi.Domain.Models
         public string? Upc12 { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public ICollection<ProductImage>? ProductImages { get; set; } // Navigation property for the join table                                  // public List<ExtractSession> ExtractSessions { get; set; }
-
-        [JsonIgnore]
         public virtual ICollection<ExtractSession> ExtractSessions { get; set; }
     }
 }

@@ -39,13 +39,14 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
 
                 var sourceType = requestObject.SourceType;
 
-                if (sourceType == null)
+                var parsedSourceType = (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), sourceType, true);
+
+                if (parsedSourceType == null)
                 {
                     return ResponseModel<ValidateAndParseRawExtractedInfoResponse>.Fail("Source type is required");
                 }
 
-
-                var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == sourceType).OrderByDescending(e => e.CompletedAt).FirstAsync();
+                var lastExtractSession = await _context.ExtractSessions.Where(e => e.ProductId == requestObject.ProductId && e.SourceType == (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), sourceType)).OrderByDescending(e => e.CompletedAt).FirstAsync();
 
                 var rawExtractData = lastExtractSession.RawExtractData;
 
@@ -55,7 +56,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
                 }
 
 
-                if (sourceType == ExtractSourceType.NutritionFact)
+                if (parsedSourceType == ExtractSourceType.NutritionFact)
                 {
 
                     var newParsedNutritionData = NutritionParser.ParseMarkdownResponse(rawExtractData);
@@ -83,7 +84,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
                 }
 
 
-                if (sourceType == ExtractSourceType.FirstAttribute)
+                if (parsedSourceType == ExtractSourceType.FirstAttribute)
                 {
                     var newParsedFirstAttributeData = FirstAttributeParser.ParseResult(rawExtractData);
 

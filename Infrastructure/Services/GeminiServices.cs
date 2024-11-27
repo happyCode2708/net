@@ -5,9 +5,11 @@ using MyApi.Application.Common.Interfaces;
 using System.Text;
 using MyApi.Application.Common.Dict;
 using System.Text.Json;
-using Newtonsoft.Json.Linq;
+// using Newtonsoft.Json.Linq;
+
 using Application.Common.Dto.Gemini;
 using MyApi.Application.Common.Utils.Base;
+using System.Text.Json.Nodes;
 
 namespace MyApi.Infrastructure.Services
 {
@@ -92,10 +94,10 @@ namespace MyApi.Infrastructure.Services
 
                 if (!String.IsNullOrEmpty(result))
                 {
-                    JObject resultObject = JObject.Parse(result);
-                    var candidates = resultObject?["candidates"];
+                    var resultObject = JsonSerializer.Deserialize<JsonObject>(result);
+                    var candidates = resultObject?["candidates"]?.AsArray();
 
-                    var concatResult = String.Join("", candidates.Select(r => r["content"]?["parts"]?.First?["text"]));
+                    var concatResult = String.Join("", candidates?.Select(r => r?["content"]?["parts"]?.AsArray()?.FirstOrDefault()?["text"]?.GetValue<string>() ?? "").Where(c => c != null)!);
 
                     return new GeminiGenerateContentResult
                     {

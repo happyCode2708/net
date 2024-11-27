@@ -4,10 +4,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 {
     public class ExtractProductSecondAttributeResponse
     {
-        // public string? FullResult { get; set; }
-
-        // public string? ConcatText { get; set; }
-
+        public string? FullResult { get; set; }
+        public string? ConcatText { get; set; }
         public SecondAttributeProductInfo? ExtractedInfo { get; set; }
     }
 }

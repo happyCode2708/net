@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json.Linq;
+// using Newtonsoft.Json.Linq;
 
 namespace MyApi.Application.Common.Utils.Base
 {
@@ -25,18 +25,18 @@ namespace MyApi.Application.Common.Utils.Base
             try
             {
                 // Xử lý cho Newtonsoft.Json types
-                if (typeof(T) == typeof(JObject))
-                {
-                    return (T)(object)JObject.Parse(value);
-                }
-                if (typeof(T) == typeof(JArray))
-                {
-                    return (T)(object)JArray.Parse(value);
-                }
-                if (typeof(T) == typeof(JToken))
-                {
-                    return (T)(object)JToken.Parse(value);
-                }
+                // if (typeof(T) == typeof(JObject))
+                // {
+                //     return (T)(object)JObject.Parse(value);
+                // }
+                // if (typeof(T) == typeof(JArray))
+                // {
+                //     return (T)(object)JArray.Parse(value);
+                // }
+                // if (typeof(T) == typeof(JToken))
+                // {
+                //     return (T)(object)JToken.Parse(value);
+                // }
 
                 return JsonSerializer.Deserialize<T>(value, new JsonSerializerOptions
                 {

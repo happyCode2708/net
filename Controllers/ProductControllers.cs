@@ -48,7 +48,7 @@ namespace MyApi.Controllers
         }
         // api api/pim/extract-fact-panel
         [HttpPost("extract-fact-panel")]
-        public async Task<IActionResult> ExtractFactPanel(ExtractFactPanelRequest request)
+        public async Task<IActionResult> ExtractFactPanel([FromBody] ExtractFactPanelRequest request)
         {
             var result = await CommandAsync(new ExtractFactPanelCommand(request));
 

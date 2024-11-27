@@ -5,7 +5,6 @@ using MyApi.Infrastructure.Persistence;
 using MyApi.Infrastructure.Services;
 using MediatR;
 using MyApi.Application.Common.Configs;
-using Newtonsoft.Json.Serialization;
 
 namespace MyApi.Infrastructure
 {
@@ -92,6 +91,9 @@ namespace MyApi.Infrastructure
       services.AddSwaggerGen();
       services.AddControllers().AddJsonOptions(options =>
       {
+        // Disable property name conversion camelcase and keep original property names from C# models
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        // Allow case-insensitive property name matching when deserializing JSON
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
       });
 

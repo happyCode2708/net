@@ -19,15 +19,17 @@ namespace MyApi.Infrastructure.Persistence.Configurations
             builder
                 .Property(e => e.Status)
                 .HasConversion(
-                    v => v.Value,
-                    v => ExtractStatus.Parse(v)
-                ).IsRequired();
+                    v => v.ToString(),
+                    v => (ExtractStatus)Enum.Parse(typeof(ExtractStatus), v, true)
+                )
+                .IsRequired();
             builder
                 .Property(e => e.SourceType)
                 .HasConversion(
-                    v => v.Value,
-                    v => ExtractSourceType.Parse(v)
-                ).IsRequired();
+                    v => v.ToString(),
+                    v => (ExtractSourceType)Enum.Parse(typeof(ExtractSourceType), v, true)
+                )
+                .IsRequired();
             builder.Property(e => e.ExtractorVersion).IsRequired();
             builder.Property(e => e.ErrorMessage).IsRequired(false);
             builder.Property(e => e.RawExtractData).IsRequired(false);

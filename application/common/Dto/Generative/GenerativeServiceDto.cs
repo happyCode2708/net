@@ -1,6 +1,7 @@
+using System.Text.Json.Nodes;
 using MyApi.Application.Common.Enums;
 using MyApi.Application.Common.Interfaces;
-using Newtonsoft.Json.Linq;
+// using Newtonsoft.Json.Linq;
 
 
 namespace Application.Common.Dto.Generative
@@ -9,7 +10,7 @@ namespace Application.Common.Dto.Generative
     {
         public string? ConcatResult { get; set; }
         public string? RawResult { get; set; }
-        public JArray? JsonParsedRawResult { get; set; }
+        public JsonArray? JsonParsedRawResult { get; set; }
     }
 
     public class GenerativeContentOptions : IGenerativeContentOptions

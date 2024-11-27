@@ -7,7 +7,7 @@ namespace MyApi.Application.Handlers.Products.Commands.ValidateAndParsedExtracte
     public class ValidateAndParseRawExtractedInfoResponse
     {
         public ParsedAndValidatedResult ParsedAndValidatedResult { get; set; }
-        public ExtractSourceType? SourceType { get; set; }
+        public string? SourceType { get; set; }
     }
 
     public class ParsedAndValidatedResult

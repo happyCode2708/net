@@ -1,6 +1,7 @@
 using MyApi.Application.Common.Interfaces;
 using MyApi.Application.Common.Enums;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
+// using Newtonsoft.Json.Linq;
 
 namespace Application.Common.Dto.Gemini
 {
@@ -14,6 +15,6 @@ namespace Application.Common.Dto.Gemini
     {
         public string? ConcatResult { get; set; }
         public string? RawResult { get; set; }
-        public JObject? JsonParsedRawResult { get; set; }
+        public JsonObject? JsonParsedRawResult { get; set; }
     }
 }

@@ -121,8 +121,8 @@ namespace MyApi.Application.Handlers.Products.Commands.ExtractProductFirstAttrib
 
                     var response = new ExtractProductSecondAttributeResponse
                     {
-                        // FullResult = result.RawResult,
-                        // ConcatText = result.ConcatResult,
+                        FullResult = generatedResult.RawResult,
+                        ConcatText = generatedResult.ConcatResult,
                         ExtractedInfo = parsedSecondAttributeData
                     };
 
